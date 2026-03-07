@@ -1,0 +1,35 @@
+# Függőségek
+node_modules/
+
+# SvelteKit build és generált fájlok
+.svelte-kit/
+/build/
+/package/
+/.output/
+
+# Platform-specifikus build mappák
+.vercel
+.netlify
+.wrangler
+
+# OS specifikus szemét
+.DS_Store
+Thumbs.db
+
+# KÖRNYEZETI VÁLTOZÓK (Szigorúan!)
+# Soha ne kerüljön fel az adatbázis jelszavad!
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite ideiglenes fájlok
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Tesztelési eredmények
+/test-results/
+
+# Prisma (Ha esetleg SQLite-ot is használnál tesztelésre)
+*.db
+*.db-journal
