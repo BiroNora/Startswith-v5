@@ -1,18 +1,18 @@
 <script lang="ts">
   import '@picocss/pico'
-  import { page } from '$app/stores'
 	import { enhance } from '$app/forms'
+  let { data, children } = $props();
 </script>
 
 <div class="m">
-  {#if $page.data.user === undefined}
+  {#if !data.user}
   <div></div>
-  {:else if $page.data.user.active === false}
+  {:else if data.user.active === false}
   <div>
     <br>
     <h6>Please contact your manager.</h6>
   </div>
-  {:else if $page.data.user.active}
+  {:else}
   <nav>
     <ul class="dropdown">
       <li>
@@ -94,7 +94,7 @@
 </div>
 
 <main>
-  <slot />
+  {@render children()}
 </main>
 
 <style>

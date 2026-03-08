@@ -9,7 +9,7 @@ declare global {
       	name: string,
       	duty: number[],
 				active: boolean
-			}
+			} | null;
 		}
 		// interface PageData {}
 		// interface Platform {}
