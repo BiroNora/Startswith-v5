@@ -88,7 +88,7 @@
   </nav>
 
   <form class="logout" action="/auth/logout" method="POST" use:enhance >
-    <button class="d" type="submit"><img src="/power1.png" alt=""></button>
+    <button class="d" type="submit"><img src="/power-button.png" alt=""></button>
   </form>
 	{/if}
 </div>
