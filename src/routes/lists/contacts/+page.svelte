@@ -1,0 +1,113 @@
+<script lang="ts">
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+
+	let searchTerm = $state('');
+
+	let filteredContacts = $derived(
+    data.contacts.filter((c) =>
+    `${c.contact_name} ${c.contact_email} ${c.contact_phone}`
+    .toLowerCase()
+    .includes(searchTerm.toLowerCase())
+  )
+);
+let count = $derived(filteredContacts.length);
+let pageName = 'My Contact List';
+</script>
+
+<svelte:head>
+	<title>{pageName}</title>
+</svelte:head>
+
+<div class="main">
+	<h1>My Contact List</h1>
+
+	<div class="input-container">
+		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
+	</div>
+
+	{#if searchTerm !== ''}
+		<div class="z">
+			{#if count === 0}
+				&nbsp; No Result
+			{:else}
+				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
+			{/if}
+		</div>
+	{/if}
+
+	<br />
+	<ul>
+		{#each filteredContacts as contact}
+			<li class="li">
+				<a href="../lists/contacts/{contact.contact_id}" class="aa">
+					{contact.contact_name}
+					<span class="icons">☎️</span>
+					{contact.contact_phone}
+					<span class="icons">📝</span>
+					{contact.contact_email}
+
+					{#if !contact.active}
+						⚠️ <strong>NOT ACTIVE</strong>
+					{/if}
+				</a>
+			</li>
+		{:else}
+			<p class="z">No contacts found.</p>
+		{/each}
+	</ul>
+	<br />
+	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
+</div>
+
+<style>
+	.main {
+		padding-left: 5%;
+		padding-top: 2%;
+		padding-right: 5%;
+	}
+
+	.aa {
+		color: #32bea6;
+		padding: 2%;
+		font-weight: 400;
+		line-height: normal;
+		font-size: 23px;
+	}
+
+  .z {
+		color: rgb(144, 132, 132);
+		font-size: medium;
+		font-weight: 400;
+		font-style: italic;
+	}
+
+	.li {
+		list-style-position: inside;
+		list-style-type: disc;
+		color: rgb(144, 132, 132);
+		padding-left: 5%;
+		text-indent: -6%;
+		line-height: 2;
+	}
+
+	strong {
+		font-weight: 500;
+		color: tomato;
+	}
+
+	.flower {
+		font-size: 140%;
+		color: #a0a9a8;
+		padding-bottom: 3%;
+		text-decoration: none; /* Remove underline */
+	}
+
+	.flower:hover {
+		font-size: 140%;
+		color: #32bea6;
+		padding-bottom: 3%;
+		text-decoration: none; /* Remove underline */
+	}
+</style>
