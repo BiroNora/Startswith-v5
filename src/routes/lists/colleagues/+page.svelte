@@ -5,7 +5,6 @@
 	let { data }: { data: PageData } = $props();
 
 	let searchTerm = $state('');
-	let pageName = 'Colleagues';
 
 	// Segédfüggvény a tisztségek szöveges megjelenítéséhez
 	function getDutyLabel(onDutyArray: number[]): string {
@@ -42,8 +41,8 @@
 		})
 	);
 
-	// Számláló - szintén automatikus
 	let count = $derived(filteredUsers.length);
+	let pageName = 'Colleagues';
 </script>
 
 <svelte:head>
@@ -54,23 +53,15 @@
 	<h1>StartsWith Colleagues</h1>
 
 	<div class="input-container">
-		<input type="search" bind:value={searchTerm} placeholder="Search for name, phone, or area..." />
-
-		{#if searchTerm}
-			<button type="button" class="clear-button" onclick={() => (searchTerm = '')}>
-				&#10007;
-			</button>
-		{/if}
+		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
 	</div>
 
 	{#if searchTerm !== ''}
 		<div class="z">
 			{#if count === 0}
 				&nbsp; No Result
-			{:else if count === 1}
-				&nbsp; <span>{count}</span> Colleague
 			{:else}
-				&nbsp; <span>{count}</span> Colleagues
+				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
 			{/if}
 		</div>
 	{/if}

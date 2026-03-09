@@ -8,26 +8,20 @@
 	let user_duties_only = $derived(user_duty_array.map((n: any) => parseInt(String(n)[0], 10)));
 	let dda = $derived(data.dir_duty);
 
-	// REAKTÍV SZŰRÉS: Ez váltja ki a handleSearch függvényt
 	let filteredActivities = $derived(
-    data.activities.filter((act: any) => {
-      const searchStr = searchTerm.toLowerCase();
-      return (
-        act.act_name.toLowerCase().includes(searchStr) ||
-        (act.act_note?.toLowerCase().includes(searchStr) ?? false) ||
-        dateSlugify(String(act.end_date)).toLowerCase().includes(searchStr)
-      );
-    })
-  );
-
-	let matchingItemCount = $derived(filteredActivities.length);
+		data.activities.filter((act: any) => {
+			const searchStr = searchTerm.toLowerCase();
+			return (
+				act.act_name.toLowerCase().includes(searchStr) ||
+				(act.act_note?.toLowerCase().includes(searchStr) ?? false) ||
+				dateSlugify(String(act.end_date)).toLowerCase().includes(searchStr)
+			);
+		})
+	);
+	let count = $derived(filteredActivities.length);
 
 	function scrollToConnect() {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
-	}
-
-	function clearSearch() {
-		searchTerm = '';
 	}
 
 	let pageName = 'Activity List';
@@ -51,27 +45,20 @@
 		<br />
 
 		<div class="input-container">
-			<input
-				type="search"
-				id="searchInput"
-				placeholder="Search for items..."
-				bind:value={searchTerm}
-			/>
-			<button type="button" class="clear-button secondary outline" onclick={clearSearch}>
-				&#10007;
-			</button>
+			<input type="search" bind:value={searchTerm} placeholder="Search for..." />
 		</div>
 
-		<div id="itemCount" class="z" style:display={searchTerm === '' ? 'none' : 'block'}>
-			{#if matchingItemCount === 0}
-				&nbsp; No Result
-			{:else}
-				<span id="length">{matchingItemCount}</span>
-				&nbsp; {matchingItemCount === 1 ? 'Activity' : 'Activities'}
-			{/if}
-		</div>
+		{#if searchTerm !== ''}
+			<div class="z">
+				{#if count === 0}
+					&nbsp; No Result
+				{:else}
+					&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
+				{/if}
+			</div>
+		{/if}
+
 		<br />
-
 		<ul id="list">
 			{#each filteredActivities as act (act.act_id)}
 				{#if data.is_director}

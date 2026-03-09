@@ -7,13 +7,14 @@
 		data.schools.filter((s) => {
 			let searchStr = `${s.school_name} ${s.city?.city_name} ${s.region?.region_name} ${s.county?.county_name}`;
 
-      if (s.basic) searchStr += ' basic';
+			if (s.basic) searchStr += ' basic';
 			if (s.medior) searchStr += ' medior';
 			if (s.high) searchStr += ' high';
 
 			return searchStr.toLowerCase().includes(searchTerm.toLowerCase());
 		})
 	);
+	let count = $derived(filteredSchools.length);
 
 	let pageName = 'School List';
 </script>
@@ -29,16 +30,17 @@
 	</hgroup>
 
 	<div class="input-container">
-		<input type="search" bind:value={searchTerm} placeholder="Search for items..." />
-		{#if searchTerm}
-			<button type="button" class="clear-button" onclick={() => (searchTerm = '')}>
-				&#10007;
-			</button>
-		{/if}
+		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
 	</div>
 
-	{#if searchTerm}
-		<div class="z">Number of items: {filteredSchools.length}</div>
+	{#if searchTerm !== ''}
+		<div class="z">
+			{#if count === 0}
+				&nbsp; No Result
+			{:else}
+				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
+			{/if}
+		</div>
 	{/if}
 
 	<br />
