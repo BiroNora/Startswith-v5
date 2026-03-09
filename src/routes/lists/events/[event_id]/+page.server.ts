@@ -2,6 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { db } from '$lib/database';
 import { dutyMap, eventMap, gradeMap, channelMap, statusMap } from '../../../stores/dataStore';
 import type { Actions, PageServerLoad } from './$types';
+import { checkEventAccess } from '$lib/validation';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!locals.user || locals.user.active === false) {
@@ -10,18 +11,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const event_id = Number(params.event_id);
 
-	const eventData = await db.event.findUnique({
-		where: { event_id },
-		include: {
-			School: { include: { city: true } },
-			InterestedStudents: { orderBy: { intrest_id: 'desc' } },
-			User: { select: { user_email: true, user_id: true } }
-		}
-	});
+	// A load függvényben is használhatod a közös ellenőrzőt!
+	// Ez egyben le is kéri az eseményt, ha van hozzá jogod.
+	const eventData = await checkEventAccess(locals, event_id);
 
 	if (!eventData) throw error(404, 'Event not found');
 
-	// --- NÉVFORDÍTÁSOK (Mapping) ---
+	// --- NÉVFORDÍTÁSOK ---
 	const eventTypeName = eventMap.find((e) => e.id === eventData.event_type)?.name || eventData.event_type;
 	const dutyName = dutyMap.find((d) => d.id === eventData.on_duty)?.name || eventData.on_duty;
 
@@ -32,8 +28,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		status_name: statusMap.find((s) => s.id === ints.status)?.name || ints.status
 	}));
 
-	const countries = await db.country.findMany();
-	const regions = await db.region.findMany({ orderBy: { region_name: 'asc' } });
+	const [countries, regions] = await Promise.all([
+		db.country.findMany(),
+		db.region.findMany({ orderBy: { region_name: 'asc' } })
+	]);
 
 	return {
 		event: eventData,
@@ -53,8 +51,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	interested: async ({ request, params }) => {
+	interested: async ({ request, params, locals }) => {
 		const event_id = Number(params.event_id);
+		await checkEventAccess(locals, event_id);
+
 		const data = await request.formData();
 		const applied = data.get('apply') !== 'true';
 
@@ -78,8 +78,10 @@ export const actions: Actions = {
 		}
 	},
 
-	event: async ({ request, params }) => {
+	event: async ({ request, params, locals }) => {
 		const event_id = Number(params.event_id);
+		await checkEventAccess(locals, event_id);
+
 		const data = await request.formData();
 		const event_name = String(data.get('fantasy'));
 		const date = new Date(String(data.get('meeting-time')));
@@ -103,60 +105,57 @@ export const actions: Actions = {
 		return { success: true };
 	},
 
-	eventU: async ({ request, params }) => {
+	eventU: async ({ request, params, locals }) => {
 		const event_id = Number(params.event_id);
+		const event = await checkEventAccess(locals, event_id);
+
 		const data = await request.formData();
 		const email = String(data.get('email'));
 
-		const user = await db.user.findUnique({ where: { user_email: email } });
-		if (!user) return fail(400, { userevent: true, alreadyevent: false });
+		const targetUser = await db.user.findUnique({
+      where: { user_email: email },
+      select: { user_id: true }
+    });
+    if (!targetUser) return fail(400, { userevent: true, alreadyevent: false });
 
-		const event = await db.event.findUnique({
-			where: { event_id },
-			include: { User: true }
-		});
-
-		if (event?.User.some((u) => u.user_email === email)) {
-			return fail(400, { alreadyevent: true, userevent: false });
-		}
+		if (event.User.some(u => u.user_id === targetUser.user_id)) {
+      return fail(400, { alreadyevent: true, userevent: false });
+    }
 
 		await db.event.update({
 			where: { event_id },
-			data: { User: { connect: { user_id: user.user_id } } }
+			data: { User: { connect: { user_id: targetUser.user_id } } }
 		});
 		return { eventresult: true, userevent: false, alreadyevent: false };
 	},
 
-	eventUD: async ({ request, params }) => {
+	eventUD: async ({ request, params, locals }) => {
 		const event_id = Number(params.event_id);
+		const event = await checkEventAccess(locals, event_id);
+
 		const data = await request.formData();
 		const email = String(data.get('email'));
 
-		const user = await db.user.findUnique({ where: { user_email: email } });
-		if (!user) return fail(400, { user: true, already: false });
+		const targetUser = await db.user.findUnique({
+      where: { user_email: email },
+      select: { user_id: true }
+    });
+    if (!targetUser) return fail(400, { user: true, already: false });
 
-		const event = await db.event.findUnique({
-			where: { event_id },
-			include: { User: true }
-		});
-
-		if (!event?.User.some((u) => u.user_email === email)) {
-			return fail(400, { already: true, user: false });
-		}
+		if (!event.User.some(u => u.user_id === targetUser.user_id)) {
+      return fail(400, { already: true, user: false });
+    }
 
 		await db.event.update({
 			where: { event_id },
-			data: { User: { disconnect: { user_id: user.user_id } } }
+			data: { User: { disconnect: { user_id: targetUser.user_id } } }
 		});
 		return { result: true, user: false, already: false };
 	},
 
-	delUser: async ({ params }) => {
+	delUser: async ({ params, locals }) => {
 		const event_id = Number(params.event_id);
-		const event = await db.event.findUnique({
-			where: { event_id },
-			include: { User: true, InterestedStudents: true }
-		});
+		const event = await checkEventAccess(locals, event_id);
 
 		// Ha van gazda (több mint 1) vagy van érdeklődő, nem törölhető
 		if (event && (event.User.length > 1 || event.InterestedStudents.length > 0)) {
@@ -167,9 +166,20 @@ export const actions: Actions = {
 		throw redirect(303, '/lists/events');
 	},
 
-	delInterest: async ({ request }) => {
+	delInterest: async ({ request, locals }) => {
 		const data = await request.formData();
 		const intrest_id = Number(data.get('int_id'));
+		const event_id = Number(data.get('event_id'));
+
+		const event = await checkEventAccess(locals, event_id);
+
+		const belongsToEvent = event.InterestedStudents.some(
+      (s) => s.intrest_id === intrest_id
+    );
+
+    if (!belongsToEvent) {
+      return fail(403, { interest: true, message: "Ez az adat nem ehhez az eseményhez tartozik." });
+    }
 
 		try {
 			await db.interestedStudents.delete({ where: { intrest_id } });

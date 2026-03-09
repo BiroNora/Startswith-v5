@@ -11,7 +11,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-  school: async ({ request }) => {
+  school: async ({ request, locals }) => {
+    if (!locals.user?.email) throw redirect(302, '/auth/login');
+
     const formData = await request.formData()
 
     // 1. Adatok kinyerése és rendszerezése a közös függvénnyel
@@ -19,7 +21,7 @@ export const actions: Actions = {
 
     // 2. User és Helyszín integritás ellenőrzése párhuzamosan
     const [myuser, regionCheck, countyCheck, cityCheck] = await Promise.all([
-      db.user.findUnique({ where: { user_email: s.user_email } }),
+      db.user.findUnique({ where: { user_email: locals.user.email } }),
       db.region.findUnique({ where: { region_id: s.region_id } }),
       db.county.findUnique({ where: { county_id: s.county_id } }),
       db.city.findUnique({ where: { city_id: s.city_id } })
@@ -39,9 +41,9 @@ export const actions: Actions = {
     const existingSchool = await db.school.findFirst({
       where: {
         OR: [
-          { om_id: s.om_id ? String(s.om_id) : undefined },
+          s.om_id ? { om_id: String(s.om_id) } : {},
           { school_email: s.school_email }
-        ]
+        ].filter(condition => Object.keys(condition).length > 0)
       }
     })
 

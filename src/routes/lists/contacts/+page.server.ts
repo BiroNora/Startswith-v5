@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const user = await db.user.findUnique({
-		where: { user_email: locals.user.email },
+		where: { user_id: locals.user.user_id },
 		include: {
 			Contact: {
 				orderBy: { contact_name: 'asc' } // ABC sorrend már a szerveren

@@ -36,15 +36,22 @@ export const load: PageServerLoad = async ({ locals }) => {
 }
 
 const user: Action = async ({ request, locals }) => {
-  if (!locals.user) throw redirect(302, '/auth/login');
+  if (!locals.user?.email) throw redirect(302, '/auth/login');
   const sessionUserEmail = locals.user.email;
 
   const data = await request.formData()
+  const user_email = String(data.get('email'))
 
+  // 1. E-mail ütközés vizsgálata (csak ha változtatni akarja)
+  if (user_email !== sessionUserEmail) {
+    const existingUser = await db.user.findUnique({ where: { user_email } })
+    if (existingUser) return fail(400, { user: true })
+  }
+
+  // 2. Alapadatok kinyerése
   const user_name = String(data.get('name'))
   const nationality = String(data.get('nationality'))
   const user_phone = String(data.get('phone'))
-  const user_email = String(data.get('email'))
 
   const basic = Boolean(data.get('basic'))
   const reB = String(data.get('regB'))
@@ -57,9 +64,6 @@ const user: Action = async ({ request, locals }) => {
   const director = Boolean(data.get('director'))
   const reD = String(data.get('regD'))
 
-  const password1 = data.get('password1')
-  const password2 = data.get('password2')
-
   const on_duty = [
     Number(dutyType[0][0] + (basic ? reB : '0')),
     Number(dutyType[1][0] + (medior ? reM : '0')),
@@ -68,40 +72,42 @@ const user: Action = async ({ request, locals }) => {
     Number(dutyType[4][0] + (director ? reD : '0'))
   ];
 
-  // Ellenőrizzük, hogy választott-e legalább egy régiót
   if (on_duty.every((val, i) => val === Number(dutyType[i][0] + '0'))) {
     return fail(400, { regions: true })
   }
 
-  if (typeof password1 !== 'string' || password1 !== password2 || !password1) {
-    return fail(400, { invalid: true })
+  // 3. Jelszó kezelése (opcionális: csak ha kitöltötte)
+  const password1 = data.get('password1')
+  const password2 = data.get('password2')
+  let passwordUpdateData = {};
+
+  if (password1) {
+    if (password1 !== password2) return fail(400, { invalid: true });
+    if (!isStrongPassword(String(password1))) return fail(400, { passw: true });
+
+    passwordUpdateData = {
+      passwordHash: await bcrypt.hash(String(password1), 10),
+      userAuthToken: crypto.randomUUID() // Kijelentkeztetés máshonnan jelszócserekor
+    };
   }
 
-  if (!isStrongPassword(password1)) {
-    return fail(400, { passw: true })
-  }
-
-  const existingUser = await db.user.findUnique({
-    where: { user_email }
-  })
-  if (existingUser && existingUser.user_email !== sessionUserEmail) {
-    return fail(400, { user: true })
-  }
-
+  // 4. Frissítés
   await db.user.update({
     where: { user_email: sessionUserEmail },
     data: {
       user_name,
+      user_email, // Itt frissül az új emailre, ha változott
       nationality,
       user_phone,
       on_duty,
-      passwordHash: await bcrypt.hash(password1, 10),
-      userAuthToken: crypto.randomUUID(),
+      ...passwordUpdateData,
       active: true,
       active_by: 'self'
     }
   })
 
+  // Ha megváltozott az e-mail, érdemes lehet a session-t is frissíteni vagy újra beléptetni,
+  // de egyelőre dobjuk a listára.
   throw redirect(303, '/lists/activities')
 }
 
@@ -112,18 +118,18 @@ const user_active_change: Action = async ({ request, locals }) => {
   const target_email = String(data.get('email'))
   const active_by = locals.user.email
 
-  const user = await db.user.findUnique({ where: { user_email: target_email } })
-  if (!user) return fail(400, { user: true })
+  const targetUser = await db.user.findUnique({ where: { user_email: target_email } })
+  if (!targetUser) return fail(400, { user: true })
 
   await db.user.update({
     where: { user_email: target_email },
     data: {
-      active: !user.active,
+      active: !targetUser.active,
       active_by
     }
   })
 
-  throw redirect(303, '/lists/colleagues')
+  return { success: true };
 }
 
 export const actions: Actions = { user, user_active_change }

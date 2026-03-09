@@ -8,10 +8,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(302, '/auth/login')
 	}
 
-	const my_email = locals.user.email!;
-
 	const user = await db.user.findUnique({
-		where: { user_email: my_email },
+		where: { user_id: locals.user.user_id },
 		include: {
 			Event: {
 				orderBy: { closing_date: 'desc' }
@@ -40,28 +38,25 @@ export const load: PageServerLoad = async ({ locals }) => {
 		};
 	}));
 
-	// Kigyűjtjük azoknak az eseményeknek az ID-it, amik "folyamatban" vannak (status: '3')
-	// Kigyűjtjük azoknak az eseményeknek az ID-it, amik "folyamatban" vannak
-  const inProgressData = await db.event.findMany({
-    where: {
-      // Itt a javítás: a User kapcsolaton belül szűrünk a user_email-re
-      User: {
-        some: {
-          user_email: my_email
-        }
-      },
-      InterestedStudents: {
-        some: {
-          status: '3'
-        }
-      }
-    },
-    select: {
-      event_id: true
-    }
-  });
+	const inProgressData = await db.event.findMany({
+		where: {
+			User: {
+				some: {
+					user_id: locals.user.user_id
+				}
+			},
+			InterestedStudents: {
+				some: {
+					status: '3'
+				}
+			}
+		},
+		select: {
+			event_id: true
+		}
+	});
 
-  const eventIdsInProgress = inProgressData.map(e => e.event_id);
+	const eventIdsInProgress = inProgressData.map(e => e.event_id);
 
 	return {
 		events,

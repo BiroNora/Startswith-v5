@@ -190,10 +190,13 @@
 				<form action="?/delInterest" method="post" use:enhance id="inter">
 					<article>
 						<h3>A(z) {itemNumber}. adat véglegesen törlődik.</h3>
+
 						{#if form?.interest}
 							<p class="ah">&nbsp; Az adatot nem lehet törölni.</p>
 						{/if}
+
 						<input type="hidden" name="int_id" value={selectedIntrestId} />
+						<input type="hidden" name="event_id" value={data.event.event_id} />
 						<footer>
 							<button type="submit" class="secondary w z cc" data-target="modal-example">
 								Confirm

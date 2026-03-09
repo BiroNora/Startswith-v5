@@ -5,6 +5,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			user: {
+				user_id: string;
 				email: string,
       	name: string,
       	duty: number[],

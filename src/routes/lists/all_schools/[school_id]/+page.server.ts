@@ -58,7 +58,7 @@ export async function load({ params, locals }) {
 		contact,
 		event,
 		internalContacts: school.User,
-    externalContacts: contact,
+		externalContacts: contact,
 	}
 }
 
@@ -68,13 +68,19 @@ export const actions: Actions = {
 		const data = await request.formData()
 		const email = String(data.get('email'))
 
-		const user = await db.user.findUnique({ where: { user_email: email } })
+		const user = await db.user.findUnique({
+			where: { user_email: email },
+			select: { user_id: true } // Csak az ID kell nekünk!
+		});
+
 		if (!user) return fail(400, { usercontact: true })
 
 		const alreadyExists = await db.school.findFirst({
 			where: {
 				school_id: sc_id,
-				User: { some: { user_email: email } }
+				User: {
+					some: { user_id: user.user_id }
+				}
 			}
 		})
 
@@ -92,7 +98,7 @@ export const actions: Actions = {
 		const data = await request.formData()
 		const email = String(data.get('email'))
 
-		const user = await db.user.findUnique({ where: { user_email: email } })
+		const user = await db.user.findUnique({ where: { user_email: email }, select: { user_id: true } })
 		if (!user) return fail(400, { user: true })
 
 		const result = await db.school.update({
