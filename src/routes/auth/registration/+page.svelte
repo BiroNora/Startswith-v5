@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import { dutyMap } from '../../stores/dataStore'
-	import type { ActionData, PageServerData } from './$types'
-	export let data: PageServerData
-	const { regions } = data
+	import type { ActionData, PageData } from './$types'
+	let { data, form }: { data: PageData, form: ActionData } = $props();
 
-	let yesB = true
-	let yesM = false
-	let yesH = false
-	let yesS = false
-	let yesD = false
-	const regionsArray = regions || []
+
+	let yesB = $state(true);
+  let yesM = $state(false);
+  let yesH = $state(false);
+  let yesS = $state(false);
+  let yesD = $state(false);
+	const regionsArray = $derived(data.regions || []);
 
 	let pageName = 'Register to Startswith'
-
-	export let form: ActionData
 </script>
 
 <svelte:head>

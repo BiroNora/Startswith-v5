@@ -1,43 +1,77 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
-  import { dutyMap } from '../../stores/dataStore';
-  import type { ActionData, PageServerData } from './$types';
+	import { enhance } from '$app/forms';
+	import { dutyMap } from '../../stores/dataStore';
+	import type { ActionData, PageData } from './$types';
 
-  export let data: PageServerData;
-  export let form: ActionData;
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-  // REAKTÍV ALAPOK: Ha a data frissül, ezek is frissülnek
-  $: onDutyArray = (data.user?.on_duty ?? [])
-    .filter((num) => num % 10 !== 0)
-    .map((num) => num.toString());
+	// REAKTÍV ALAPOK: Ha a data frissül, ezek is frissülnek
+	let onDutyArray = $derived(
+		(data.user?.on_duty ?? []).filter((num) => num % 10 !== 0).map((num) => num.toString())
+	);
 
-  $: is_dir = (data.user?.on_duty?.[4] ?? 0) % 10 !== 0;
+	let is_dir = $derived((data.user?.on_duty?.[4] ?? 0) % 10 !== 0);
 
-  // Form állapotok
-  let yesB = false, yesM = false, yesH = false, yesS = false, yesD = false;
-  let yesBreg = 0, yesMreg = 0, yesHreg = 0, yesSreg = 0, yesDuty = '';
+	// Form állapotok
+	let yesB = $state(false),
+		yesM = $state(false),
+		yesH = $state(false),
+		yesS = $state(false),
+		yesD = $state(false);
 
-  let pageName = 'Update User';
+	let yesBreg = $state(0),
+		yesMreg = $state(0),
+		yesHreg = $state(0),
+		yesSreg = $state(0),
+		yesDuty = $state('');
 
-  // ADATOK BETÖLTÉSE: Ezt egyszer kell megtenni, amikor megérkezik a data
-  // A reactive label ($:) figyeli a változást, de az inicializáláshoz használjuk ezt:
-  $: if (data.user && data.regions) {
-    // Reseteljük az állapotokat mielőtt újra feltöltjük (opcionális)
-    onDutyArray.forEach(val => {
-      const type = val.charAt(0);
-      const regId = Number(val.charAt(1));
+	$effect(() => {
+		if (data.user && data.regions) {
+			// Alaphelyzetbe állítás frissüléskor
+			yesB = false;
+			yesM = false;
+			yesH = false;
+			yesS = false;
+			yesD = false;
 
-      if (type === '1') { yesB = true; yesBreg = regId; }
-      if (type === '2') { yesM = true; yesMreg = regId; }
-      if (type === '3') { yesH = true; yesHreg = regId; }
-      if (type === '4') { yesS = true; yesSreg = regId; }
-      if (type === '5') { yesD = true; yesDuty = val.charAt(1); }
-    });
-  }
+			onDutyArray.forEach((val) => {
+				const type = val.charAt(0);
+				const regId = Number(val.slice(1));
 
-  function showAlert() {
-    alert('User status will be changed.');
-  }
+				if (type === '1') {
+					yesB = true;
+					yesBreg = regId;
+				}
+				if (type === '2') {
+					yesM = true;
+					yesMreg = regId;
+				}
+				if (type === '3') {
+					yesH = true;
+					yesHreg = regId;
+				}
+				if (type === '4') {
+					yesS = true;
+					yesSreg = regId;
+				}
+				if (type === '5') {
+					yesD = true;
+					yesDuty = val.slice(1);
+				}
+			});
+		}
+	});
+
+	let alertShown = $state(false); // Állapot, hogy lefutott-e már
+
+	function showAlert(event: MouseEvent) {
+		if (alertShown) return; // Ha már lefutott, ne csináljon semmit
+
+		alert('User status will be changed.');
+		alertShown = true;
+	}
+
+	let pageName = 'Update User';
 </script>
 
 <svelte:head>
@@ -45,24 +79,26 @@
 </svelte:head>
 
 {#if is_dir}
-<div class="grid">
-	<div class="rei">
-		<p>Update Startswith's User Data</p>
-	</div>
-	<br />
-	<form action="?/user_active_change" method="post" use:enhance>
-		<div>
-			<label for="email">Email</label>
-			<input type="text" name="email" id="email" required />
+	<div class="grid">
+		<div class="rei">
+			<p>Update Startswith's User Data</p>
 		</div>
+		<br />
+		<form action="?/user_active_change" method="post" use:enhance>
+			<div>
+				<label for="email">Email</label>
+				<input type="text" name="email" id="email" required />
+			</div>
 
-		{#if form?.user}
-			<p class="error">Confirm user.</p>
-		{/if}
+			{#if form?.user}
+				<p class="error">Confirm user.</p>
+			{/if}
 
-		<button on:click|once={showAlert} class="btn" id="btn" type="submit">Inactive / Reactive User</button>
-	</form>
-</div>
+			<button onclick={showAlert} class="btn" id="btn" type="submit">
+				Inactive / Reactive User
+			</button>
+		</form>
+	</div>
 {/if}
 
 <div class="grid">
@@ -77,7 +113,13 @@
 		</div>
 		<div>
 			<label for="nationality">Nationality</label>
-			<input type="text" name="nationality" id="nationality" value={data.user?.nationality} required />
+			<input
+				type="text"
+				name="nationality"
+				id="nationality"
+				value={data.user?.nationality}
+				required
+			/>
 		</div>
 		<div>
 			<label for="phone">Phone</label>
@@ -150,10 +192,11 @@
 		{/if}
 
 		{#if form?.passw}
-			<p class="error">Password must be at least 8 characters long,
-				must include at least one lowercase and uppercase letter,
-				and at least one numeric digit and at least one special character
-				(such as !, @, #, $, %, ^, &, *).</p>
+			<p class="error">
+				Password must be at least 8 characters long, must include at least one lowercase and
+				uppercase letter, and at least one numeric digit and at least one special character (such as
+				!, @, #, $, %, ^, &, *).
+			</p>
 		{/if}
 
 		<button class="btn" id="btn" type="submit">Update</button>

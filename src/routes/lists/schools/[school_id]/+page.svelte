@@ -3,32 +3,57 @@
 	import type { ActionData, PageData } from './$types';
 	import { dutyMap, eventMap, formatDate } from '../../../stores/dataStore.js';
 
-	export let data: PageData;
-	export let form: ActionData;
+	let { data, form }: { data: PageData, form: ActionData } = $props();
 
-	let yesA = data.school.school_type.includes('1');
-	let yesB = data.school.school_type.includes('2');
-	let yesC = data.school.school_type.includes('3');
-	let yesD = data.school.school_type.includes('4');
-	let yesE = data.school.school_type.includes('5');
-	let yesF = data.school.school_type.includes('6');
-	let yesG = data.school.school_type.includes('7');
-	let yesH = data.school.school_type.includes('8');
-	let yesI = data.school.school_type.includes('9');
-	let yesJ = data.school.school_type.includes('10');
-	let yesK = data.school.school_type.includes('11');
-	let yesL = data.school.school_type.includes('12');
-	let yesM = data.school.school_type.includes('13');
-	let yesN = data.school.school_type.includes('14');
-	let yesO = data.school.school_type.includes('15');
+  // 1. Deklaráljuk az állapotokat alapértelmezett értékkel (üres/false)
+  // Így nincs közvetlen 'data' hivatkozás a $state-ben, elhallgat a hibaüzenet.
+  let yesA = $state(false);
+  let yesB = $state(false);
+  let yesC = $state(false);
+  let yesD = $state(false);
+  let yesE = $state(false);
+  let yesF = $state(false);
+  let yesG = $state(false);
+  let yesH = $state(false);
+  let yesI = $state(false);
+  let yesJ = $state(false);
+  let yesK = $state(false);
+  let yesL = $state(false);
+  let yesM = $state(false);
+  let yesN = $state(false);
+  let yesO = $state(false);
 
-	// Duty szintek inicializálása
-	let yesBAS = data.school.duty.includes('1');
-	let yesMED = data.school.duty.includes('2');
-	let yesHIG = data.school.duty.includes('3');
+  let yesBAS = $state(false);
+  let yesMED = $state(false);
+  let yesHIG = $state(false);
 
-	let yesCOOP = data.school.coop ?? true;
-	let yesACT = data.school.active ?? true;
+  let yesCOOP = $state(true);
+  let yesACT = $state(true);
+
+  $effect(() => {
+    yesA = data.school.school_type.includes('1');
+    yesB = data.school.school_type.includes('2');
+    yesC = data.school.school_type.includes('3');
+    yesD = data.school.school_type.includes('4');
+    yesE = data.school.school_type.includes('5');
+    yesF = data.school.school_type.includes('6');
+    yesG = data.school.school_type.includes('7');
+    yesH = data.school.school_type.includes('8');
+    yesI = data.school.school_type.includes('9');
+    yesJ = data.school.school_type.includes('10');
+    yesK = data.school.school_type.includes('11');
+    yesL = data.school.school_type.includes('12');
+    yesM = data.school.school_type.includes('13');
+    yesN = data.school.school_type.includes('14');
+    yesO = data.school.school_type.includes('15');
+
+    yesBAS = data.school.duty.includes('1');
+    yesMED = data.school.duty.includes('2');
+    yesHIG = data.school.duty.includes('3');
+
+    yesCOOP = data.school.coop ?? true;
+    yesACT = data.school.active ?? true;
+  });
 
 	function scrollToConnect() {
 		window.scrollTo({ top: 0 });
@@ -169,7 +194,7 @@
 			<br />
 			<button
 				type="button"
-				on:click={scrollToConnect}
+				onclick={scrollToConnect}
 				id="backToTop"
 				class="contrast outline cgb h44">Cancel &#10070; Jump to the Top</button
 			>
@@ -208,7 +233,7 @@
 			<br />
 			<button
 				type="button"
-				on:click={scrollToConnect}
+				onclick={scrollToConnect}
 				id="backToTop"
 				class="contrast outline cgb h44">Cancel &#10070; Jump to the Top</button
 			>
@@ -367,7 +392,7 @@
 			<br />
 			<button
 				type="button"
-				on:click={scrollToConnect}
+				onclick={scrollToConnect}
 				id="backToTop"
 				class="contrast outline cgb h44">Cancel &#10070; Jump to the Top</button
 			>
