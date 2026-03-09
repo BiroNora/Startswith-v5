@@ -5,14 +5,19 @@
 	function scrollToConnect() {
 		window.scrollTo({
 			top: 0
-		})
+		});
 	}
 
 	let { data }: { data: PageData } = $props();
 
-	let yesACT = $state(data.contact.active);
+	let yesACT = $state(false);
 
-	let pageName = 'Contact Details'
+  // 2. Az effect fogja betölteni az értéket, amikor az oldal betöltődik VAGY a data frissül
+  $effect(() => {
+    yesACT = data.contact.active;
+  });
+
+	let pageName = 'Contact Details';
 </script>
 
 <svelte:head>
@@ -22,43 +27,46 @@
 <div class="main">
 	<div id="base">
 		<h1>Contact Details</h1>
-			<hgroup>
-				<h3>
-        {data.contact.contact_name}
-        {#if !data.contact.active} {' ⚠️ '} {/if}
-      </h3>
-      <br>
-      <h4 class="h41">Adatok</h4>
-      <a href="#section_contact" class="ad"> ☞ Kapcsolattartó adatainak módosítása </a>
+		<hgroup>
+			<h3>
+				{data.contact.contact_name}
+				{#if !data.contact.active}
+					{' ⚠️ '}
+				{/if}
+			</h3>
+			<br />
+			<h4 class="h41">Adatok</h4>
+			<a href="#section_contact" class="ad"> ☞ Kapcsolattartó adatainak módosítása </a>
 
-				<ul class="ab">
-					<li class="lb">Név: {data.contact.contact_name}</li>
-					<li class="lb">Telefon: {data.contact.contact_phone}</li>
-					<li class="lb">Email: {data.contact.contact_email}</li>
-					<li class="lb">Feljegyzés: {data.contact.contact_note}</li>
-					<li class="lb">Iskola:</li>
+			<ul class="ab">
+				<li class="lb">Név: {data.contact.contact_name}</li>
+				<li class="lb">Telefon: {data.contact.contact_phone}</li>
+				<li class="lb">Email: {data.contact.contact_email}</li>
+				<li class="lb">Feljegyzés: {data.contact.contact_note}</li>
+				<li class="lb">Iskola:</li>
 
-					<hgroup>
-						{#each data.schools as sch}
-							<ul class="ac">
-								<hgroup>
-									<li class="ld">
-										<a href="../../lists/schools/{sch.school_id}" class="aa">
-											Név: {sch.school_name}
-										</a>
-									</li>
-									<li class="ld">Telefon: {sch.dir_phone}</li>
-									<li class="ld">Email: {sch.school_email}</li>
-									<li class="ld">Feljegyzés: {sch.note}</li>
-								</hgroup>
-							</ul>
-						{/each}
-					</hgroup>
-				</ul>
-				<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
-			</hgroup>
+				<hgroup>
+					{#each data.schools as sch}
+						<ul class="ac">
+							<hgroup>
+								<li class="ld">
+									<a href="../../lists/schools/{sch.school_id}" class="aa">
+										Név: {sch.school_name}
+									</a>
+								</li>
+								<li class="ld">Telefon: {sch.dir_phone}</li>
+								<li class="ld">Email: {sch.school_email}</li>
+								<li class="ld">Feljegyzés: {sch.note}</li>
+							</hgroup>
+						</ul>
+					{/each}
+				</hgroup>
+			</ul>
+			<a href="#top" class="flower"
+				>&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
+			>
+		</hgroup>
 	</div>
-
 
 	<!-- Contact update form -->
 
@@ -66,39 +74,60 @@
 		<div class="rei">
 			<p>Contact Update</p>
 		</div>
-  	<br>
+		<br />
 		<form action="?/contact" method="post" use:enhance>
 			<div>
 				<label for="name">Name</label>
-				<input type="text" value="{data.contact.contact_name}" name="contactname" id="contactname" required />
+				<input
+					type="text"
+					value={data.contact.contact_name}
+					name="contactname"
+					id="contactname"
+					required
+				/>
 			</div>
 			<div>
 				<label for="email">Email</label>
-				<input type="email" value="{data.contact.contact_email}" name="contactemail" id="contactemail" required />
+				<input
+					type="email"
+					value={data.contact.contact_email}
+					name="contactemail"
+					id="contactemail"
+					required
+				/>
 			</div>
 			<div>
 				<label for="phone">Phone</label>
-				<input type="text" value="{data.contact.contact_phone}" name="contactphone" id="contactphone" required />
+				<input
+					type="text"
+					value={data.contact.contact_phone}
+					name="contactphone"
+					id="contactphone"
+					required
+				/>
 			</div>
-			<br>
+			<br />
 			<div>
 				<label for="message">Note</label>
-				<textarea id="message" value="{data.contact.contact_note}" name="contactmessage" rows="2" cols="50"></textarea>
+				<textarea id="message" name="contactmessage" rows="2" cols="50"
+					>{data.contact.contact_note}</textarea
+				>
 			</div>
-			<br>
+			<br />
 			<div class="second">
 				ACTIVE
 				<input type="checkbox" name="active" bind:checked={yesACT} />
 			</div>
-			<br>
-			<br>
-			<button class="btn" id="btn" type="submit" >Update</button>
-			<br>
+			<br />
+			<br />
+			<button class="btn" id="btn" type="submit">Update</button>
+			<br />
 			<button
 				type="button"
 				onclick={scrollToConnect}
 				id="backToTop"
-				class="contrast outline cgb h44" >Cancel &#10070; Jump to the Top</button>
+				class="contrast outline cgb h44">Cancel &#10070; Jump to the Top</button
+			>
 		</form>
 	</div>
 </div>
