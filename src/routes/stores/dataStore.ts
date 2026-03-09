@@ -199,5 +199,17 @@ export const subjectMap = [
 	{ id: '14', name: 'ELSE*' }
 ] as const;
 
-// Így gyorsan kereshető a név az ID alapján
-export const getSubjectName = (id: string) => subjectMap.find(s => s.id === id)?.name || 'Ismeretlen';
+// Közös típus a Map-ekhez
+interface MapItem {
+  readonly id: string;
+  readonly name: string;
+}
+
+/**
+ * Általános névkereső függvény Map-ekhez.
+ * Használható: getName(dutyMap, '1') -> 'BASIC'
+ */
+export const getName = (map: readonly MapItem[], id: string | null | undefined): string => {
+  if (!id) return '';
+  return map.find((item) => item.id === id)?.name || id;
+};
