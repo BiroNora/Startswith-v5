@@ -2,12 +2,12 @@ import { error, redirect } from '@sveltejs/kit'
 import { db } from '$lib/database'
 import type { Actions, PageServerLoad } from './$types'
 
-const today = new Date()
-today.setDate(today.getDate() - 1)
-
 export const load: PageServerLoad = async ({ locals }) => {
   // 1. Jogosultság ellenőrzése
   if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login');
+
+  const today = new Date()
+  today.setDate(today.getDate() - 1)
 
   // 2. Változók kiszámítása (függvényen belül!)
   const user_duty = locals.user.duty;
@@ -23,7 +23,6 @@ export const load: PageServerLoad = async ({ locals }) => {
   const dir_flag = is_director;
 
   // 3. Adatbázis lekérések
-  const today = new Date();
   today.setHours(0, 0, 0, 0); // Ma éjféltől nézzük a lejáratot
 
   const [activities, regio, city] = await Promise.all([

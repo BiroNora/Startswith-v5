@@ -5,11 +5,11 @@
 
 	let { data, form }: { data: PageData, form: ActionData } = $props();
 
-	let pageName = 'School Details'
-
 	function scrollToConnect() {
-    window.scrollTo({ top: 0 });
+		window.scrollTo({ top: 0 });
   }
+	
+	let pageName = 'School Details'
 </script>
 
 <svelte:head>

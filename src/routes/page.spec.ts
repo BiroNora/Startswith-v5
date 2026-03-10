@@ -11,3 +11,18 @@ describe('/+page.svelte', () => {
 		await expect.element(heading).toBeInTheDocument();
 	});
 });
+
+
+
+/* import { describe, expect, it } from 'vitest';
+import { render, screen } from '@testing-library/svelte';
+// NINCS vitest/browser import!
+import Page from './+page.svelte';
+
+describe('Alap renderelés', () => {
+  it('megjelenik a címsor', () => {
+    render(Page);
+    const heading = screen.getByRole('heading');
+    expect(heading).toBeTruthy();
+  });
+}); */

@@ -10,7 +10,7 @@ import {
 	dutyType,
 	schoolType
 } from '../../../stores/dataStore.js'
-import type { Action, Actions, PageServerLoad } from './$types'
+import type { Actions, PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')

@@ -6,7 +6,7 @@
 	let { data, form }: { data: PageData, form: ActionData } = $props();
 
   // 1. Deklaráljuk az állapotokat alapértelmezett értékkel (üres/false)
-  // Így nincs közvetlen 'data' hivatkozás a $state-ben, elhallgat a hibaüzenet.
+  // Így nincs közvetlen 'data' hivatkozás a $state-ben.
   let yesA = $state(false);
   let yesB = $state(false);
   let yesC = $state(false);

@@ -11,8 +11,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const event_id = Number(params.event_id);
 
-	// A load függvényben is használhatod a közös ellenőrzőt!
-	// Ez egyben le is kéri az eseményt, ha van hozzá jogod.
 	const eventData = await checkEventAccess(locals, event_id);
 
 	if (!eventData) throw error(404, 'Event not found');

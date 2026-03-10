@@ -2,6 +2,7 @@
   let { data } = $props();
 
 	let schools = $derived(data.schools ?? []);
+  
 	let pageName = "My School List";
 </script>
 
