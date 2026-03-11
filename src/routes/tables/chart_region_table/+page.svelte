@@ -1,0 +1,259 @@
+<script lang="ts">
+  import RegionDoughnut from '$lib/components/RegionDoughnut.svelte';
+  import { duty, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
+  import type { PageServerData } from './$types';
+
+  // 1. Adatok fogadása
+  let { data }: { data: PageServerData } = $props();
+
+  // 2. Reaktív állapotok (Rúnák) - A Te változóneveiddel
+  let selectedYear = $state('ALL');
+  let semesterFilter = $state('ALL');
+  let dutyFilter = $state('ALL');
+
+  let regionIntAdm = $state<any[]>([]);
+  let isElementVisible = $state(false);
+  let err_mess = $state(false);
+  let err_mess1 = $state(false);
+
+  // Kijelző változók a "sticky" sorhoz
+  let selYear = $state('');
+  let selSemest = $state('');
+  let selDuty = $state('');
+
+  // 3. Beküldő függvény
+  async function sendDataWithForm(e: Event) {
+    e.preventDefault();
+    err_mess = false;
+    err_mess1 = false;
+
+    try {
+      const response = await fetch('/tables/chart_region_table', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selectedYear,
+          selectedSemester: semesterFilter,
+          selectedDuty: dutyFilter
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        regionIntAdm = result.regionIntAdm;
+
+        if (regionIntAdm.length === 0) {
+            err_mess1 = true;
+        }
+
+        // Frissítjük a kijelzőt
+        selYear = selectedYear;
+        selSemest = semesterFilter;
+        selDuty = dutyFilter;
+        isElementVisible = true;
+      } else {
+        err_mess = true;
+      }
+    } catch (error) {
+      console.error(error);
+      err_mess = true;
+    }
+  }
+
+  // Százalék számító segédfüggvény (calcPerc helyett)
+  function getPercents(counts: number[]) {
+    const total = counts.reduce((a, b) => a + b, 0);
+    return total === 0 ? [] : counts.map(c => Math.round((c / total) * 100));
+  }
+</script>
+
+<svelte:head>
+  <title>CHART_REGION_TABLE</title>
+</svelte:head>
+
+<div class="main" id="top">
+  <hgroup>
+    <h1>Chart Tables* of Events** and Interested Students at Regions</h1>
+    <i>&emsp;*Events only with active and cooperative schools</i>
+    <br />
+    <i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i>
+  </hgroup>
+  <br />
+
+  <form onsubmit={sendDataWithForm}>
+    <div>
+      <label for="year"><i>Select </i> Event Year</label>
+      <select bind:value={selectedYear} id="year">
+        {#each data.distinctYears as year}
+          <option value={year}>{year}</option>
+        {/each}
+      </select>
+    </div>
+
+    <div>
+      <label for="semester"><i>Select </i> Event Semester</label>
+      <select bind:value={semesterFilter} id="semester">
+        {#each semester as sem}
+          <option value={sem}>{sem}</option>
+        {/each}
+      </select>
+    </div>
+
+    <div>
+      <label for="duty"><i>Select </i> Event Duty</label>
+      <select bind:value={dutyFilter} id="duty">
+        {#each duty as d}
+          <option value={d.id}>{d.name}</option>
+        {/each}
+      </select>
+    </div>
+
+    <button class="btn" type="submit"> Confirm </button>
+  </form>
+
+  {#if isElementVisible}
+    <div class="sticky select1" id="stickyLine">
+      <i class="h">Event Year: </i>{selYear} &nbsp;&nbsp;
+      <i>Event Semester: </i>{selSemest} &nbsp;&nbsp;
+      <i>Event Duty: </i>
+      {#each duty as item}
+        {#if selDuty === item.id}{item.name}{/if}
+      {/each}
+      &nbsp;&nbsp;
+    </div>
+  {/if}
+
+  {#if err_mess}
+    <div class="container" style="margin-bottom: 8rem;">
+      <p><i>Something went wrong. Please try it later.</i></p>
+    </div>
+  {/if}
+
+  {#if err_mess1}
+    <div class="container" style="margin-bottom: 8rem;">
+      <p><i>No data available.</i></p>
+    </div>
+  {/if}
+
+  <div class="container charts-section">
+    {#if regionIntAdm.length > 0}
+      <div class="f">
+        <RegionDoughnut
+          data={getPercents(regionIntAdm.map(d => d.intrest_count))}
+          labels={regionIntAdm.map(d => d.region_name)}
+          title="Percentage Proportion of Interested Students at Regions"
+        />
+      </div>
+      <div class="f">
+        <RegionDoughnut
+          data={getPercents(regionIntAdm.map(d => d.intrest_count_status_1))}
+          labels={regionIntAdm.map(d => d.region_name)}
+          title="Percentage Proportion of Admitted Students at Regions"
+        />
+      </div>
+    {/if}
+  </div>
+
+  <a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
+</div>
+
+<style>
+  /* A Te eredeti CSS-ed, egy az egyben! */
+  .main {
+    padding-left: 0.5%;
+    padding-top: 2%;
+    padding-right: 0.5%;
+    font-family: sans-serif;
+  }
+
+  .container {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 8%;
+    padding-top: 2%;
+    padding-bottom: 4%;
+  }
+
+  .charts-section {
+    margin-bottom: 3rem;
+  }
+
+  .f {
+		flex: 1;
+    width: 45%; /* Itt állítottam, hogy kényelmesen elférjenek egymás mellett */
+  }
+
+  .h {
+    padding-left: 2%;
+  }
+
+  i {
+    font-weight: 300;
+  }
+
+  .sticky {
+    background-color: rgb(246, 242, 242);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 40px;
+    width: 100%;
+    padding: 5px;
+    color: #32bea6;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  select {
+    border-radius: 100px;
+    width: 25%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+  }
+
+  .select1 {
+    border-radius: 100px;
+  }
+
+  label {
+    padding-left: 1%;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgb(144, 132, 132);
+    display: block;
+  }
+
+  .btn {
+    border-radius: 100px;
+    width: 25%;
+    background-color: #32bea6;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .btn:hover {
+    background-color: #11a58c;
+  }
+
+  .flower {
+    display: block;
+    text-align: center;
+    font-size: 140%;
+    color: #a0a9a8;
+    padding-bottom: 3%;
+    text-decoration: none;
+    margin-top: 50px;
+  }
+
+  .flower:hover {
+    color: #32bea6;
+  }
+</style>
