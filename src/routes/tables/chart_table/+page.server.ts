@@ -4,8 +4,8 @@ import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user || locals.user.active === false) {
-		throw redirect(302, '/auth/login')
-	}
+    throw redirect(302, '/auth/login')
+  }
 
 	const years = await db.event.findMany({
 		distinct: ['event_year'],
