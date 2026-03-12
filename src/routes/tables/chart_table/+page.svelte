@@ -1,131 +1,192 @@
 <script lang="ts">
-	import { writable } from 'svelte/store'
-	import { channelMap, duty, gradeMap, semester, statusMap, subjectMap } from '../../stores/dataStore'
-	import type { RequestPayload } from './+server'
-	import type { PageServerData } from './$types'
-	import { Chart } from 'chart.js/auto'
+	import {
+		duty,
+		gradeMap,
+		subjectMap
+	} from '../../stores/dataStore';
+	import { Chart } from 'chart.js/auto';
+	import FilterForm from './FilterForm.svelte';
 
-	export let data: PageServerData
-	export const responseData = writable([])
-	export const selectedYear = writable<string>('ALL')
-	export const selectedRegion = writable('ALL')
-	export const selectedCountry = writable('ALL')
+	import type { PageData } from './$types';
+	let { data }: { data: PageData } = $props();
+	let pageName = 'CHART_TABLE';
 
-	const {
-		distinctYears,
-		countries,
-		regions
-	} = data
+	let selYear = $state('');
+	let selSemest = $state('');
+	let selDuty = $state('ALL');
+	let selRegion = $state('ALL');
+	let selCountry = $state('ALL');
+	const countriesArray = $derived(data.distinctCountries || []);
+	const regionsArray = $derived(data.distictRegions || []);
 
-	let pageName = 'CHART_TABLE'
+	const selectedCountryObj = $derived(
+		countriesArray.find((c) => c.country_id === Number(selCountry))
+	);
+	const selectedRegionObj = $derived(
+		regionsArray.find((r) => r.region_id === Number(selRegion))
+	);
+	let isElementVisible = $state(false);
 
-	let semesterFilter = 'ALL'
-	let dutyFilter = 'ALL'
-	let responseDataFormatted: any = null
-	let statusCountry: any = []
-	let statusGrade: any = []
-	let admittedGrade: any = []
-	let subjectIntrest: any = []
-	let subjectAdmitted: any = []
-	let regionIntrest: any = []
-	let regionAdmitted: any = []
-	let channelIntrest: any = []
-	let channelAdmitted: any = []
-	let isElementVisible = false
-	let selYear: any
-	let selSemest: any
-	let selDuty: any
-	let selCountry: any
-	let selRegion: any
-	const distinctYearsArray = distinctYears || []
-	const countriesArray = countries || []
-	const regionsArray = regions || []
-	const gradeMapLength: number = Object.keys(gradeMap).length
-	const subjectMapLength: number = Object.keys(subjectMap).length
-	const gradeNames = Array.from({ length: gradeMapLength }, (_, i) => gradeMap[i].name)
-	const subjectNames = Array.from({ length: subjectMapLength }, (_, i) => subjectMap[i].name)
-	let gradeData: number[] = []
-	let subjectData: number[] = []
-	let gradeColors = [
-		'rgb(251, 2, 71)',
-		'rgb(255, 99, 132)',
-		'rgb(100, 99, 132)',
-		'rgb(54, 162, 235)',
-		'rgb(75, 192, 192)'
-	]
-	let subjectColors = [
-		'rgb(251, 2, 71)',
-		'rgb(255, 216, 132)',
-		'rgb(100, 199, 132)',
-		'rgb(54, 162, 235)',
-		'rgb(75, 192, 192)',
-		'rgb(251, 12, 71)',
-		'rgb(255, 99, 132)',
-		'rgb(100, 99, 132)',
-		'rgb(54, 182, 235)',
-		'rgb(175, 192, 192)',
-		'rgb(252, 169, 3)',
-		'rgb(16, 52, 166)',
-		'rgb(100, 56, 132)',
-		'rgb(54, 162, 135)',
-		'rgb(175, 92, 192)'
-	]
-	let err_mess = false
-	let err_mess1 = false
+	let err_mess = $state(false);
+	let err_mess1 = $state(false);
 
-	$: {
-		$selectedRegion, $selectedCountry
-	}
+	// Chart rúnák (ezek hiányoztak a kódodból!)
+	let chart1Labels = $state<string[]>([]);
+	let chart1Data = $state<any[]>([]);
+	let chart2Labels = $state<string[]>([]);
+	let chart2Data = $state<any>(null);
+	let chart3Labels = $state<string[]>([]);
+	let chart3Data = $state<any>(null);
+	let chart4Labels = $state<string[]>([]);
+	let chart4Data = $state<any>(null);
+	let chart5Labels = $state<string[]>([]);
+	let chart5Data = $state<any>(null);
+	let chart6Labels = $state<string[]>([]);
+	let chart6Data = $state<any>(null);
+	let chart7Labels = $state<string[]>([]);
+	let chart7Data = $state<any>(null);
 
-	interface StatusCountry {
-		country_name: string
-		total_intrest_count: number
-		intrest_count_status_0: number
-		intrest_count_status_1: number
-		intrest_count_status_2: number
-		intrest_count_status_3: number
-		intert: number
-	}
+	let responseDataFormatted: any = null;
 
-	interface RegionIntrest {
-		region_name: string
-		intrest_count: number
-	}
-
-	interface RegionAdmitted {
-		region_name: string
-		intrest_count: number
-	}
-
-	interface ChannelIntrest {
-		channel: string
-		intrest_count: number
-	}
-
-	interface ChannelAdmitted {
-		channel: string
-		intrest_count: number
-	}
+	const gradeMapLength: number = Object.keys(gradeMap).length;
+	const subjectMapLength: number = Object.keys(subjectMap).length;
+	const gradeNames = Array.from({ length: gradeMapLength }, (_, i) => gradeMap[i].name);
+	const subjectNames = Array.from({ length: subjectMapLength }, (_, i) => subjectMap[i].name);
 
 	function calcPerc(x: any, y: any): number {
-		return x !== 0 ? Math.round((x * 100) / y) : 0
-	}
-
-	function updateContent() {
-		selYear = $selectedYear
-		selSemest = semesterFilter
-		selDuty = dutyFilter
-		selCountry = $selectedCountry
-		selRegion = $selectedRegion
-		isElementVisible = true
+		return x !== 0 ? Math.round((x * 100) / y) : 0;
 	}
 
 	// For JSON visualization
 	function formatAndSetResponseData(responseData: any) {
-		responseDataFormatted = JSON.stringify(responseData, null, 2)
+		responseDataFormatted = JSON.stringify(responseData, null, 2);
 	}
 
-	async function sendDataWithForm(event: any) {
+	interface FilterCriteria {
+		selectedYear: string;
+		selectedSemester: string;
+		selectedDuty: any;
+		selectedCountry: any;
+		selectedRegion: any;
+	}
+
+	async function handleFilterUpdate(filters: FilterCriteria) {
+		// 1. Frissítjük a Sticky sáv adatait
+		selYear = filters.selectedYear;
+		selSemest = filters.selectedSemester || 'ALL';
+		selDuty = filters.selectedDuty || 'ALL';
+		selCountry = filters.selectedCountry;
+		selRegion = filters.selectedRegion;
+
+		// 2. Megjelenítjük a sávot
+		isElementVisible = true;
+		err_mess = false;
+		err_mess1 = false;
+
+		const cleanFilters = {
+			selectedSemester: filters.selectedSemester,
+			// Csak akkor konvertálunk számra, ha nem 'ALL'
+			selectedYear: filters.selectedYear === 'ALL' ? null : Number(filters.selectedYear),
+			selectedDuty: filters.selectedDuty,
+			selectedCountry: filters.selectedCountry === 'ALL' ? null : Number(filters.selectedCountry),
+			selectedRegion: filters.selectedRegion === 'ALL' ? null : Number(filters.selectedRegion)
+		};
+
+		console.log('Ez megy a szerverre:', cleanFilters);
+
+		try {
+			// 2. FETCH az SQL adatokért (a te szerver végpontodra)
+			const response = await fetch('/tables/chart_table', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(cleanFilters)
+			});
+
+			if (!response.ok) throw new Error('Szerver hiba');
+
+			const result = await response.json();
+			console.log('A SZERVER ILYEN ADATOKAT KÜLDÖTT:', result);
+
+			console.log(
+				'%c >>> SZERVER VÁLASZA MEGÉRKEZETT <<<',
+				'color: blue; font-size: 15px; font-weight: bold;'
+			);
+			console.log('A kapott objektum kulcsai:', Object.keys(result));
+			console.log('Adatok táblázatosan:');
+			console.table(result.statusCountry); // Ez a leglátványosabb!
+			console.dir(result); // Itt a teljes fa struktúra
+
+			// --- Chart 1: Országos statisztika (Bar) ---
+			chart1Labels = result.statusCountry.map((d: any) => d.country_name);
+			chart1Data = [
+				{
+					label: 'Total Interest',
+					data: result.statusCountry.map((d: any) => d.total_intrest_count),
+					backgroundColor: '#32bea6'
+				}
+			];
+
+			// --- Chart 2: Évfolyamok JAVÍTVA ---
+			// A result.statusGrade egy tömb, aminek az első eleme az adat
+			const gradeData = result.statusGrade && result.statusGrade[0] ? result.statusGrade[0] : {};
+
+			const interestGradeArray = [
+				gradeData.intrest_grade_status_1 || 0,
+				gradeData.intrest_grade_status_2 || 0,
+				gradeData.intrest_grade_status_3 || 0,
+				gradeData.intrest_grade_status_4 || 0,
+				gradeData.intrest_grade_status_5 || 0
+			];
+
+			const totalInterest = interestGradeArray.reduce((sum, val) => sum + val, 0);
+
+			chart2Labels = ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'];
+			chart2Data = interestGradeArray.map((val) =>
+				totalInterest !== 0 ? Math.round((val * 100) / totalInterest) : 0
+			);
+
+			// --- Chart 3: Subject JAVÍTVA ---
+			const sData =
+				result.subjectIntrest && result.subjectIntrest[0] ? result.subjectIntrest[0] : {};
+			chart3Labels = Array.from({ length: 14 }, (_, i) => `Subject ${i + 1}`);
+			chart3Data = Array.from({ length: 14 }, (_, i) => sData[`intrest_work_title_${i + 1}`] || 0);
+			// --- Chart 3: Évfolyamok (Felvettek) százalékos számítása ---
+			const subjectData = result.subjectIntrest[0] || {};
+			const admittedGradeArray = [
+				subjectData.admittedGrade.intrest_grade_status_1 || 0,
+				subjectData.admittedGrade.intrest_grade_status_2 || 0,
+				subjectData.admittedGrade.intrest_grade_status_3 || 0,
+				subjectData.admittedGrade.intrest_grade_status_4 || 0,
+				subjectData.admittedGrade.intrest_grade_status_5 || 0
+			];
+			const totalAdmitted = admittedGradeArray.reduce((sum, val) => sum + val, 0);
+
+			chart3Labels = ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5'];
+			chart3Data = admittedGradeArray.map((val) =>
+				totalAdmitted !== 0 ? Math.round((val * 100) / totalAdmitted) : 0
+			);
+			// Chart 3: Munkakörök/Subject (Doughnut)
+			chart3Labels = Array.from({ length: 14 }, (_, i) => `Subject ${i + 1}`);
+			chart3Data = Array.from(
+				{ length: 14 },
+				(_, i) => result.subjectIntrest[`intrest_work_title_${i + 1}`]
+			);
+
+			// Chart 4: Régiók (Doughnut)
+			chart4Labels = result.regionIntrest.map((r: any) => r.region_name);
+			chart4Data = result.regionIntrest.map((r: any) => r.intrest_count);
+
+			// Üres adat ellenőrzése
+			if (chart1Labels.length === 0) {
+				err_mess1 = true;
+			}
+		} catch (error) {
+			err_mess = true;
+			console.error('Hiba történt:', error);
+		}
+	}
+
+	/* async function sendDataWithForm(event: any) {
 		event.preventDefault()
 		try {
 			const formData: RequestPayload = {
@@ -181,8 +242,8 @@
 			console.error('Error:', error)
 		}
 	}
-
-	function destroyChart() {
+ */
+	/* function destroyChart() {
 
 		const canvasIds: string[] = [
 			'chartCanvas1',
@@ -208,9 +269,9 @@
 				}
 			}
 		})
-  }
+  } */
 
-	function createChart() {
+	/* function createChart() {
 		err_mess = false
 		let chartCanvas1: HTMLCanvasElement | null = document.getElementById(
 			'chartCanvas1'
@@ -576,7 +637,7 @@
 				}
 			}
 		})
-	}
+	} */
 </script>
 
 <svelte:head>
@@ -593,58 +654,9 @@
 	</hgroup>
 	<br />
 
-	<form on:submit={sendDataWithForm} id="top">
-		<div >
-			<label for="year"><i>Select </i> Event Year</label>
-			<select bind:value={$selectedYear} name="year" id="year" class="hidden-textbox">
-				{#each distinctYearsArray as year}
-					<option value={year}>{year} </option>
-				{/each}
-			</select>
-		</div>
+	<FilterForm {data} onFilter={handleFilterUpdate} />
 
-		<div >
-			<label for="semester"><i>Select </i> Event Semester</label>
-			<select bind:value={semesterFilter} name="semester" id="semester" class="hidden-textbox">
-				{#each semester as sem}
-					<option value={sem}>{sem} </option>
-				{/each}
-			</select>
-		</div>
-
-		<div >
-			<label for="duty"><i>Select </i> Event Duty</label>
-			<select bind:value={dutyFilter} name="duty" id="duty" class="hidden-textbox">
-				{#each duty as d}
-					<option value={d.id}>{d.name} </option>
-				{/each}
-			</select>
-		</div>
-
-		<div >
-			<label for="country"><i>Select </i> School Country</label>
-			<select bind:value={$selectedCountry} name="country" id="country" class="hidden-textbox">
-				<option value="ALL">ALL</option>
-				{#each countriesArray as country}
-					<option value={country.country_id}>{country.country_name} </option>
-				{/each}
-			</select>
-		</div>
-
-		<div >
-			<label for="region"><i>Select </i> School Region</label>
-			<select bind:value={$selectedRegion} name="region" id="region" class="hidden-textbox">
-				<option value="ALL">ALL</option>
-				{#each regionsArray as reg}
-					<option value={reg.region_id}>{reg.region_name} </option>
-				{/each}
-			</select>
-		</div>
-
-		<button class="btn" id="btn" type="submit" on:click={updateContent}> Confirm </button>
-	</form>
-
-	 <!--<div class="response-data">
+	<!--<div class="response-data">
 		<pre>{responseDataFormatted}</pre>
 	</div>-->
 
@@ -660,23 +672,15 @@
 			{/each}
 			&nbsp;&nbsp;
 			<i>School Country: </i>
-			{#if selCountry !== 'ALL'}
-				{#each countriesArray as country}
-					{#if country.country_id === selCountry}
-						{country.country_name}
-					{/if}
-				{/each}
+			{#if selectedCountryObj}
+  			{selectedCountryObj.country_name}
 			{:else}
 				ALL
 			{/if}
 			&nbsp;&nbsp;
 			<i>School Region: </i>
-			{#if selRegion !== 'ALL'}
-				{#each regionsArray as region}
-					{#if region.region_id === selRegion}
-						{region.region_name}
-					{/if}
-				{/each}
+			{#if selectedRegionObj}
+				{selectedRegionObj.region_name}
 			{:else}
 				ALL
 			{/if}
@@ -696,7 +700,7 @@
 		</div>
 	{/if}
 
-	<div class="e" style="margin-bottom: 3rem;">
+	<!-- <div class="e" style="margin-bottom: 3rem;">
 		<canvas id="chartCanvas1" />
 	</div>
 	<div class="container" style="margin-bottom: 3rem;">
@@ -720,7 +724,7 @@
 	</div>
 	<div class="e" style="margin-bottom: 3rem;">
 		<canvas id="chartCanvas7" />
-	</div>
+	</div> -->
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
@@ -814,16 +818,16 @@
 	}
 
 	.flower {
-    font-size: 140%;
-    color: #a0a9a8;
-    padding-bottom: 3%;
+		font-size: 140%;
+		color: #a0a9a8;
+		padding-bottom: 3%;
 		text-decoration: none; /* Remove underline */
-  }
+	}
 
-  .flower:hover {
-    font-size: 140%;
-    color: #32bea6;
-    padding-bottom: 3%;
+	.flower:hover {
+		font-size: 140%;
+		color: #32bea6;
+		padding-bottom: 3%;
 		text-decoration: none; /* Remove underline */
-  }
+	}
 </style>

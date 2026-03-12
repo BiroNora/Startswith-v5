@@ -22,12 +22,22 @@
 		if (canvasElement && data && data.length > 0) {
 			if (chart) chart.destroy();
 
+			// Először elkészítjük a tiszta (snapshotolt) adatokat
+      // A $state.snapshot() gondoskodik róla, hogy a Chart.js ne vesszen össze a Svelte-tel
+      const cleanLabels = $state.snapshot(labels);
+
+      // Ha doughnut, akkor a 'data' egy sima számtömb, ha bar, akkor egy objektumtömb
+      const cleanData = $state.snapshot(data);
+
 			// Ha bar chart, akkor több dataset is jöhet, ha doughnut, akkor csak egy
-			const datasets = type === 'doughnut' ? [{ data, backgroundColor: colors }] : data; // Bar chartnál az adatstruktúrát készen kapja
+			const datasets = type === 'doughnut' ? [{ cleanData, backgroundColor: colors }] : cleanData; // Bar chartnál az adatstruktúrát készen kapja
 
 			chart = new Chart(canvasElement, {
 				type: type,
-				data: { labels, datasets },
+				data: {
+          labels: cleanLabels,
+          datasets: datasets
+        },
 				options: {
 					responsive: true,
 					maintainAspectRatio: false,

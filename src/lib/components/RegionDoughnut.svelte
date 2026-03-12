@@ -34,10 +34,10 @@
 			chart = new Chart(canvasElement, {
 				type: 'doughnut',
 				data: {
-					labels: labels,
+					labels: $state.snapshot(labels),
 					datasets: [
 						{
-							data: data,
+							data: $state.snapshot(data),
 							backgroundColor: gradeColors,
 							borderWidth: 1
 						}

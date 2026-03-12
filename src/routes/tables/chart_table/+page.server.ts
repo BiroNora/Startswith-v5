@@ -25,22 +25,22 @@ export const load: PageServerLoad = async ({ locals }) => {
 	distinctYears.sort()
 	distinctYears.unshift('ALL')
 
-	const countries = await db.country.findMany({
+	const distinctCountries = await db.country.findMany({
 		orderBy: { country_name: 'asc' }
 	})
 
-	if (!countries) {
+	if (!distinctCountries) {
 		return fail(400, {
 			error: true,
 			message: 'Something went wrong. Please try it later.'
 		})
 	}
 
-	const regions = await db.region.findMany({
+	const distictRegions = await db.region.findMany({
 		orderBy: { region_name: 'asc' }
 	})
 
-	if (!regions) {
+	if (!distictRegions) {
 		return fail(400, {
 			error: true,
 			message: 'Something went wrong. Please try it later.'
@@ -49,7 +49,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	return {
 		distinctYears,
-		countries,
-		regions
+		distinctCountries,
+		distictRegions
 	}
 }
