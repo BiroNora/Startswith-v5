@@ -19,6 +19,7 @@
 	let chart: Chart | null = null;
 
 	$effect(() => {
+		// console.log(`Chart "${title}" effekt lefut. Adat hossza:`, data?.length);
 		if (canvasElement && data && data.length > 0) {
 			if (chart) chart.destroy();
 
@@ -30,7 +31,7 @@
       const cleanData = $state.snapshot(data);
 
 			// Ha bar chart, akkor több dataset is jöhet, ha doughnut, akkor csak egy
-			const datasets = type === 'doughnut' ? [{ cleanData, backgroundColor: colors }] : cleanData; // Bar chartnál az adatstruktúrát készen kapja
+			const datasets = type === 'doughnut' ? [{ data: cleanData, backgroundColor: colors }] : cleanData; // Bar chartnál az adatstruktúrát készen kapja
 
 			chart = new Chart(canvasElement, {
 				type: type,
