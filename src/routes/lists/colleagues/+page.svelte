@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fuzzySearch, SearchInput } from '$lib/components/filters/index.js';
 	import { dutyMap, dutyType } from '../../stores/dataStore.js';
 	import type { PageData } from './$types';
 
@@ -29,19 +30,17 @@
 			.join(', ');
 	}
 
-	// Szűrt lista - automatikusan újraszámolódik, ha a searchTerm vagy a data.users változik
 	let filteredUsers = $derived(
-		data.users.filter((user) => {
-			if (!user.active) return false;
+    fuzzySearch(
+      data.users.filter(u => u.active), // Csak az aktívakat nézzük
+      searchTerm,
+      (user) => {
+        const dutyText = getDutyLabel(user.on_duty);
+        return `${user.user_name} ${user.user_email} ${user.user_phone} ${dutyText}`;
+      }
+    )
+  );
 
-			const dutyText = getDutyLabel(user.on_duty);
-			const searchStr =
-				`${user.user_name} ${user.user_email} ${user.user_phone} ${dutyText}`.toLowerCase();
-			return searchStr.includes(searchTerm.toLowerCase());
-		})
-	);
-
-	let count = $derived(filteredUsers.length);
 	let pageName = 'Colleagues';
 </script>
 
@@ -53,18 +52,8 @@
 	<h1>StartsWith Colleagues</h1>
 
 	<div class="input-container">
-		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
+		<SearchInput bind:searchTerm count={filteredUsers.length} placeholder="Search for..." />
 	</div>
-
-	{#if searchTerm !== ''}
-		<div class="z">
-			{#if count === 0}
-				&nbsp; No Result
-			{:else}
-				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
-			{/if}
-		</div>
-	{/if}
 
 	<br />
 	<ul id="list">

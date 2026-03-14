@@ -1,20 +1,20 @@
 <script lang="ts">
-	let { data } = $props();
-	let searchTerm = $state('');
+	import { fuzzySearch, SearchInput } from '$lib/components/filters/index.js';
 
-	// Svelte 5 mágia: A szűrt lista automatikusan frissül, ha a searchTerm változik
+	let { data } = $props();
+
+	let searchTerm = $state('');
 	let filteredSchools = $derived(
-		data.schools.filter((s) => {
+		fuzzySearch(data.schools, searchTerm, (s) => {
 			let searchStr = `${s.school_name} ${s.city?.city_name} ${s.region?.region_name} ${s.county?.county_name}`;
 
 			if (s.basic) searchStr += ' basic';
 			if (s.medior) searchStr += ' medior';
 			if (s.high) searchStr += ' high';
 
-			return searchStr.toLowerCase().includes(searchTerm.toLowerCase());
+			return searchStr;
 		})
 	);
-	let count = $derived(filteredSchools.length);
 
 	let pageName = 'School List';
 </script>
@@ -30,18 +30,8 @@
 	</hgroup>
 
 	<div class="input-container">
-		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
+		<SearchInput bind:searchTerm count={filteredSchools.length} placeholder="Search in events..." />
 	</div>
-
-	{#if searchTerm !== ''}
-		<div class="z">
-			{#if count === 0}
-				&nbsp; No Result
-			{:else}
-				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
-			{/if}
-		</div>
-	{/if}
 
 	<br />
 	<ul id="list">
@@ -81,7 +71,7 @@
 	}
 
 	.aa {
-		color: #147263;
+		color: #09c6a7;
 		padding: 2%;
 		font-weight: 480;
 		font-size: 20px;
@@ -101,7 +91,7 @@
 		color: rgb(144, 132, 132);
 		padding-left: 5%;
 		text-indent: -6%;
-		line-height: 1.6;
+		line-height: 1.35;
 	}
 
 	.flower {

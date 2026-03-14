@@ -1,21 +1,18 @@
 <script lang="ts">
 	import { duty } from '../../stores/dataStore';
+	import { FilterForm, StickyFilterBar, StatusMessage } from '$lib/components/filters';
 	import {
+		GenericChart,
 		mapChannelData,
 		mapCountryStatusData,
-		mapGradeData,
 		mapRegionData,
+		mapGradeData,
 		mapSubjectData,
 		type ChartDataDatasets,
 		type ChartDataSimple
-	} from '$lib/components/chartMappers';
-
-	import FilterForm from '../../../lib/components/FilterForm.svelte';
-	import GenericChart from '$lib/components/GenericChart.svelte';
+	} from '$lib/components/charts';
 
 	import type { PageData } from './$types';
-	import StickyFilterBar from '$lib/components/StickyFilterBar.svelte';
-	import StatusMessage from '$lib/components/StatusMessage.svelte';
 
 	let { data }: { data: PageData } = $props();
 	let pageName = 'CHART_TABLE';
@@ -101,7 +98,7 @@
 
 		const cleanFilters = {
 			selectedSemester: filters.selectedSemester === 'ALL' ? null : filters.selectedSemester,
-  		selectedDuty: filters.selectedDuty === 'ALL' ? null : filters.selectedDuty,
+			selectedDuty: filters.selectedDuty === 'ALL' ? null : filters.selectedDuty,
 			selectedYear: filters.selectedYear === 'ALL' ? null : Number(filters.selectedYear),
 			selectedCountry: filters.selectedCountry === 'ALL' ? null : Number(filters.selectedCountry),
 			selectedRegion: filters.selectedRegion === 'ALL' ? null : Number(filters.selectedRegion)
@@ -202,72 +199,70 @@
 	/>
 
 	<StatusMessage error={err_mess} noData={err_mess1}>
-
-	<div class="container c">
-		<GenericChart
-			labels={chart1Data.labels}
-			data={chart1Data.datasets}
-			title="Interested Students and their Status per Country"
-			type="bar"
-		/>
-	</div>
-	<div class="container">
-		<div class="c">
+		<div class="container c">
 			<GenericChart
-				labels={chart2Data.labels}
-				data={chart2Data.data}
-				colors={chart2Data.colors}
-				title="Grade Proportion of Interested Students"
-				type="doughnut"
+				labels={chart1Data.labels}
+				data={chart1Data.datasets}
+				title="Interested Students and their Status per Country"
+				type="bar"
 			/>
 		</div>
-		<div class="c">
+		<div class="container">
+			<div class="c">
+				<GenericChart
+					labels={chart2Data.labels}
+					data={chart2Data.data}
+					colors={chart2Data.colors}
+					title="Grade Proportion of Interested Students"
+					type="doughnut"
+				/>
+			</div>
+			<div class="c">
+				<GenericChart
+					labels={chart3Data.labels}
+					data={chart3Data.data}
+					colors={chart3Data.colors}
+					title="Grade Proportion of Admitted Students"
+					type="doughnut"
+				/>
+			</div>
+		</div>
+		<div class="container">
+			<div class="c">
+				<GenericChart
+					labels={chart4Data.labels}
+					data={chart4Data.data}
+					colors={chart4Data.colors}
+					title="Subject Proportion of Interested Students"
+					type="doughnut"
+				/>
+			</div>
+			<div class="c">
+				<GenericChart
+					labels={chart5Data.labels}
+					data={chart5Data.data}
+					colors={chart5Data.colors}
+					title="Subject Proportion of Admitted Students"
+					type="doughnut"
+				/>
+			</div>
+		</div>
+		<div class="container c">
 			<GenericChart
-				labels={chart3Data.labels}
-				data={chart3Data.data}
-				colors={chart3Data.colors}
-				title="Grade Proportion of Admitted Students"
-				type="doughnut"
+				labels={chart6Data.labels}
+				data={chart6Data.datasets}
+				title="Interested / Admitted Students Are Informed by Which Center"
+				type="bar"
 			/>
 		</div>
-	</div>
-	<div class="container">
-		<div class="c">
+		<div class="container c">
 			<GenericChart
-				labels={chart4Data.labels}
-				data={chart4Data.data}
-				colors={chart4Data.colors}
-				title="Subject Proportion of Interested Students"
-				type="doughnut"
+				labels={chart7Data.labels}
+				data={chart7Data.datasets}
+				title="Interested / Admitted Students Are Informed by Which Channel"
+				type="bar"
 			/>
 		</div>
-		<div class="c">
-			<GenericChart
-				labels={chart5Data.labels}
-				data={chart5Data.data}
-				colors={chart5Data.colors}
-				title="Subject Proportion of Admitted Students"
-				type="doughnut"
-			/>
-		</div>
-	</div>
-	<div class="container c">
-		<GenericChart
-			labels={chart6Data.labels}
-			data={chart6Data.datasets}
-			title="Interested / Admitted Students Are Informed by Which Center"
-			type="bar"
-		/>
-	</div>
-	<div class="container c">
-		<GenericChart
-			labels={chart7Data.labels}
-			data={chart7Data.datasets}
-			title="Interested / Admitted Students Are Informed by Which Channel"
-			type="bar"
-		/>
-	</div>
-
 	</StatusMessage>
 
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>

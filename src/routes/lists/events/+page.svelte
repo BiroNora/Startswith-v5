@@ -1,21 +1,18 @@
 <script lang="ts">
+	import { fuzzySearch, SearchInput } from '$lib/components/filters';
 	import { dateSlugify } from '../../stores/dataStore';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
 	let searchTerm = $state('');
-
-	// Reaktív szűrt lista
 	let filteredEvents = $derived(
-		data.events.filter((ev) =>
-			`${ev.event_name} ${ev.school_name} ${ev.duty_name}`
-				.toLowerCase()
-				.includes(searchTerm.toLowerCase())
-		)
-	);
+    fuzzySearch(data.events, searchTerm, (ev) =>
+      `${ev.event_name} ${ev.school_name} ${ev.duty_name}`
+    )
+  );
 
-	let count = $derived(filteredEvents.length);
+	let count = $derived(data.events.length);
 
 	let pageName = 'My Event List';
 </script>
@@ -31,18 +28,8 @@
 	</hgroup>
 
 	<div class="input-container">
-		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
+		<SearchInput bind:searchTerm count={filteredEvents.length} placeholder="Search in events..." />
 	</div>
-
-	{#if searchTerm !== ''}
-		<div class="z">
-			{#if count === 0}
-				&nbsp; No Result
-			{:else}
-				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
-			{/if}
-		</div>
-	{/if}
 
 	<br />
 	<ul>
@@ -87,7 +74,7 @@
 		padding: 2%;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 23px;
+		font-size: 20px;
 	}
 
 	.li {
@@ -96,7 +83,7 @@
 		color: rgb(144, 132, 132);
 		padding-left: 5%;
 		text-indent: -6%;
-		line-height: 2;
+		line-height: 1.35;
 	}
 
 	.b {

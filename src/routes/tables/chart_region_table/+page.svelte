@@ -1,5 +1,5 @@
 <script lang="ts">
-  import RegionDoughnut from '$lib/components/RegionDoughnut.svelte';
+  import RegionDoughnut from '$lib/components/charts/RegionDoughnut.svelte';
   import { duty, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
   import type { PageServerData } from './$types';
 

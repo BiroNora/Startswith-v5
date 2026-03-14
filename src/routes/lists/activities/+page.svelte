@@ -1,24 +1,19 @@
 <script lang="ts">
 	import { dateSlugify, dutyMap } from '../../stores/dataStore.js';
+	import { SearchInput, fuzzySearch } from '$lib/components/filters';
 
 	let { data, form } = $props<{ data: any; form: any }>();
-	let searchTerm = $state(''); // A keresőmező értéke
-
+	
 	let user_duty_array = $derived(data.user_duty.filter((n: any) => n % 10 !== 0));
 	let user_duties_only = $derived(user_duty_array.map((n: any) => parseInt(String(n)[0], 10)));
 	let dda = $derived(data.dir_duty);
 
+	let searchTerm = $state('');
 	let filteredActivities = $derived(
-		data.activities.filter((act: any) => {
-			const searchStr = searchTerm.toLowerCase();
-			return (
-				act.act_name.toLowerCase().includes(searchStr) ||
-				(act.act_note?.toLowerCase().includes(searchStr) ?? false) ||
-				dateSlugify(String(act.end_date)).toLowerCase().includes(searchStr)
-			);
-		})
-	);
-	let count = $derived(filteredActivities.length);
+    fuzzySearch(data.activities, searchTerm, (act: any) =>
+      `${act.act_name} ${act.act_note ?? ''} ${dateSlugify(String(act.end_date))}`
+    )
+  );
 
 	function scrollToConnect() {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -45,18 +40,8 @@
 		<br />
 
 		<div class="input-container">
-			<input type="search" bind:value={searchTerm} placeholder="Search for..." />
+			<SearchInput bind:searchTerm={searchTerm} count={filteredActivities.length} placeholder="Search activities..." />
 		</div>
-
-		{#if searchTerm !== ''}
-			<div class="z">
-				{#if count === 0}
-					&nbsp; No Result
-				{:else}
-					&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
-				{/if}
-			</div>
-		{/if}
 
 		<br />
 		<ul id="list">
@@ -74,7 +59,7 @@
 									{act.act_note}
 								{/if}
 								{' 🏠 '}
-								{#each dutyMap as item, index (item.id)}
+								{#each dutyMap as item (item.id)}
 									{#if act.on_duty.charAt(0) === item.id}
 										{item.name}:
 									{/if}
@@ -296,10 +281,10 @@
 	}
 
 	.aa {
-		color: #32bea6;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 22px;
+		color: #147263;
+		padding: 2%;
+		font-weight: 480;
+		font-size: 20px;
 	}
 
 	.ab {
@@ -323,7 +308,6 @@
 		text-indent: -6%;
 		color: #282f2e;
 		line-height: 1.35;
-		font-size: 25px;
 	}
 
 	.lia::before {
@@ -355,7 +339,7 @@
 		list-style-type: none; /* Remove default bullet */
 		padding-left: 5%;
 		text-indent: -6%;
-		color: #32bea6; /* Set font color to #32bea6 */
+		color: rgb(144, 132, 132); /* Set font color to #32bea6 */
 		line-height: 1.35;
 	}
 
@@ -438,20 +422,6 @@
 
 	.input-container {
 		position: relative;
-	}
-
-	.clear-button {
-		position: absolute;
-		width: auto;
-		top: 35%;
-		right: 38px;
-		transform: translateY(-50%);
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		font-size: 1.2rem;
-		color: #32bea6;
 	}
 
 	.error {

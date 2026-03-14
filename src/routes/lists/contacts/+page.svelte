@@ -1,19 +1,19 @@
 <script lang="ts">
+	import { fuzzySearch, SearchInput } from '$lib/components/filters';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
 	let searchTerm = $state('');
-
 	let filteredContacts = $derived(
-    data.contacts.filter((c) =>
-    `${c.contact_name} ${c.contact_email} ${c.contact_phone}`
-    .toLowerCase()
-    .includes(searchTerm.toLowerCase())
-  )
-);
-let count = $derived(filteredContacts.length);
-let pageName = 'My Contact List';
+		fuzzySearch(
+			data.contacts,
+			searchTerm,
+			(c) => `${c.contact_name} ${c.contact_email} ${c.contact_phone}`
+		)
+	);
+
+	let pageName = 'My Contact List';
 </script>
 
 <svelte:head>
@@ -24,18 +24,8 @@ let pageName = 'My Contact List';
 	<h1>My Contact List</h1>
 
 	<div class="input-container">
-		<input type="search" bind:value={searchTerm} placeholder="Search for..." />
+		<SearchInput bind:searchTerm count={filteredContacts.length} placeholder="Search for..." />
 	</div>
-
-	{#if searchTerm !== ''}
-		<div class="z">
-			{#if count === 0}
-				&nbsp; No Result
-			{:else}
-				&nbsp; <span>{count}</span> {count === 1 ? 'Result' : 'Results'}
-			{/if}
-		</div>
-	{/if}
 
 	<br />
 	<ul>
@@ -53,8 +43,6 @@ let pageName = 'My Contact List';
 					{/if}
 				</a>
 			</li>
-		{:else}
-			<p class="z">No contacts found.</p>
 		{/each}
 	</ul>
 	<br />
@@ -76,11 +64,8 @@ let pageName = 'My Contact List';
 		font-size: 23px;
 	}
 
-  .z {
-		color: rgb(144, 132, 132);
-		font-size: medium;
-		font-weight: 400;
-		font-style: italic;
+	.input-container {
+		position: relative;
 	}
 
 	.li {
@@ -89,7 +74,7 @@ let pageName = 'My Contact List';
 		color: rgb(144, 132, 132);
 		padding-left: 5%;
 		text-indent: -6%;
-		line-height: 2;
+		line-height: 1.35;
 	}
 
 	strong {
