@@ -13,22 +13,22 @@ export async function POST({ request, locals }) {
 	let queryParams: any[] = [];
 
 	// 2. Dinamikus szűrők hozzáadása
-	// Csak akkor adjuk hozzá, ha nem 'ALL' és nem null/undefined
-	if (selectedYear && selectedYear !== 'ALL') {
+	// Csak akkor adjuk hozzá, ha nem 'ALL'
+	if (selectedYear !== null) {
 		queryParams.push(Number(selectedYear));
 		whereConditions.push(`e.event_year = $${queryParams.length}`);
 	}
 
-	if (selectedSemester && selectedSemester !== 'ALL') {
+	if (selectedSemester !== null) {
 		queryParams.push(selectedSemester);
 		whereConditions.push(`e.semester = $${queryParams.length}`);
 	}
 
-	if (selectedDuty && selectedDuty !== 'ALL') {
+	if (selectedDuty !== null) {
 		queryParams.push(selectedDuty);
 		whereConditions.push(`e.on_duty = $${queryParams.length}`);
 	}
-	
+
 	// Összefűzzük a feltételeket egyetlen stringgé, AND-del elválasztva
 	const finalWhereClause = whereConditions.join(" AND ");
 

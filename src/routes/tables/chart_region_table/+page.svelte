@@ -8,8 +8,8 @@
 
   // 2. Reaktív állapotok (Rúnák) - A Te változóneveiddel
   let selectedYear = $state('ALL');
-  let semesterFilter = $state('ALL');
-  let dutyFilter = $state('ALL');
+  let selectedSemester = $state('ALL');
+  let selectedDuty = $state('ALL');
 
   let regionIntAdm = $state<any[]>([]);
   let isElementVisible = $state(false);
@@ -32,9 +32,9 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          selectedYear,
-          selectedSemester: semesterFilter,
-          selectedDuty: dutyFilter
+          selectedYear: selectedYear === 'ALL' ? null : Number(selectedYear),
+          selectedSemester: selectedSemester === 'ALL' ? null : selectedSemester,
+  		    selectedDuty: selectedDuty === 'ALL' ? null : selectedDuty
         })
       });
 
@@ -48,8 +48,8 @@
 
         // Frissítjük a kijelzőt
         selYear = selectedYear;
-        selSemest = semesterFilter;
-        selDuty = dutyFilter;
+        selSemest = selectedSemester;
+        selDuty = selectedDuty;
         isElementVisible = true;
       } else {
         err_mess = true;
@@ -92,7 +92,7 @@
 
     <div>
       <label for="semester"><i>Select </i> Event Semester</label>
-      <select bind:value={semesterFilter} id="semester">
+      <select bind:value={selectedSemester} id="semester">
         {#each semester as sem}
           <option value={sem}>{sem}</option>
         {/each}
@@ -101,7 +101,7 @@
 
     <div>
       <label for="duty"><i>Select </i> Event Duty</label>
-      <select bind:value={dutyFilter} id="duty">
+      <select bind:value={selectedDuty} id="duty">
         {#each duty as d}
           <option value={d.id}>{d.name}</option>
         {/each}
@@ -112,12 +112,12 @@
   </form>
 
   {#if isElementVisible}
-    <div class="sticky select1" id="stickyLine">
-      <i class="h">Event Year: </i>{selYear} &nbsp;&nbsp;
-      <i>Event Semester: </i>{selSemest} &nbsp;&nbsp;
-      <i>Event Duty: </i>
+    <div class="sticky" id="stickyLine">
+      <i class="black">Event Year: </i>&nbsp;{selYear} &nbsp;&nbsp;
+      <i class="black">Event Semester: </i>&nbsp;{selSemest} &nbsp;&nbsp;
+      <i class="black">Event Duty: </i>
       {#each duty as item}
-        {#if selDuty === item.id}{item.name}{/if}
+        &nbsp;{#if selDuty === item.id}{item.name}{/if}
       {/each}
       &nbsp;&nbsp;
     </div>
@@ -182,11 +182,7 @@
 
   .f {
 		flex: 1;
-    width: 45%; /* Itt állítottam, hogy kényelmesen elférjenek egymás mellett */
-  }
-
-  .h {
-    padding-left: 2%;
+    width: 45%;
   }
 
   i {
@@ -194,30 +190,27 @@
   }
 
   .sticky {
-    background-color: rgb(246, 242, 242);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    height: 40px;
-    width: 100%;
-    padding: 5px;
-    color: #32bea6;
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-  }
+    display: flex;            /* Bekapcsolja a flexboxot */
+    align-items: center;      /* Függőlegesen középre igazít */
+    justify-content: flex-start;
+		background-color: rgb(246, 242, 242);
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		height: 40px;
+		width: 100%;
+		padding: 5px;
+		color: #32bea6;
+		border-radius: 100px;
+		font-size: clamp(0.7rem, 0.8rem, 1.2rem);
+    white-space: nowrap;      /* Ne törje több sorba */
+    overflow: hidden;         /* Ami nem fér be, tűnjön el */
+    text-overflow: ellipsis;
+	}
 
-  select {
-    border-radius: 100px;
-    width: 25%;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-  }
-
-  .select1 {
-    border-radius: 100px;
-  }
+	.black {
+		color:rgb(112, 108, 108);
+	}
 
   label {
     padding-left: 1%;
