@@ -10,10 +10,12 @@
 		type ChartDataSimple
 	} from '$lib/components/chartMappers';
 
-	import FilterForm from './FilterForm.svelte';
+	import FilterForm from '../../../lib/components/FilterForm.svelte';
 	import GenericChart from '$lib/components/GenericChart.svelte';
 
 	import type { PageData } from './$types';
+	import StickyFilterBar from '$lib/components/StickyFilterBar.svelte';
+	import StatusMessage from '$lib/components/StatusMessage.svelte';
 
 	let { data }: { data: PageData } = $props();
 	let pageName = 'CHART_TABLE';
@@ -97,11 +99,10 @@
 		err_mess = false;
 		err_mess1 = false;
 
-		// Server adatok konvertálása (csak akkor konvertálunk számra, ha nem 'ALL')
 		const cleanFilters = {
-			selectedSemester: filters.selectedSemester,
+			selectedSemester: filters.selectedSemester === 'ALL' ? null : filters.selectedSemester,
+  		selectedDuty: filters.selectedDuty === 'ALL' ? null : filters.selectedDuty,
 			selectedYear: filters.selectedYear === 'ALL' ? null : Number(filters.selectedYear),
-			selectedDuty: filters.selectedDuty,
 			selectedCountry: filters.selectedCountry === 'ALL' ? null : Number(filters.selectedCountry),
 			selectedRegion: filters.selectedRegion === 'ALL' ? null : Number(filters.selectedRegion)
 		};
@@ -186,49 +187,23 @@
 	</hgroup>
 	<br />
 
-	<FilterForm {data} onFilter={handleFilterUpdate} />
+	<div id="top">
+		<FilterForm {data} onFilter={handleFilterUpdate} />
+	</div>
 
-	{#if isElementVisible}
-		<div class="sticky select1" id="stickyLine">
-			<i class="h">Event Year: </i>{selYear} &nbsp;&nbsp;
-			<i>Event Semester: </i>{selSemest} &nbsp;&nbsp;
-			<i>Event Duty: </i>
-			{#each duty as item (item.id)}
-				{#if selDuty === item.id}
-					{item.name}
-				{/if}
-			{/each}
-			&nbsp;&nbsp;
-			<i>School Country: </i>
-			{#if selectedCountryObj}
-				{selectedCountryObj.country_name}
-			{:else}
-				ALL
-			{/if}
-			&nbsp;&nbsp;
-			<i>School Region: </i>
-			{#if selectedRegionObj}
-				{selectedRegionObj.region_name}
-			{:else}
-				ALL
-			{/if}
-			&nbsp;&nbsp;
-		</div>
-	{/if}
+	<StickyFilterBar
+		{isElementVisible}
+		{selYear}
+		{selSemest}
+		{selDuty}
+		{duty}
+		{selectedCountryObj}
+		{selectedRegionObj}
+	/>
 
-	{#if err_mess}
-		<div class="container" style="margin-bottom: 8rem;">
-			<p><i>Something went wrong. Please try it later.</i></p>
-		</div>
-	{/if}
+	<StatusMessage error={err_mess} noData={err_mess1}>
 
-	{#if err_mess1}
-		<div class="container" style="margin-bottom: 8rem;">
-			<p><i>No data available.</i></p>
-		</div>
-	{/if}
-
-	<div class="e" style="margin-bottom: 3rem;">
+	<div class="container c">
 		<GenericChart
 			labels={chart1Data.labels}
 			data={chart1Data.datasets}
@@ -236,8 +211,8 @@
 			type="bar"
 		/>
 	</div>
-	<div class="container" style="margin-bottom: 3rem;">
-		<div class="f">
+	<div class="container">
+		<div class="c">
 			<GenericChart
 				labels={chart2Data.labels}
 				data={chart2Data.data}
@@ -246,7 +221,7 @@
 				type="doughnut"
 			/>
 		</div>
-		<div class="f">
+		<div class="c">
 			<GenericChart
 				labels={chart3Data.labels}
 				data={chart3Data.data}
@@ -256,8 +231,8 @@
 			/>
 		</div>
 	</div>
-	<div class="container" style="margin-bottom: 3rem;">
-		<div class="f">
+	<div class="container">
+		<div class="c">
 			<GenericChart
 				labels={chart4Data.labels}
 				data={chart4Data.data}
@@ -266,7 +241,7 @@
 				type="doughnut"
 			/>
 		</div>
-		<div class="f">
+		<div class="c">
 			<GenericChart
 				labels={chart5Data.labels}
 				data={chart5Data.data}
@@ -276,7 +251,7 @@
 			/>
 		</div>
 	</div>
-	<div class="e" style="margin-bottom: 3rem;">
+	<div class="container c">
 		<GenericChart
 			labels={chart6Data.labels}
 			data={chart6Data.datasets}
@@ -284,7 +259,7 @@
 			type="bar"
 		/>
 	</div>
-	<div class="e" style="margin-bottom: 3rem;">
+	<div class="container c">
 		<GenericChart
 			labels={chart7Data.labels}
 			data={chart7Data.datasets}
@@ -292,6 +267,9 @@
 			type="bar"
 		/>
 	</div>
+
+	</StatusMessage>
+
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
@@ -300,6 +278,7 @@
 		padding-left: 0.5%;
 		padding-top: 2%;
 		padding-right: 0.5%;
+		font-family: sans-serif;
 	}
 
 	.container {
@@ -308,65 +287,29 @@
 		flex-direction: row;
 		justify-content: space-around;
 		gap: 8%;
-		padding-top: 2%;
-		padding-bottom: 4%;
+		padding-top: 10%;
+		padding-bottom: 10%;
 	}
 
-	.e {
+	.c {
 		width: 90%;
-		padding-top: 4%;
-		padding-bottom: 3%;
-		padding-left: 3%;
-	}
-
-	.f {
-		width: 90%;
-	}
-
-	.g {
-		width: 90%;
-		padding-top: 4%;
-		padding-bottom: 3%;
-		padding-left: 3%;
-	}
-
-	.h {
-		padding-left: 2%;
 	}
 
 	i {
 		font-weight: 300;
 	}
 
-	.sticky {
-		background-color: rgb(246, 242, 242);
-		position: sticky;
-		top: 0;
-		z-index: 1;
-		height: 40px;
-		width: 100%;
-		padding: 5px;
-		color: #32bea6;
-	}
-
-	.select1 {
-		border-top-left-radius: 100px;
-		border-top-right-radius: 100px;
-		border-bottom-left-radius: 100px;
-		border-bottom-right-radius: 100px;
-	}
-
 	.flower {
+		display: block;
+		text-align: center;
 		font-size: 140%;
 		color: #a0a9a8;
 		padding-bottom: 3%;
 		text-decoration: none; /* Remove underline */
+		margin-top: 50px;
 	}
 
 	.flower:hover {
-		font-size: 140%;
 		color: #32bea6;
-		padding-bottom: 3%;
-		text-decoration: none; /* Remove underline */
 	}
 </style>

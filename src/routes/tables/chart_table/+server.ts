@@ -5,11 +5,11 @@ function buildWhereClause(filters: any): Prisma.Sql {
   const { selectedYear, selectedSemester, selectedDuty, selectedCountry, selectedRegion } = filters;
   const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE` ];
 
-  if (selectedYear && selectedYear !== 'ALL') conditions.push(Prisma.sql`e.event_year = ${selectedYear}`);
-  if (selectedSemester && selectedSemester !== 'ALL') conditions.push(Prisma.sql`e.semester = ${selectedSemester}`);
-  if (selectedDuty && selectedDuty !== 'ALL') conditions.push(Prisma.sql`e.on_duty = ${selectedDuty}`);
-  if (selectedCountry && selectedCountry !== 'ALL') conditions.push(Prisma.sql`i.country_id = ${Number(selectedCountry)}`);
-  if (selectedRegion && selectedRegion !== 'ALL') conditions.push(Prisma.sql`i.region_id = ${Number(selectedRegion)}`);
+  if (selectedYear !== null)      conditions.push(Prisma.sql`e.event_year = ${selectedYear}`);
+  if (selectedSemester !== null)  conditions.push(Prisma.sql`e.semester = ${selectedSemester}`);
+  if (selectedDuty !== null)      conditions.push(Prisma.sql`e.on_duty = ${selectedDuty}`);
+  if (selectedCountry !== null)   conditions.push(Prisma.sql`i.country_id = ${Number(selectedCountry)}`);
+  if (selectedRegion !== null)    conditions.push(Prisma.sql`i.region_id = ${Number(selectedRegion)}`);
 
   return Prisma.join(conditions, ' AND ');
 }
