@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { duty, semester } from '../../routes/stores/dataStore';
+	import { duty, semester } from '../../../routes/stores/dataStore';
 
 	let { data, onFilter } = $props();
 

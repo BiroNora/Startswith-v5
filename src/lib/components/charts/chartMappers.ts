@@ -1,5 +1,7 @@
 // src/lib/components/chartMappers.ts
-import { channelMap, gradeMap, statusMap, subjectMap } from "../../routes/stores/dataStore";
+
+import { channelMap, gradeMap, statusMap, subjectMap } from "../../../routes/stores/dataStore";
+
 
 const SUBJECT_COLORS = [
   '#32bea6', '#87a7c4', '#f2c461', '#fb0247', '#5d2b6e',
@@ -93,7 +95,7 @@ export function mapGradeData(data: any): ChartDataSimple {
   const values: number[] = [];
   const labels: string[] = [];
 
-  gradeMap.forEach((grade) => {
+  gradeMap.forEach((grade: { id: string | number; name: string }) => {
     const key = `intrest_grade_status_${grade.id}`;
     values.push(item[key] || 0);
     labels.push(grade.name);
@@ -125,7 +127,7 @@ export function mapSubjectData(data: any): ChartDataSimple {
 
   // 2. Adatok kinyerése és nevek hozzárendelése a subjectMap alapján
   // Ez biztosítja, hogy pontosan azokat a kulcsokat keressük, amik a mapben vannak
-  subjectMap.forEach((subject) => {
+  subjectMap.forEach((subject: { id: string | number; name: string }) => {
     const workTitleKey = `intrest_work_title_${subject.id}`;
 
     values.push(item[workTitleKey] || 0);
