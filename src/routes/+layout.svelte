@@ -199,9 +199,4 @@
     color: #32BEA6;
     font-weight: 600;
   }
-
-  .dropdown > .b:focus + .dropdown-content a {
-    opacity: 1;
-    transform: translate(0);
-  }
 </style>
