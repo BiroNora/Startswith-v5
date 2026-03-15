@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
-	import { dutyMap } from '../../stores/dataStore'
+	import { dutyMap, eyeClosed, eyeOpen } from '../../stores/dataStore'
 	import type { ActionData, PageData } from './$types'
 	let { data, form }: { data: PageData, form: ActionData } = $props();
 
+	let showPassword = $state(false);
 
 	let yesB = $state(true);
   let yesM = $state(false);
@@ -88,11 +89,21 @@
 		</div>
 		<div>
 			<label for="password1">Password</label>
-			<input type="password" name="password1" id="password1" required />
+			<div class="password-wrapper">
+				<input id="password1" name="password1" type={showPassword ? 'text' : 'password'} required />
+				<button type="button" class="eye-toggle" onclick={() => (showPassword = !showPassword)} tabindex="-1">
+					{@html showPassword ? eyeOpen : eyeClosed }
+				</button>
+			</div>
 		</div>
 		<div>
 			<label for="password2">Confirm Password</label>
-			<input type="password" name="password2" id="password2" required />
+			<div class="password-wrapper">
+				<input id="password2" name="password2" type={showPassword ? 'text' : 'password'} required />
+				<button type="button" class="eye-toggle" onclick={() => (showPassword = !showPassword)} tabindex="-1">
+					{@html showPassword ? eyeOpen : eyeClosed }
+				</button>
+			</div>
 		</div>
 
 		{#if form?.user}
@@ -119,6 +130,38 @@
 </div>
 
 <style>
+/* --- JELSZÓ INPUTON BELÜLI GOMB --- */
+	.password-wrapper {
+		position: relative; /* Ez teszi lehetővé, hogy a gomb "ráragadjon" az inputra */
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+	.password-wrapper input {
+		width: 100%;
+		padding-right: 60px; /* Hely a gombnak az inputon belül */
+	}
+
+	.eye-toggle {
+		position: absolute;
+		right: 15px;
+		background: transparent !important; /* Semmi kék háttér */
+		border: none !important; /* Semmi keret */
+		color: #83918f;
+		cursor: pointer;
+		font-size: 14px;
+		font-weight: bold;
+		padding: 0;
+		z-index: 10;
+		box-shadow: none !important;
+	}
+
+	.eye-toggle:hover {
+		background: transparent !important;
+		color: #83918f;
+	}
+	/* --- EDDIG --- */
 	.rei p {
 		position: relative;
 		line-height: normal;

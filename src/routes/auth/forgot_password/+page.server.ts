@@ -35,22 +35,32 @@ export const actions: Actions = {
     })
 
     // Send a password reset email with the link containing the resetToken
-    const resetLink = `http://localhost:5173/auth/reset-password?${resetToken}`
+    const resetLink = `http://localhost:5173/auth/reset-password?token=${resetToken}`
 
 
     // Use this transporter for sending emails
     const transporter = nodemailer.createTransport({
-      host: 'localhost',
+      host: '127.0.0.1',
       port: 1025, // The default MailHog SMTP port
       secure: false, // Use SSL, false for TLS
+      auth: {
+        user: 'user',
+        pass: 'pass'
+      }
     })
 
     try {
       await transporter.sendMail({
-        from: 'startswith@stsw.com',
+        from: '"Startswith" <startswith@stsw.com>',
         to: userEmail,
         subject: 'Password Reset',
         text: `Kattints a linkre a jelszó visszaállításához: ${resetLink}`,
+        html: `
+          <h1>Jelszó visszaállítás</h1>
+          <p>Kérted a jelszavad visszaállítását.</p>
+          <a href="${resetLink}">Kattints ide az új jelszó megadásához</a>
+          <p>A link 5 percig érvényes.</p>
+        `
       })
       return { sent: true }
     } catch (error) {

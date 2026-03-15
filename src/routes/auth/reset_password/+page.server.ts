@@ -5,25 +5,29 @@ import bcrypt from 'bcryptjs'
 import { isStrongPassword } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ url }) => {
-  const token = url.searchParams.get('token') || url.search.slice(1);
+  // A linkből kiszedjük a tokent: http://localhost:5173/auth/reset-password?token=XYZ
+  const token = url.searchParams.get('token');
 
   if (!token) {
-    return redirect(302, '../reset-password-error')
+    return redirect(302, '/auth/forgot_password')
   }
 
   const user = await db.user.findFirst({
-    where: { resetToken: token },
+    where: {
+      resetToken: token,
+      resetTokenExpiry: { gt: new Date() } // Csak akkor érvényes, ha a lejárati idő nagyobb, mint "most"
+    }
   })
 
-  if (user && user.active === true && user.resetTokenExpiry && new Date(user.resetTokenExpiry) >= new Date()) {
-    return {
-      isValid: true,
-      userEmail: user.user_email,
-      token: token // Visszaadjuk a tokent is a biztonság kedvéért
-    }
+  if (!user) {
+    return { isValid: false };
   }
 
-  return { isValid: false, userEmail: '' }
+  return {
+    isValid: true,
+    userEmail: user.user_email,
+    token: token
+  };
 }
 
 export const actions: Actions = {
@@ -37,17 +41,24 @@ export const actions: Actions = {
       return fail(400, { credentials: true })
     }
 
-    // generate new auth token just in case
-    await db.user.update({
-      where: { user_email: email },
-      data: {
-        user_password: await bcrypt.hash(password, 10), // Figyelj a mezőnévre a sémádban!
-        userAuthToken: crypto.randomUUID(),
-        resetToken: null, // Töröljük a tokent, hogy ne lehessen újra felhasználni
-        resetTokenExpiry: null
-      }
-    })
+    // 2. Mentés
+    try {
+      await db.user.update({
+        where: { user_email: email },
+        data: {
+          // JAVÍTÁS: A sémád szerint passwordHash a mező neve!
+          passwordHash: await bcrypt.hash(password, 10),
+          userAuthToken: crypto.randomUUID(), // Biztonság: minden más eszközről kiléptetjük
+          resetToken: null,       // Felhasználtuk, töröljük
+          resetTokenExpiry: null  // Lejárati időt is ürítjük
+        }
+      })
+    } catch (err) {
+      console.error("Hiba mentéskor:", err);
+      return fail(500, { dbError: true });
+    }
 
-    throw redirect(302, '/auth/login')
+    // 3. Siker! Irány a login
+    throw redirect(303, '/auth/login')
   }
 }

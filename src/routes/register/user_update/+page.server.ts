@@ -40,18 +40,11 @@ const user: Action = async ({ request, locals }) => {
   const sessionUserEmail = locals.user.email;
 
   const data = await request.formData()
-  const user_email = String(data.get('email'))
-
-  // 1. E-mail ütközés vizsgálata (csak ha változtatni akarja)
-  if (user_email !== sessionUserEmail) {
-    const existingUser = await db.user.findUnique({ where: { user_email } })
-    if (existingUser) return fail(400, { user: true })
-  }
 
   // 2. Alapadatok kinyerése
-  const user_name = String(data.get('name'))
-  const nationality = String(data.get('nationality'))
-  const user_phone = String(data.get('phone'))
+  const user_name = data.get('name') ? String(data.get('name')) : undefined;
+  const nationality = data.get('nationality') ? String(data.get('nationality')) : undefined;
+  const user_phone = data.get('phone') ? String(data.get('phone')) : undefined;
 
   const basic = Boolean(data.get('basic'))
   const reB = String(data.get('regB'))
@@ -81,7 +74,7 @@ const user: Action = async ({ request, locals }) => {
   const password2 = data.get('password2')
   let passwordUpdateData = {};
 
-  if (password1) {
+  if (password1 && String(password1).trim() !== "") {
     if (password1 !== password2) return fail(400, { invalid: true });
     if (!isStrongPassword(String(password1))) return fail(400, { passw: true });
 
@@ -95,11 +88,10 @@ const user: Action = async ({ request, locals }) => {
   await db.user.update({
     where: { user_email: sessionUserEmail },
     data: {
-      user_name,
-      user_email, // Itt frissül az új emailre, ha változott
-      nationality,
-      user_phone,
-      on_duty,
+      user_name,    // Ha undefined, marad a régi
+      nationality,  // Ha undefined, marad a régi
+      user_phone,   // Ha undefined, marad a régi
+      on_duty,      // Ezt mindig frissítjük a form alapján
       ...passwordUpdateData,
       active: true,
       active_by: 'self'

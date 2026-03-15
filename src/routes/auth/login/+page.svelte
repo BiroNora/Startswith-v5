@@ -1,9 +1,11 @@
 <script lang="ts">
-  import type { ActionData } from './$types'
+	import { eyeClosed, eyeOpen } from '../../stores/dataStore';
+	import type { ActionData } from './$types';
 
-  export let form: ActionData
+	let { form }: { form: ActionData } = $props();
 
-  let pageName="LOGIN"
+	let showPassword = $state(false);
+	let pageName = 'LOGIN';
 </script>
 
 <svelte:head>
@@ -11,80 +13,107 @@
 </svelte:head>
 
 <div class="main">
-  <h1>Login</h1>
+	<h1>Login</h1>
 
-  <form action="?/login" method="POST">
-    <div class="w">
-      <label for="email">Email</label>
-      <input id="email" name="email" type="email" required />
-    </div>
+	<form action="?/login" method="POST">
+		<div class="w">
+			<label for="email">Email</label>
+			<input id="email" name="email" type="email" required />
+		</div>
 
-    <div class="w">
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" required />
-    </div>
+		<div class="w">
+			<label for="password">Password</label>
+			<div class="password-wrapper">
+				<input id="password" name="password" type={showPassword ? 'text' : 'password'} required />
+				<button type="button" class="eye-toggle" onclick={() => (showPassword = !showPassword)} tabindex="-1">
+					{@html showPassword ? eyeOpen : eyeClosed }
+				</button>
+			</div>
+		</div>
 
-    {#if form?.invalid}
-      <p class="error">Email address and password are required.</p>
-    {/if}
+		{#if form?.invalid}
+			<p class="error">Email address and password are required.</p>
+		{/if}
 
-    {#if form?.credentials}
-      <p class="error">Wrong credentials.</p>
-    {/if}
+		{#if form?.credentials}
+			<p class="error">Wrong credentials.</p>
+		{/if}
 
-    <button
-      class="btn"
-      id="btn"
-      type="submit"
-      >
-      Login
-    </button>
-  </form>
-  <a
-    href="../auth/forgot_password"
-    role="button"
-    class="cgb h44 btn-outline secondary outline"
-    >
-    Forgot Password?
-  </a>
+		<button class="btn" id="btn" type="submit"> Login </button>
+	</form>
+	<a href="../auth/forgot_password" role="button" class="cgb h44 btn-outline secondary outline">
+		Forgot Password?
+	</a>
 </div>
 
 <style>
-  .main {
-    padding-left: 2%;
-    padding-top: 2%;
-    padding-right: 0.5%;
-    width: 100%;
-  }
+	.main {
+		padding-left: 2%;
+		padding-top: 2%;
+		padding-right: 0.5%;
+		width: 100%;
+	}
 
-  .w {
-    width: 25%;
-  }
+	.w {
+		width: 25%;
+	}
+	/* --- JELSZÓ INPUTON BELÜLI GOMB --- */
+	.password-wrapper {
+		position: relative; /* Ez teszi lehetővé, hogy a gomb "ráragadjon" az inputra */
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
 
-  .h44 {
+	.password-wrapper input {
+		width: 100%;
+		padding-right: 60px; /* Hely a gombnak az inputon belül */
+	}
+
+	.eye-toggle {
+		position: absolute;
+		right: 15px;
+		background: transparent !important; /* Semmi kék háttér */
+		border: none !important; /* Semmi keret */
+		color: #83918f;
+		cursor: pointer;
+		font-size: 14px;
+		font-weight: bold;
+		padding: 0;
+		z-index: 10;
+		box-shadow: none !important;
+	}
+
+	.eye-toggle:hover {
+		background: transparent !important;
+		color: #83918f;
+	}
+	/* --- EDDIG --- */
+
+	.h44 {
 		color: #83918f;
 		border-color: #83918f;
 	}
 
-  input {
+	input {
 		border-top-left-radius: 100px;
-    border-top-right-radius: 100px;
+		border-top-right-radius: 100px;
 		border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
+		border-bottom-right-radius: 100px;
 	}
 
-  label {
+	label {
 		padding-left: 1%;
 		font-size: 22px;
 		font-weight: 400;
 		color: rgb(144, 132, 132);
 	}
 
-  .btn {
+	.btn {
 		border-top-left-radius: 100px;
-    border-top-right-radius: 100px;
+		border-top-right-radius: 100px;
 		border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
+		border-bottom-right-radius: 100px;
 		width: 25%;
 		background-color: #32bea6;
 	}
@@ -93,24 +122,24 @@
 		background-color: #11a58c;
 	}
 
-  .btn-outline {
+	.btn-outline {
 		border-top-left-radius: 100px;
-    border-top-right-radius: 100px;
+		border-top-right-radius: 100px;
 		border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
+		border-bottom-right-radius: 100px;
 		width: 25%;
-    border-color: #32bea6;
+		border-color: #32bea6;
 	}
 
 	.btn-outline:hover {
 		border-color: #6c7776;
 	}
 
-  .error {
-    color: tomato;
-    text-align: center;
-    font-style: italic;
-    font-weight: 500;
-    width: 25%;
-  }
+	.error {
+		color: tomato;
+		text-align: center;
+		font-style: italic;
+		font-weight: 500;
+		width: 25%;
+	}
 </style>
