@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Snippet } from "svelte";
+
 	let {
 		isElementVisible,
 		selYear,
@@ -6,8 +8,18 @@
 		selDuty,
 		duty,
 		selectedCountryObj,
-		selectedRegionObj
-	} = $props();
+		selectedRegionObj,
+		children
+	} = $props<{
+    isElementVisible: boolean;
+    selYear: string;
+    selSemest: string;
+    selDuty: string;
+    duty: any;
+    selectedCountryObj: any;
+    selectedRegionObj: any;
+    children?: Snippet; // <--- A kérdőjeltől lesz OPCIONÁLIS
+  }>();
 </script>
 
 {#if isElementVisible}
@@ -35,6 +47,8 @@
 			&nbsp;ALL
 		{/if}
 		&nbsp;&nbsp;
+
+		{@render children()}
 	</div>
 {/if}
 
