@@ -299,9 +299,7 @@
 		text-align: center;
 		font-size: 140%;
 		color: #a0a9a8;
-		padding-bottom: 3%;
 		text-decoration: none; /* Remove underline */
-		margin-top: 50px;
 	}
 
 	.flower:hover {

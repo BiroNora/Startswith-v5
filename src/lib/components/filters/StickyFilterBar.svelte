@@ -18,7 +18,7 @@
     duty: any;
     selectedCountryObj: any;
     selectedRegionObj: any;
-    children?: Snippet; // <--- A kérdőjeltől lesz OPCIONÁLIS
+    children?: Snippet;
   }>();
 </script>
 
@@ -48,7 +48,7 @@
 		{/if}
 		&nbsp;&nbsp;
 
-		{@render children()}
+		{@render children?.()}
 	</div>
 {/if}
 

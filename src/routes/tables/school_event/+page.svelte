@@ -268,12 +268,12 @@
 		<tbody>
 			{#each filteredSchools as school}
 				<tr>
-					<td id="nameCell" class="c">{school.user_names}</td>
+					<td id="nameCell" class="c z">{school.user_names}</td>
 					<td class="c w">{school.country_name}</td>
 					<td class="c w">{school.region_name}</td>
 					<td class="c w">{school.county_name}</td>
-					<td class="c">{school.city_name}</td>
-					<td class="centered-link c h">
+					<td class="c z">{school.city_name}</td>
+					<td class="centered-link c h z">
 						<a href="../lists/all_schools/{school.school_id}" target="_blank" class="h">
 							{school.school_name}
 						</a>
@@ -296,12 +296,12 @@
 						<td></td>
 					{/if}
 
-					<td class="c">{school.event_count}</td>
-					<td class="c">{school.sum_estimated_student}</td>
-					<td class="c">{school.total_intrest_count_status_0}</td>
-					<td class="c">{school.total_intrest_count_status_1}</td>
-					<td class="c">{school.total_intrest_count_status_2}</td>
-					<td class="c">{school.total_intrest_count_status_3}</td>
+					<td class="c z">{school.event_count}</td>
+					<td class="c z">{school.sum_estimated_student}</td>
+					<td class="c z">{school.total_intrest_count_status_0}</td>
+					<td class="c z">{school.total_intrest_count_status_1}</td>
+					<td class="c z">{school.total_intrest_count_status_2}</td>
+					<td class="c z">{school.total_intrest_count_status_3}</td>
 				</tr>
 			{/each}
 		</tbody>
@@ -344,12 +344,12 @@
 		font-weight: 600;
 	}
 
-	.j {
-		padding-left: 1%;
-	}
-
 	.v {
 		font-size: 17px;
+	}
+
+	.z {
+		font-size: small;
 	}
 
 	.w {
@@ -396,71 +396,7 @@
 		padding-top: 10px;
   }
 
-	.sticky {
-		background-color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    height: 40px;
-    width: 100%;
-		padding: 5px;
-		color: #32bea6;
-	}
-
 	.input-container {
 		position: relative;
 	}
-
-	.container {
-		display: flex; /* or inline-flex */
-		width: 100%;
-		flex-direction: row;
-		justify-content: space-around;
-		gap: 8%;
-		padding-top: 2%;
-		padding-bottom: 4%;
-	}
-
-	.clear-button {
-		position: absolute;
-		width: auto;
-		top: 35%;
-		right: 38px;
-		transform: translateY(-50%);
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		font-size: 1.2rem;
-		color: #32bea6;
-	}
-
-	select {
-		border-top-left-radius: 100px;
-    border-top-right-radius: 100px;
-		border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
-		width: 25%;
-	}
-
-	label {
-		padding-left: 1%;
-		font-size: 22px;
-		font-weight: 400;
-		color: rgb(144, 132, 132);
-	}
-
-	.btn {
-		border-top-left-radius: 100px;
-    border-top-right-radius: 100px;
-		border-bottom-left-radius: 100px;
-    border-bottom-right-radius: 100px;
-		width: 25%;
-		background-color: #32bea6;
-	}
-
-	.btn:hover {
-		background-color: #11a58c;
-	}
-
 </style>

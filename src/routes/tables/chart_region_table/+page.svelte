@@ -135,7 +135,7 @@
     </div>
   {/if}
 
-  <div class="container charts-section">
+  <div class="container">
     {#if regionIntAdm.length > 0}
       <div class="f">
         <RegionDoughnut
@@ -170,20 +170,34 @@
     display: flex;
     width: 100%;
     flex-direction: row;
-    justify-content: space-around;
-    gap: 8%;
-    padding-top: 2%;
-    padding-bottom: 4%;
-  }
+    /* Ez teszi őket középre és osztja el az üres helyet egyenlően */
+    justify-content: center;
+    /* Vagy használd a space-evenly-t, ha azt akarod, hogy a széleken is ugyanannyi hely legyen */
+    /* justify-content: space-evenly; */
 
-  .charts-section {
-    margin-bottom: 3rem;
-  }
+    align-items: center;    /* Függőlegesen is középre igazítja őket, ha nem egyforma magasak */
+    gap: 5%;                /* Csökkentettem a gap-et, hogy biztosan elférjenek egymás mellett */
+    padding-top: 4%;
+    padding-bottom: 3%;
+    box-sizing: border-box; /* Hogy a padding ne növelje meg a 100% szélességet */
+}
 
-  .f {
-		flex: 1;
-    width: 45%;
-  }
+.f {
+    /* Fontos: adjunk nekik egy fix vagy rugalmas szélességet, hogy ne nyomják össze egymást */
+    flex: 0 1 40%;
+    min-width: 300px; /* Megakadályozza, hogy túl kicsik legyenek mobilon */
+    display: flex;
+    justify-content: center;
+}
+
+  select {
+		border-radius: 100px;
+		width: 25%;
+		padding: 8px;
+		margin: 10px 0;
+		border: 1px solid #ccc;
+	}
+
 
   i {
     font-weight: 300;
@@ -238,12 +252,10 @@
 
   .flower {
     display: block;
-    text-align: center;
+		text-align: center;
     font-size: 140%;
     color: #a0a9a8;
-    padding-bottom: 3%;
     text-decoration: none;
-    margin-top: 50px;
   }
 
   .flower:hover {
