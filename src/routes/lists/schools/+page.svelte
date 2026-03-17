@@ -36,7 +36,7 @@
 		<h4 class="z">Number of schools:&nbsp;{schools.length}</h4>
 	</hgroup>
 
-	<div class="input-container">
+	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredSchools.length} placeholder="Search in events..." />
 	</div>
 
@@ -68,7 +68,6 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		padding: 2%;

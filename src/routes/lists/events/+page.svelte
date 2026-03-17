@@ -7,10 +7,12 @@
 
 	let searchTerm = $state('');
 	let filteredEvents = $derived(
-    fuzzySearch(data.events, searchTerm, (ev) =>
-      `${ev.event_name} ${ev.school_name} ${ev.duty_name}`
-    )
-  );
+		fuzzySearch(
+			data.events,
+			searchTerm,
+			(ev) => `${ev.event_name} ${ev.school_name} ${ev.duty_name}`
+		)
+	);
 
 	let count = $derived(data.events.length);
 
@@ -27,43 +29,42 @@
 		<h4 class="z">Number of events:&nbsp;{count}</h4>
 	</hgroup>
 
-	<div class="input-container">
+	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredEvents.length} placeholder="Search in events..." />
 	</div>
 
 	<br />
 	<ul>
-    {#each filteredEvents as ev (ev.event_id)}
-        {@const isInProgress = data.eventIdsInProgress.includes(ev.event_id)}
-        <li class="li">
-            <a href="../lists/events/{ev.event_id}" class="aa">
-                {dateSlugify(String(ev.closing_date))}
+		{#each filteredEvents as ev (ev.event_id)}
+			{@const isInProgress = data.eventIdsInProgress.includes(ev.event_id)}
+			<li class="li">
+				<a href="../lists/events/{ev.event_id}" class="aa">
+					{dateSlugify(String(ev.closing_date))}
 
-                {#if isInProgress}
-                    <span> 🚧 </span>
-                {:else}
-                    <span class="d"> ❧ </span>
-                {/if}
+					{#if isInProgress}
+						<span> 🚧 </span>
+					{:else}
+						<span class="d"> ❧ </span>
+					{/if}
 
-                {ev.event_name}
-                {' 🏠 '}
-                {ev.school_name}
-                <span class="d"> ❧ </span>
-                {ev.duty_name}
+					{ev.event_name}
+					{' 🏠 '}
+					{ev.school_name}
+					<span class="d"> ❧ </span>
+					{ev.duty_name}
 
-                {#if isInProgress}
-                    <span class="b"> STUDENTS IN PROGRESS</span>
-                {/if}
-            </a>
-        </li>
-    {/each}
-    </ul>
+					{#if isInProgress}
+						<span class="b"> STUDENTS IN PROGRESS</span>
+					{/if}
+				</a>
+			</li>
+		{/each}
+	</ul>
 	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		padding: 2%;

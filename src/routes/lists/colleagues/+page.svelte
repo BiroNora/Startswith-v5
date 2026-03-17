@@ -31,15 +31,15 @@
 	}
 
 	let filteredUsers = $derived(
-    fuzzySearch(
-      data.users.filter(u => u.active), // Csak az aktívakat nézzük
-      searchTerm,
-      (user) => {
-        const dutyText = getDutyLabel(user.on_duty);
-        return `${user.user_name} ${user.user_email} ${user.user_phone} ${dutyText}`;
-      }
-    )
-  );
+		fuzzySearch(
+			data.users.filter((u) => u.active), // Csak az aktívakat nézzük
+			searchTerm,
+			(user) => {
+				const dutyText = getDutyLabel(user.on_duty);
+				return `${user.user_name} ${user.user_email} ${user.user_phone} ${dutyText}`;
+			}
+		)
+	);
 
 	let pageName = 'Colleagues';
 </script>
@@ -51,7 +51,7 @@
 <div id="top" class="main">
 	<h1>StartsWith Colleagues</h1>
 
-	<div class="input-container">
+	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredUsers.length} placeholder="Search for..." />
 	</div>
 
@@ -77,7 +77,6 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		font-weight: 400;

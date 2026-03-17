@@ -170,10 +170,11 @@
 		<FilterForm {data} onFilter={handleFilterUpdate} />
 	</div>
 
-	<div class="input-container">
-		<SearchInput bind:searchTerm={searchTerm} count={filteredSchools.length} placeholder="Search in events..." />
+	<div class="search-input">
+		<SearchInput bind:searchTerm count={filteredSchools.length} placeholder="Search in events..." />
 	</div>
 
+	<br />
 	<StickyFilterBar
 		{isElementVisible}
 		{selYear}
@@ -310,7 +311,7 @@
 
 <style>
 	.c {
-		text-align: center
+		text-align: center;
 	}
 
 	.b {
@@ -347,21 +348,22 @@
 	}
 
 	.w {
-		font-size:xx-small;
+		font-size: xx-small;
 	}
 
 	table {
-    border-collapse: collapse;
-    width: 100%;
-  }
+		border-collapse: collapse;
+		width: 100%;
+	}
 
-  th, td {
-    padding: 8px;
-    text-align: left;
-  }
+	th,
+	td {
+		padding: 8px;
+		text-align: left;
+	}
 
 	tr:nth-child(even) {
-  	background-color: #f2f2f2;
+		background-color: #f2f2f2;
 	}
 
 	i {
@@ -370,11 +372,11 @@
 
 	.centered-link {
 		height: 100%; /* Optional: If you want the link to take up the full height of the cell */
-		display:table-cell;
-		align-items:center;
-		justify-content:space-around;
+		display: table-cell;
+		align-items: center;
+		justify-content: space-around;
 		flex-direction: column;
-		text-align:center;
+		text-align: center;
 		vertical-align: middle;
 		width: 100%;
 		border: none; /* Remove border */
@@ -383,10 +385,10 @@
 	}
 
 	th {
-    background-color:#fafdfd;
-    position: sticky;
-    top: 40px;
-    z-index: 2;
+		background-color: #fafdfd;
+		position: sticky;
+		top: 40px;
+		z-index: 2;
 		padding-top: 10px;
-  }
+	}
 </style>

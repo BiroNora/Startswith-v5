@@ -10,10 +10,12 @@
 
 	let searchTerm = $state('');
 	let filteredActivities = $derived(
-    fuzzySearch(data.activities, searchTerm, (act: any) =>
-      `${act.act_name} ${act.act_note ?? ''} ${dateSlugify(String(act.end_date))}`
-    )
-  );
+		fuzzySearch(
+			data.activities,
+			searchTerm,
+			(act: any) => `${act.act_name} ${act.act_note ?? ''} ${dateSlugify(String(act.end_date))}`
+		)
+	);
 
 	function scrollToConnect() {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -39,8 +41,12 @@
 		</hgroup>
 		<br />
 
-		<div class="input-container">
-			<SearchInput bind:searchTerm={searchTerm} count={filteredActivities.length} placeholder="Search activities..." />
+		<div class="search-input">
+			<SearchInput
+				bind:searchTerm
+				count={filteredActivities.length}
+				placeholder="Search activities..."
+			/>
 		</div>
 
 		<br />
@@ -274,7 +280,6 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #147263;
 		padding: 2%;

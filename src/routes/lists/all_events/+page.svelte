@@ -23,7 +23,7 @@
 <div class="main">
 	<h1>Event List</h1>
 
-	<div class="input-container">
+	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredEvents.length} placeholder="Search in events..." />
 	</div>
 
@@ -48,7 +48,6 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #147263;
 		padding: 2%;

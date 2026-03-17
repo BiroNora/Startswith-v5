@@ -23,7 +23,7 @@
 <div class="main">
 	<h1>My Contact List</h1>
 
-	<div class="input-container">
+	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredContacts.length} placeholder="Search for..." />
 	</div>
 
@@ -50,7 +50,6 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		padding: 2%;
