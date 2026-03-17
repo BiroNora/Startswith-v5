@@ -130,38 +130,6 @@
 </div>
 
 <style>
-/* --- JELSZÓ INPUTON BELÜLI GOMB --- */
-	.password-wrapper {
-		position: relative; /* Ez teszi lehetővé, hogy a gomb "ráragadjon" az inputra */
-		width: 100%;
-		display: flex;
-		align-items: center;
-	}
-
-	.password-wrapper input {
-		width: 100%;
-		padding-right: 60px; /* Hely a gombnak az inputon belül */
-	}
-
-	.eye-toggle {
-		position: absolute;
-		right: 15px;
-		background: transparent !important; /* Semmi kék háttér */
-		border: none !important; /* Semmi keret */
-		color: #83918f;
-		cursor: pointer;
-		font-size: 14px;
-		font-weight: bold;
-		padding: 0;
-		z-index: 10;
-		box-shadow: none !important;
-	}
-
-	.eye-toggle:hover {
-		background: transparent !important;
-		color: #83918f;
-	}
-	/* --- EDDIG --- */
 	.rei p {
 		position: relative;
 		line-height: normal;
@@ -203,11 +171,6 @@
 
 	.dir {
 		padding-bottom: 15px;
-	}
-
-	.btn {
-		margin-bottom: 0;
-		background-color: #32bea6;
 	}
 
 	.error {

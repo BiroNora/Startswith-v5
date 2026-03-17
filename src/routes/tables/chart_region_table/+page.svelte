@@ -80,7 +80,7 @@
   </hgroup>
   <br />
 
-  <form onsubmit={sendDataWithForm}>
+  <form onsubmit={sendDataWithForm} class="width-25">
     <div>
       <label for="year"><i>Select </i> Event Year</label>
       <select bind:value={selectedYear} id="year">
@@ -184,7 +184,6 @@
 
   select {
 		border-radius: 100px;
-		width: 25%;
 		padding: 8px;
 		margin: 10px 0;
 		border: 1px solid #ccc;
@@ -194,26 +193,6 @@
   i {
     font-weight: 300;
   }
-
-  .sticky {
-    display: flex;            /* Bekapcsolja a flexboxot */
-    align-items: center;      /* Függőlegesen középre igazít */
-    justify-content: flex-start;
-		background-color: rgb(246, 242, 242);
-		position: sticky;
-		top: 0;
-		z-index: 1;
-		height: 40px;
-		width: 100%;
-		padding: 5px;
-		color: #32bea6;
-		border-radius: 100px;
-		font-size: clamp(0.7rem, 0.8rem, 1.2rem);
-    white-space: nowrap;      /* Ne törje több sorba */
-    overflow: hidden;         /* Ami nem fér be, tűnjön el */
-    text-overflow: ellipsis;
-	}
-
 	.black {
 		color:rgb(112, 108, 108);
 	}
@@ -224,21 +203,5 @@
     font-weight: 400;
     color: rgb(144, 132, 132);
     display: block;
-  }
-
-  .btn {
-    border-radius: 100px;
-    width: 25%;
-    background-color: #32bea6;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    margin-top: 10px;
-  }
-
-  .btn:hover {
-    background-color: #11a58c;
   }
 </style>

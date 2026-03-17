@@ -19,6 +19,14 @@
 	width: 100%;
 }
 
+.reg-container {
+  display: flex;           /* Bekapcsolja a rugalmas elrendezést */
+  justify-content: center; /* Vízszintesen középre tesz */
+  align-items: center;     /* Függőlegesen középre tesz */
+  min-height: 100vh;      /* A képernyő teljes magasságát figyelembe veszi */
+  width: 100%;
+}
+
 .input-container {
 	flex-direction: column; /* Egymás alá rakja az elemeket */
 	align-items: flex-start; /* Balra igazítja őket */
@@ -95,7 +103,19 @@ input::placeholder {
 	text-overflow: ellipsis;
 }
 
-.btn-rounded {
+.width-25 {
+	width: 100%;
+	max-width: 400px;
+}
+
+input {
+	width: 100%; /* Alapból töltse ki a rendelkezésre álló helyet (mobilon szuper) */
+	max-width: 400px;
+	border-radius: 100px;
+	font-size: 0.8rem;
+}
+
+.btn {
 	border-radius: 100px;
 	background-color: var(--primary-green);
 	color: white;
@@ -103,10 +123,30 @@ input::placeholder {
 	padding: 0.2rem 0.4rem;
 	cursor: pointer;
 	transition: background 0.2s;
+	outline: none;
 }
 
 .btn-rounded:hover {
 	background-color: var(--hover-green);
+}
+
+.btn-outline {
+	border-radius: 100px;
+	transition: background 0.2s;
+	border-color: #32bea6;
+}
+
+.btn-outline:hover {
+	border-color: #6c7776;
+}
+
+.btn-forgot {
+	width: 100%; /* Alapból töltse ki a rendelkezésre álló helyet (mobilon szuper) */
+	max-width: 400px;
+	border-radius: 100px;
+	background-color: white;
+	color: var(--secondary-gray-cool);
+	border-color: var(--primary-green);
 }
 
 .chart-container-shared {
@@ -122,7 +162,14 @@ body {
 	-moz-osx-font-smoothing: grayscale; /* Firefox/Mac finomítás */
 	text-rendering: optimizeLegibility;
 }
-//body
-{
-	background-color: red !important;
+.error {
+	color: tomato;
+	text-align: center;
+	font-style: italic;
+	font-weight: 500;
+	width: 25%;
 }
+
+/*body {
+	background-color: red !important;
+} */

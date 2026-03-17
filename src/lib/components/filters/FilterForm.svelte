@@ -24,7 +24,7 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} id="top">
+<form onsubmit={handleSubmit} id="top" class="width-25">
 	<div>
 		<label for="year"><i>Select </i> Event Year</label>
 		<select bind:value={selectedYear} name="year" id="year" class="hidden-textbox">
@@ -87,7 +87,6 @@
 
 	select {
 		border-radius: 100px;
-		width: 25%;
 		padding: 8px;
 		margin: 10px 0;
 		border: 1px solid #ccc;
@@ -100,19 +99,4 @@
 		color: rgb(144, 132, 132);
 	}
 
-	.btn {
-		border-radius: 100px;
-		width: 25%;
-		background-color: #32bea6;
-		color: white;
-		padding: 10px;
-		border: none;
-		cursor: pointer;
-		font-size: 18px;
-		margin-top: 10px;
-	}
-
-	.btn:hover {
-		background-color: #11a58c;
-	}
 </style>
