@@ -1,8 +1,128 @@
-@import '@fontsource/poppins'
+@import '@fontsource/poppins';
+
+:root {
+	--primary-green: #32bea6;
+	--hover-green: #11a58c;
+	--secondary-gray-cool: #83918f; /* Hideg, kékes szürke */
+	--secondary-gray-warm: #908484;
+}
+
+.main {
+	padding: 2% 2% 0 2%;
+	width: 100%;
+}
+
+.main-chart {
+	padding-left: 0.5%;
+	padding-top: 2%;
+	padding-right: 0.5%;
+	width: 100%;
+}
+
+.input-container {
+	flex-direction: column; /* Egymás alá rakja az elemeket */
+	align-items: flex-start; /* Balra igazítja őket */
+	position: relative;
+	width: 100%;
+}
+
+input::placeholder {
+	color: var(--secondary-gray-cool);
+}
+
+/* --- Chartnál a virág motívum --- */
+.flower {
+	display: block;
+	text-align: center;
+	font-size: 1rem;
+	color: var(--secondary-gray-cool);
+	text-decoration: none; /* Remove underline */
+}
+
+.flower:hover {
+	color: var(--primary-green);
+}
+
+/* --- JELSZÓ INPUTON BELÜLI GOMB --- */
+.password-wrapper {
+	position: relative; /* Ez teszi lehetővé, hogy a gomb "ráragadjon" az inputra */
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.password-wrapper input {
+	width: 100%;
+	padding-right: 60px; /* Hely a gombnak az inputon belül */
+}
+
+.eye-toggle {
+	position: absolute;
+	right: 15px;
+	background: transparent !important; /* Semmi kék háttér */
+	border: none !important; /* Semmi keret */
+	color: var(--secondary-gray-cool);
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0;
+	z-index: 10;
+	box-shadow: none !important;
+}
+
+.eye-toggle:hover {
+	background: transparent !important;
+	color: var(--secondary-gray-cool);
+}
+/* --- EDDIG --- */
+
+.sticky {
+	display: flex; /* Bekapcsolja a flexboxot */
+	align-items: center; /* Függőlegesen középre igazít */
+	justify-content: flex-start;
+	background-color: rgb(246, 242, 242);
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	height: 40px;
+	width: 100%;
+	padding: 5px;
+	color: #32bea6;
+	border-radius: 100px;
+	font-size: clamp(0.7rem, 0.8rem, 1.2rem);
+	white-space: nowrap; /* Ne törje több sorba */
+	overflow: hidden; /* Ami nem fér be, tűnjön el */
+	text-overflow: ellipsis;
+}
+
+.btn-rounded {
+	border-radius: 100px;
+	background-color: var(--primary-green);
+	color: white;
+	border: none;
+	padding: 0.2rem 0.4rem;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.btn-rounded:hover {
+	background-color: var(--hover-green);
+}
+
+.chart-container-shared {
+	display: flex;
+	justify-content: space-evenly;
+	gap: 5%;
+	padding: 5% 0;
+}
 
 body {
-  font-family: 'Poppins', sans-serif;
-  -webkit-font-smoothing: antialiased; /* Safari/Chrome finomítás */
-  -moz-osx-font-smoothing: grayscale; /* Firefox/Mac finomítás */
-  text-rendering: optimizeLegibility;
+	font-family: 'Poppins', sans-serif;
+	-webkit-font-smoothing: antialiased; /* Safari/Chrome finomítás */
+	-moz-osx-font-smoothing: grayscale; /* Firefox/Mac finomítás */
+	text-rendering: optimizeLegibility;
+}
+//body
+{
+	background-color: red !important;
 }

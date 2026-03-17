@@ -174,7 +174,7 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
+<div class="main-chart">
 	<hgroup>
 		<h1>Chart Tables* of Events** and Interested Students</h1>
 		<i>&emsp;*Events only with active and cooperative schools</i>
@@ -269,12 +269,6 @@
 </div>
 
 <style>
-	.main {
-		padding-left: 0.5%;
-		padding-top: 2%;
-		padding-right: 0.5%;
-		font-family: sans-serif;
-	}
 
 	.container {
 		display: flex; /* or inline-flex */
@@ -294,15 +288,5 @@
 		font-weight: 300;
 	}
 
-	.flower {
-		display: block;
-		text-align: center;
-		font-size: 140%;
-		color: #a0a9a8;
-		text-decoration: none; /* Remove underline */
-	}
 
-	.flower:hover {
-		color: #32bea6;
-	}
 </style>

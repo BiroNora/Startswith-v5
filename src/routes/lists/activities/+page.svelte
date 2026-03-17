@@ -3,7 +3,7 @@
 	import { SearchInput, fuzzySearch } from '$lib/components/filters';
 
 	let { data, form } = $props<{ data: any; form: any }>();
-	
+
 	let user_duty_array = $derived(data.user_duty.filter((n: any) => n % 10 !== 0));
 	let user_duties_only = $derived(user_duty_array.map((n: any) => parseInt(String(n)[0], 10)));
 	let dda = $derived(data.dir_duty);
@@ -274,11 +274,6 @@
 </div>
 
 <style>
-	.main {
-		padding-left: 5%;
-		padding-top: 2%;
-		padding-right: 5%;
-	}
 
 	.aa {
 		color: #147263;
@@ -401,27 +396,9 @@
 		transform: translateY(520vh); /* Move the element down one viewport height (vh) */
 	}
 
-	.flower {
-		font-size: 140%;
-		color: #a0a9a8;
-		padding-top: 1%;
-		text-decoration: none; /* Remove underline */
-	}
-
-	.flower:hover {
-		font-size: 140%;
-		color: #32bea6;
-		padding-top: 1%;
-		text-decoration: none; /* Remove underline */
-	}
-
 	.h44 {
 		color: #83918f;
 		border-color: #83918f;
-	}
-
-	.input-container {
-		position: relative;
 	}
 
 	.error {

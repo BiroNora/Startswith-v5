@@ -25,12 +25,6 @@
 </div>
 
 <style>
-  .input-container {
-    flex-direction: column; /* Egymás alá rakja az elemeket */
-    align-items: flex-start; /* Balra igazítja őket */
-    position: relative;
-    width: 100%;
-  }
 
   .z {
 		color: rgb(144, 132, 132);

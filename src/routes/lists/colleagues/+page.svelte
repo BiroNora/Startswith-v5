@@ -77,11 +77,6 @@
 </div>
 
 <style>
-	.main {
-		padding-left: 5%;
-		padding-top: 2%;
-		padding-right: 5%;
-	}
 
 	.aa {
 		color: #32bea6;
@@ -103,37 +98,5 @@
 		padding-left: 5%;
 		text-indent: -6%;
 		line-height: 2;
-	}
-
-	.input-container {
-		position: relative;
-	}
-
-	.clear-button {
-		position: absolute;
-		width: auto;
-		top: 35%;
-		right: 38px;
-		transform: translateY(-50%);
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		font-size: 1.2rem;
-		color: #32bea6;
-	}
-
-	.flower {
-		font-size: 140%;
-		color: #a0a9a8;
-		padding-top: 1%;
-		text-decoration: none; /* Remove underline */
-	}
-
-	.flower:hover {
-		font-size: 140%;
-		color: #32bea6;
-		padding-top: 1%;
-		text-decoration: none; /* Remove underline */
 	}
 </style>

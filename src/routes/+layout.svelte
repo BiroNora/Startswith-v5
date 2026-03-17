@@ -2,6 +2,7 @@
   import '@picocss/pico'
 	import { enhance } from '$app/forms'
   let { data, children } = $props();
+  import '../app.css';
 </script>
 
 <div class="m">

@@ -156,7 +156,7 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
+<div class="main-chart">
 	<hgroup>
 		<h1>Search on the Base of Schools* and their Events**</h1>
 		<i>&emsp;*Active and cooperative schools only with Startswith contact</i>
@@ -309,12 +309,6 @@
 </div>
 
 <style>
-  .main {
-    padding-left: 0.5%;
-    padding-top: 2%;
-    padding-right: 0.5%;
-  }
-
 	.c {
 		text-align: center
 	}
@@ -395,8 +389,4 @@
     z-index: 2;
 		padding-top: 10px;
   }
-
-	.input-container {
-		position: relative;
-	}
 </style>

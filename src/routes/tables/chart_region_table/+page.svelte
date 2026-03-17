@@ -71,7 +71,7 @@
   <title>CHART_REGION_TABLE</title>
 </svelte:head>
 
-<div class="main" id="top">
+<div class="main-chart" id="top">
   <hgroup>
     <h1>Chart Tables* of Events** and Interested Students at Regions</h1>
     <i>&emsp;*Events only with active and cooperative schools</i>
@@ -158,14 +158,6 @@
 </div>
 
 <style>
-  /* A Te eredeti CSS-ed, egy az egyben! */
-  .main {
-    padding-left: 0.5%;
-    padding-top: 2%;
-    padding-right: 0.5%;
-    font-family: sans-serif;
-  }
-
   .container {
     display: flex;
     width: 100%;
@@ -248,17 +240,5 @@
 
   .btn:hover {
     background-color: #11a58c;
-  }
-
-  .flower {
-    display: block;
-		text-align: center;
-    font-size: 140%;
-    color: #a0a9a8;
-    text-decoration: none;
-  }
-
-  .flower:hover {
-    color: #32bea6;
   }
 </style>

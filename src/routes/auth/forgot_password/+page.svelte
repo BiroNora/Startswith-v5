@@ -40,13 +40,6 @@
 </div>
 
 <style>
-  .main {
-    padding-left: 0.5%;
-    padding-top: 2%;
-    padding-right: 0.5%;
-    width: 100%;
-  }
-
   .w {
     width: 25%;
   }

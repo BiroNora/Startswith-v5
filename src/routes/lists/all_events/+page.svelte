@@ -48,21 +48,12 @@
 </div>
 
 <style>
-	.main {
-		padding-left: 5%;
-		padding-top: 2%;
-		padding-right: 5%;
-	}
 
 	.aa {
 		color: #147263;
 		padding: 2%;
 		font-weight: 480;
 		font-size: 20px;
-	}
-
-  .input-container {
-		position: relative;
 	}
 
 	.li {
@@ -72,19 +63,5 @@
 		padding-left: 5%;
 		text-indent: -6%;
 		line-height: 1.35;
-	}
-
-	.flower {
-		font-size: 140%;
-		color: #a0a9a8;
-		padding-bottom: 3%;
-		text-decoration: none; /* Remove underline */
-	}
-
-	.flower:hover {
-		font-size: 140%;
-		color: #32bea6;
-		padding-bottom: 3%;
-		text-decoration: none; /* Remove underline */
 	}
 </style>

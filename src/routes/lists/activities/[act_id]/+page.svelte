@@ -81,11 +81,6 @@
 </div>
 
 <style>
-	.main {
-		padding-left: 5%;
-		padding-top: 2%;
-		padding-right: 5%;
-	}
 
 	.aa {
 		color: #32bea6;

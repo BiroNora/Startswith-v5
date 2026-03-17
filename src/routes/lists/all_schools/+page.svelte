@@ -64,11 +64,6 @@
 </div>
 
 <style>
-	.main {
-		padding-left: 5%;
-		padding-top: 2%;
-		padding-right: 5%;
-	}
 
 	.aa {
 		color: #09c6a7;
@@ -94,20 +89,6 @@
 		line-height: 1.35;
 	}
 
-	.flower {
-		font-size: 140%;
-		color: #a0a9a8;
-		padding-bottom: 3%;
-		text-decoration: none; /* Remove underline */
-	}
-
-	.flower:hover {
-		font-size: 140%;
-		color: #32bea6;
-		padding-bottom: 3%;
-		text-decoration: none; /* Remove underline */
-	}
-
 	.s {
 		font-size: 18px;
 		font-weight: 500;
@@ -125,24 +106,6 @@
 		font-size: medium;
 		font-weight: 400;
 		font-style: italic;
-	}
-
-	.input-container {
-		position: relative;
-	}
-
-	.clear-button {
-		position: absolute;
-		width: auto;
-		top: 35%;
-		right: 38px;
-		transform: translateY(-50%);
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-		font-size: 1.2rem;
-		color: #32bea6;
 	}
 
 	i {
