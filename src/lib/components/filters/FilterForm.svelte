@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { duty, semester } from '../../../routes/stores/dataStore';
 
 	let { data, onFilter } = $props();
@@ -25,7 +24,7 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} id="top" use:enhance class="width-400">
+<form onsubmit={handleSubmit} id="top" class="width-400">
 	<div>
 		<label for="year"><i>Select </i> &nbsp;&nbsp;Event Year</label>
 		<select bind:value={selectedYear} name="year" id="year" class="hidden-textbox">

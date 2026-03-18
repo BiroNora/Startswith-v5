@@ -43,14 +43,14 @@
 
 <div class="grid">
 	<div class="rei">
-		<p>School Register</p>
+		<p class="black">School Register</p>
 	</div>
 	<br />
 	<form action="?/school" method="post" use:enhance>
 		<fieldset>
-			<legend class="n">Location</legend>
+			<legend>Location</legend>
 			<p class="notice">
-				Please note: if country / region / county /city <i>does not exist</i> in the list,
+				Please note: if country / region / county /city <i class="note">does not exist</i> in the list,
 				<a class="aa" href="/register/location">use this link</a> before the registration.
 			</p>
 
@@ -126,8 +126,9 @@
 			<input type="text" name="website" id="website" required />
 		</div>
 		<br />
-		<div>
-			<input type="checkbox" name="iskA" bind:checked={yesA} />
+		<div class="black">
+			<div class="black">
+			<input  type="checkbox" name="iskA" bind:checked={yesA} />
 			ÁLTALÁNOS ISKOLA
 		</div>
 		<br />
@@ -200,8 +201,10 @@
 			<input type="checkbox" name="iskO" bind:checked={yesO} />
 			NEM BESOROLT *
 		</div>
-		<p><i class="iii">* please leave a comment</i></p>
-		<div class="first">
+		<p><i class="iiii">* please leave a comment</i></p>
+		</div>
+
+		<div class="first black">
 			<div>
 				<input type="checkbox" name="bas" bind:checked={yesBAS} />
 				BASIC
@@ -216,9 +219,9 @@
 			</div>
 		</div>
 		<fieldset>
-			<legend class="n">Note on School</legend>
+			<legend>Note on School</legend>
 			<br />
-			<div class="second">
+			<div class="black">
 				<input type="checkbox" name="coop" bind:checked={yesCOOP} />
 				COOPERATION
 			</div>
@@ -258,31 +261,17 @@
 </div>
 
 <style>
-	i {
-		color: #32bea6;
-	}
-
-	.iii {
-		display: flex;
-		text-align: left;
-		padding-left: 40px;
-		color: rgb(146, 136, 136);
-	}
-
 	.iiii {
 		color: rgb(146, 136, 136);
-		padding-left: 10px;
-	}
-
-	.n {
-		font-weight: 500;
+		padding-left: 0.5rem;
+		font-size: 0.7rem;
 	}
 
 	.notice {
 		color: tomato;
 		padding: 2%;
 		text-align: center;
-		font-weight: bolder;
+		font-weight:normal;
 		line-height: normal;
 	}
 
@@ -294,6 +283,10 @@
 		line-height: normal;
 	}
 
+	.note {
+		font-weight: bolder;
+	}
+
 	.aa {
 		color: #32bea6;
 		font-style: italic;
@@ -303,62 +296,5 @@
 		justify-content: space-between;
 		padding: 0 5% 5%;
 		line-height: 1.9;
-	}
-
-	fieldset {
-		position: relative;
-		padding: 6px;
-		border: 2px solid #32bea6;
-		border-radius: 5px;
-		border-spacing: 2px;
-	}
-
-	label {
-		padding: 6px;
-	}
-
-	legend {
-		padding: 6px;
-	}
-
-	.rei p {
-		position: relative;
-		line-height: normal;
-		font-size: 140%;
-		font-weight: bold;
-	}
-
-	.grid {
-		padding: 35px 15px 0px 15px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-content: space-around;
-		width: 45%;
-		line-height: 85%;
-		grid-row: minmax(5px, auto);
-		margin: 10px auto 10px auto;
-		border: 2px solid #32bea6;
-		border-radius: 5px;
-		border-spacing: 2px;
-		flex: 10 auto;
-	}
-
-	.grid input:checked {
-		background-color: #32bea6;
-	}
-
-	.btn {
-		margin-bottom: 0;
-		background-color: #32bea6;
-	}
-
-	.error {
-		color: tomato;
-		padding: 2%;
-		text-align: center;
-		font-style: italic;
-		line-height: 95%;
-		font-weight: 500;
 	}
 </style>

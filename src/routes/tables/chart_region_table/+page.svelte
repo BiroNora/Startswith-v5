@@ -182,16 +182,4 @@
 		display: flex;
 		justify-content: center;
 	}
-
-	.black {
-		color: rgb(112, 108, 108);
-	}
-
-	.sticky {
-		padding-top: 0px;
-	}
-
-	.btn {
-		padding-bottom: 0px;
-	}
 </style>

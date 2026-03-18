@@ -160,7 +160,7 @@
 	<hgroup>
 		<h1>Search on the Base of Schools* and their Events**</h1>
 		<i>&emsp;*Active and cooperative schools only with Startswith contact</i>
-		
+
 		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i>
 	</hgroup>
 	<br />
@@ -273,7 +273,7 @@
 					<td class="c w">{school.region_name}</td>
 					<td class="c w">{school.county_name}</td>
 					<td class="c z">{school.city_name}</td>
-					<td class="centered-link c h z">
+					<td class="centered-link h w">
 						<a href="../lists/all_schools/{school.school_id}" target="_blank" class="h">
 							{school.school_name}
 						</a>
@@ -306,6 +306,7 @@
 			{/each}
 		</tbody>
 	</table>
+	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
@@ -365,10 +366,6 @@
 		background-color: #f2f2f2;
 	}
 
-	i {
-		font-weight: 300;
-	}
-
 	.centered-link {
 		height: 100%; /* Optional: If you want the link to take up the full height of the cell */
 		display: table-cell;
@@ -378,7 +375,7 @@
 		text-align: center;
 		vertical-align: middle;
 		width: 100%;
-		border: none; /* Remove border */
+
 		outline: none; /* Remove focus outline (optional, for better accessibility) */
 		text-decoration-color: #32bea6;
 	}

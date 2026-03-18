@@ -268,7 +268,6 @@
 </div>
 
 <style>
-
 	.container {
 		display: flex; /* or inline-flex */
 		width: 100%;
@@ -286,6 +285,4 @@
 	i {
 		font-weight: 300;
 	}
-
-
 </style>

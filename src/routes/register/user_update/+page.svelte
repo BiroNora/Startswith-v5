@@ -84,7 +84,7 @@
 {#if is_dir}
 	<div class="grid">
 		<div class="rei">
-			<p>Update Startswith's User Data</p>
+			<p class="black">Update Startswith's User Data</p>
 		</div>
 		<br />
 		<form action="?/user_active_change" method="post" use:enhance>
@@ -102,7 +102,7 @@
 
 <div class="grid">
 	<div class="rei">
-		<p>Update Startswith's User Data</p>
+		<p class="black">Update Startswith's User Data</p>
 	</div>
 	<br />
 	<form action="?/user" method="post" use:enhance>
@@ -126,91 +126,96 @@
 		</div>
 
 		<div class="input-group">
-    <label class="check-label">
-        <input type="checkbox" name="basic" bind:checked={yesB} />
-        <span>BASIC</span>
-    </label>
-    <div class="select-wrapper">
-        {#if yesB}
-            <select bind:value={yesBreg} name="regB" id="sel-B" transition:fade={{ duration: 200 }}>
-                {#each data.regions ?? [] as regio}
-                    <option value={regio.region_id}>{regio.region_name}</option>
-                {/each}
-            </select>
-        {/if}
-    </div>
-</div>
+			<label class="check-label">
+				<input type="checkbox" name="basic" bind:checked={yesB} />
+				<span>BASIC</span>
+			</label>
+			<div class="select-wrapper">
+				{#if yesB}
+					<select bind:value={yesBreg} name="regB" id="sel-B" transition:fade={{ duration: 200 }}>
+						{#each data.regions ?? [] as regio}
+							<option value={regio.region_id}>{regio.region_name}</option>
+						{/each}
+					</select>
+				{/if}
+			</div>
+		</div>
 
-<div class="input-group">
-    <label class="check-label">
-        <input type="checkbox" name="medior" bind:checked={yesM} />
-        <span>MEDIOR</span>
-    </label>
-    <div class="select-wrapper">
-        {#if yesM}
-            <select bind:value={yesMreg} name="regM" id="sel-M" transition:fade={{ duration: 200 }}>
-                {#each data.regions ?? [] as regio}
-                    <option value={regio.region_id}>{regio.region_name}</option>
-                {/each}
-            </select>
-        {/if}
-    </div>
-</div>
+		<div class="input-group">
+			<label class="check-label">
+				<input type="checkbox" name="medior" bind:checked={yesM} />
+				<span>MEDIOR</span>
+			</label>
+			<div class="select-wrapper">
+				{#if yesM}
+					<select bind:value={yesMreg} name="regM" id="sel-M" transition:fade={{ duration: 200 }}>
+						{#each data.regions ?? [] as regio}
+							<option value={regio.region_id}>{regio.region_name}</option>
+						{/each}
+					</select>
+				{/if}
+			</div>
+		</div>
 
-<div class="input-group">
-    <label class="check-label">
-        <input type="checkbox" name="high" bind:checked={yesH} />
-        <span>HIGH</span>
-    </label>
-    <div class="select-wrapper">
-        {#if yesH}
-            <select bind:value={yesHreg} name="regH" id="sel-H" transition:fade={{ duration: 200 }}>
-                {#each data.regions ?? [] as regio}
-                    <option value={regio.region_id}>{regio.region_name}</option>
-                {/each}
-            </select>
-        {/if}
-    </div>
-</div>
+		<div class="input-group">
+			<label class="check-label">
+				<input type="checkbox" name="high" bind:checked={yesH} />
+				<span>HIGH</span>
+			</label>
+			<div class="select-wrapper">
+				{#if yesH}
+					<select bind:value={yesHreg} name="regH" id="sel-H" transition:fade={{ duration: 200 }}>
+						{#each data.regions ?? [] as regio}
+							<option value={regio.region_id}>{regio.region_name}</option>
+						{/each}
+					</select>
+				{/if}
+			</div>
+		</div>
 
-<div class="input-group">
-    <label class="check-label">
-        <input type="checkbox" name="superior" bind:checked={yesS} />
-        <span>SUPERIOR</span>
-    </label>
-    <div class="select-wrapper">
-        {#if yesS}
-            <select bind:value={yesSreg} name="regS" id="sel-S" transition:fade={{ duration: 200 }}>
-                {#each data.regions ?? [] as regio}
-                    <option value={regio.region_id}>{regio.region_name}</option>
-                {/each}
-            </select>
-        {/if}
-    </div>
-</div>
+		<div class="input-group">
+			<label class="check-label">
+				<input type="checkbox" name="superior" bind:checked={yesS} />
+				<span>SUPERIOR</span>
+			</label>
+			<div class="select-wrapper">
+				{#if yesS}
+					<select bind:value={yesSreg} name="regS" id="sel-S" transition:fade={{ duration: 200 }}>
+						{#each data.regions ?? [] as regio}
+							<option value={regio.region_id}>{regio.region_name}</option>
+						{/each}
+					</select>
+				{/if}
+			</div>
+		</div>
 
-<div class="input-group dir">
-    <label class="check-label">
-        <input type="checkbox" name="director" bind:checked={yesD} />
-        <span>DIRECTOR</span>
-    </label>
-    <div class="select-wrapper">
-        {#if yesD}
-            <select bind:value={yesDuty} name="regD" id="sel-D" transition:fade={{ duration: 200 }}>
-                {#each dutyMap as item (item.id)}
-                    <option value={item.id}>{item.name}</option>
-                {/each}
-            </select>
-        {/if}
-    </div>
-</div>
+		<div class="input-group">
+			<label class="check-label">
+				<input type="checkbox" name="director" bind:checked={yesD} />
+				<span>DIRECTOR</span>
+			</label>
+			<div class="select-wrapper">
+				{#if yesD}
+					<select bind:value={yesDuty} name="regD" id="sel-D" transition:fade={{ duration: 200 }}>
+						{#each dutyMap as item (item.id)}
+							<option value={item.id}>{item.name}</option>
+						{/each}
+					</select>
+				{/if}
+			</div>
+		</div>
 
 		<div>
 			<label for="password1">Password</label>
 			<div class="password-wrapper">
 				<input id="password1" name="password1" type={showPassword ? 'text' : 'password'} required />
-				<button type="button" class="eye-toggle" onclick={() => (showPassword = !showPassword)} tabindex="-1">
-					{@html showPassword ? eyeOpen : eyeClosed }
+				<button
+					type="button"
+					class="eye-toggle"
+					onclick={() => (showPassword = !showPassword)}
+					tabindex="-1"
+				>
+					{@html showPassword ? eyeOpen : eyeClosed}
 				</button>
 			</div>
 		</div>
@@ -218,8 +223,13 @@
 			<label for="password2">Confirm Password</label>
 			<div class="password-wrapper">
 				<input id="password2" name="password2" type={showPassword ? 'text' : 'password'} required />
-				<button type="button" class="eye-toggle" onclick={() => (showPassword = !showPassword)} tabindex="-1">
-					{@html showPassword ? eyeOpen : eyeClosed }
+				<button
+					type="button"
+					class="eye-toggle"
+					onclick={() => (showPassword = !showPassword)}
+					tabindex="-1"
+				>
+					{@html showPassword ? eyeOpen : eyeClosed}
 				</button>
 			</div>
 		</div>
@@ -245,150 +255,32 @@
 </div>
 
 <style>
-/* --- JELSZÓ INPUTON BELÜLI GOMB --- */
-	.password-wrapper {
-		position: relative; /* Ez teszi lehetővé, hogy a gomb "ráragadjon" az inputra */
-		width: 100%;
+	.input-group {
+		display: flex;
+		flex-direction: row; /* Alapértelmezetten egymás mellett */
+		align-items: center;
+		height: 2.5rem !important;
+		padding: 0 1rem !important;
+		gap: 10px;
+		margin-bottom: 5px;
+	}
+
+	.check-label {
 		display: flex;
 		align-items: center;
-	}
-
-	.password-wrapper input {
-		width: 100%;
-		padding-right: 60px; /* Hely a gombnak az inputon belül */
-	}
-
-	.eye-toggle {
-		position: absolute;
-		right: 15px;
-		background: transparent !important; /* Semmi kék háttér */
-		border: none !important; /* Semmi keret */
-		color: #83918f;
+		gap: 12px;
+		min-width: 160px;
 		cursor: pointer;
-		font-size: 14px;
-		font-weight: bold;
-		padding: 0;
-		z-index: 10;
-		box-shadow: none !important;
 	}
 
-	.eye-toggle:hover {
-		background: transparent !important;
-		color: #83918f;
-	}
-	/* --- EDDIG --- */
-.input-group {
-    display: flex;
-    flex-direction: row;    /* Alapértelmezetten egymás mellett */
-    align-items: center;
-    min-height: 50px;
-    gap: 10px;
-    margin-bottom: 5px;
-  }
-
-  .check-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 160px;       /* Asztali gépen szép igazítás */
-    cursor: pointer;
-  }
-
-  /* --- MOBIL NÉZET (768px alatt) --- */
-  @media (max-width: 768px) {
-    .input-group {
-      flex-direction: column; /* Mobilon egymás alá kerülnek */
-      align-items: flex-start; /* Balra igazítás */
-      min-height: auto;       /* Itt már nem kell fix magasság */
-      padding-bottom: 15px;   /* Hely a következő csoport előtt */
-    }
-
-    .check-label {
-      min-width: unset;       /* Mobilon nem kell a fix szélesség */
-      width: 100%;
-      margin-bottom: 5px;
-    }
-
-    .select-wrapper {
-      width: 100%;            /* A select töltse ki a teljes szélességet */
-      padding-right: 0;       /* Mobilon ne legyen extra margó a jobb oldalon */
-    }
-
-    select {
-      max-width: 100%;        /* Teljesen kihasználja a telefon szélességét */
-    }
-  }
-
-
-
-
-  /* A select konténere, ami kitölti a maradék helyet */
-  .select-wrapper {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-  }
-
-  /* Maga a select szélessége */
-  select {
-    width: 100%;
-    max-width: 300px;       /* Hogy ne legyen túl széles nagy képernyőn */
-    padding: 4px;
-    border: 1px solid #32bea6;
-    border-radius: 4px;
-    background-color: white;
-  }
-
-  /* Director extra távolsága maradjon meg */
-  .dir {
-    padding-bottom: 15px;
-  }
-	.rei p {
-		position: relative;
-		line-height: normal;
-		font-size: 140%;
-		font-weight: bold;
+	select {
+		max-width: 100%;
 	}
 
-	.grid {
-		padding: 35px 15px 0px 15px;
+	/* A select konténere, ami kitölti a maradék helyet */
+	.select-wrapper {
+		flex-grow: 1;
 		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-content: space-around;
-		width: 45%;
-		line-height: 85%;
-		grid-row: minmax(5px, auto);
-		margin: 10px auto 10px auto;
-		border: 2px solid #32bea6;
-		border-radius: 5px;
-		border-spacing: 2px;
-		flex: 10 auto;
-	}
-
-	.grid input:checked {
-		background-color: #32bea6;
-	}
-
-	label {
-		padding: 6px;
-	}
-
-	.dir {
-		padding-bottom: 15px;
-	}
-
-	.btn {
-		margin-bottom: 0;
-		background-color: #32bea6;
-	}
-
-	.error {
-		color: tomato;
-		padding: 2%;
-		text-align: center;
-		font-style: italic;
-		line-height: 95%;
-		font-weight: 500;
+		align-items: center;
 	}
 </style>

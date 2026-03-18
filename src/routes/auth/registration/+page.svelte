@@ -125,18 +125,11 @@
 			<p class="error">One duty must be choosen.</p>
 		{/if}
 
-		<button class="btn" id="btn" type="submit">Register</button>
+		<button class="btn v" id="btn" type="submit">Register</button>
 	</form>
 </div>
 
 <style>
-	.rei p {
-		position: relative;
-		line-height: normal;
-		font-size: 140%;
-		font-weight: bold;
-	}
-
 	.hidden-textbox {
 		visibility: hidden;
 	}
@@ -145,40 +138,7 @@
 		visibility: visible;
 	}
 
-	.grid {
-		padding: 35px 15px 0px 15px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-content: space-around;
-		width: 45%;
-		line-height: 85%;
-		grid-row: minmax(5px, auto);
-		margin: 10px auto 10px auto;
-		border: 2px solid #32bea6;
-		border-radius: 5px;
-		border-spacing: 2px;
-		flex: 10 auto;
-	}
-
-	.grid input:checked {
-		background-color: #32bea6;
-	}
-
-	label {
-		padding: 6px;
-	}
-
 	.dir {
 		padding-bottom: 15px;
-	}
-
-	.error {
-		color: tomato;
-		padding: 2%;
-		text-align: center;
-		font-style: italic;
-		line-height: 95%;
-		font-weight: 500;
 	}
 </style>

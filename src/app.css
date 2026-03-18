@@ -46,10 +46,12 @@ select {
 
 label {
 	padding-left: 1%;
+	margin-bottom: 0rem;
 	font-size: 0.8rem;
 	font-weight: 600;
 	color: var(--secondary-gray-cool);
 }
+
 .main {
 	padding: 2% 2% 0 2%;
 	width: 100%;
@@ -115,6 +117,8 @@ label {
 	padding: 0;
 	z-index: 10;
 	box-shadow: none !important;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .eye-toggle:hover {
@@ -209,12 +213,62 @@ i {
 	font-weight: 400;
 }
 
+p {
+	font-size: 0.9rem;
+	line-height: 1.5;
+	margin-bottom: 0.5rem;
+	color: #ccc;
+}
+
+.rei p {
+	position: relative;
+	line-height: 1;
+	font-size: 140%;
+	font-weight: bold;
+}
+
+.grid {
+	padding: 35px 15px 10px 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-content: space-around;
+	width: 45%;
+	line-height: 85%;
+	grid-row: minmax(5px, auto);
+	margin: 10px auto 10px auto;
+	border: 2px solid #32bea6;
+	border-radius: 5px;
+	border-spacing: 2px;
+	flex: 10 auto;
+}
+
+.grid input:checked {
+	background-color: #32bea6;
+}
+
+fieldset {
+	position: relative;
+	padding: 6px;
+	border: 2px solid #32bea6;
+	border-radius: 5px;
+	border-spacing: 2px;
+}
+
+legend {
+	padding: 6px;
+	color: #32bea6 !important;
+}
+
+.black {
+	color: rgb(112, 108, 108);
+}
+
 .error {
 	color: tomato;
 	text-align: center;
 	font-style: italic;
-	font-weight: 500;
-	width: 25%;
+	font-weight: 400;
 }
 
 /*body {

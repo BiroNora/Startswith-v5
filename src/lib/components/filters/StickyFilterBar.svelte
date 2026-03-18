@@ -51,10 +51,3 @@
 		{@render children?.()}
 	</div>
 {/if}
-
-<style>
-
-	.black {
-		color:rgb(112, 108, 108);
-	}
-</style>
