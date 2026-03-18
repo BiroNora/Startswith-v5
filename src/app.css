@@ -14,24 +14,42 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
-input {
+input:not([type='checkbox']),
+select {
+	/* Itt jön a mágia: kényszerítsük őket egyforma magasságra */
+	height: 2.5rem !important;
+	padding: 0 1rem !important; /* A függőleges paddingot nullázzuk a fix magasság miatt */
+
 	border-radius: 100px;
 	font-size: 0.8rem;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+
+	/* Megszünteti a Pico alapértelmezett extra magasságát */
+	line-height: normal !important;
+	appearance: none; /* Néha segít a selectnél, de a Pico-nál óvatosan */
+}
+
+input[type='search'] {
+	height: 2.5rem !important; /* Legyen ugyanakkora, mint a többi meződ */
+	padding: 0 1rem 0 2.5rem !important; /* Bal oldalon hagyunk helyet az ikonnak */
+	border-radius: 100px !important;
+	line-height: normal !important;
+	background-position: left 0.75rem center !important; /* Az ikon helye balra zárva */
+	background-repeat: no-repeat !important;
 }
 
 select {
-	border-radius: 100px;
-	padding: 8px;
-	margin: 10px 0;
-	border: 1px solid #ccc;
-	font-size: 0.8rem;
+	padding-right: 2rem !important; /* Hely a nyílnak a jobb szélen */
+	background-position: center right 0.75rem;
 }
 
-input::placeholder {
+label {
+	padding-left: 1%;
+	font-size: 0.8rem;
+	font-weight: 600;
 	color: var(--secondary-gray-cool);
-	font-size: 0.8rem;
 }
-
 .main {
 	padding: 2% 2% 0 2%;
 	width: 100%;
@@ -124,7 +142,7 @@ input::placeholder {
 	text-overflow: ellipsis;
 }
 
-.width-25 {
+.width-400 {
 	width: 100%;
 	max-width: 400px;
 }
@@ -170,6 +188,25 @@ input::placeholder {
 	justify-content: space-evenly;
 	gap: 5%;
 	padding: 5% 0;
+}
+
+/* --- FONTS --- */
+hgroup i {
+	font-size: 0.8rem !important;
+	display: block !important; /* Hogy mindegyik külön sorba kerüljön és egyforma legyen a viselkedése */
+	line-height: 1.2rem !important; /* Fix sor magasság, hogy ne ugráljanak */
+	margin: 0 !important;
+	padding: 0 !important;
+	font-weight: normal !important;
+	color: var(--secondary-gray-cool);
+}
+
+i {
+	font-weight: 300;
+}
+
+.log {
+	font-weight: 400;
 }
 
 .error {

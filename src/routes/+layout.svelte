@@ -83,9 +83,9 @@
       </ul>
     </ul>
 
-    <li>
-      <a class="c" href="/lists/activities" target="_blank">Activity List</a>
-    </li>
+    <div class="c" >
+      <a href="/lists/activities" target="_blank">Activity List</a>
+    </div>
   </nav>
 
   <form class="logout" action="/auth/logout" method="POST" use:enhance >
@@ -107,6 +107,7 @@
 
   .c {
     text-align: center;
+    padding-top: 35px;
   }
 
   .c:hover {
@@ -192,7 +193,7 @@
   /* Show the dropdown menu on hover */
   .dropdown:hover .dropdown-content {
     display: block;
-    width: 25px;
+    min-width: 35px;
   }
 
   /* Change the background color of the dropdown button when the dropdown content is shown */

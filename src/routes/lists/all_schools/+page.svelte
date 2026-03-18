@@ -25,7 +25,8 @@
 
 <div class="main">
 	<hgroup>
-		<h1>School List* <i>&emsp;*Grey colored schools have no Startswith connection</i></h1>
+		<h1>School List* </h1>
+		<i>&emsp;*Grey colored schools have no Startswith connection</i>
 		<h4 class="z">Number of schools: {data.schools.length}</h4>
 	</hgroup>
 

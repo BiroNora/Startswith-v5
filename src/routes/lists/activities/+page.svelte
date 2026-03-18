@@ -93,7 +93,7 @@
 								{act.act_note}
 							{/if}
 							{' 🏠 '}
-							{#each dutyMap as item, index (item.id)}
+							{#each dutyMap as item (item.id)}
 								{#if act.on_duty.charAt(0) === item.id}
 									{item.name}:
 								{/if}
@@ -121,7 +121,7 @@
 								{act.act_note}
 							{/if}
 							{' 🏠 '}
-							{#each dutyMap as item, index (item.id)}
+							{#each dutyMap as item (item.id)}
 								{#if act.on_duty.charAt(0) === item.id}
 									{item.name}:
 								{/if}
@@ -149,7 +149,7 @@
 									{act.act_note}
 								{/if}
 								{' 🏠 '}
-								{#each dutyMap as item, index (item.id)}
+								{#each dutyMap as item (item.id)}
 									{#if act.on_duty.charAt(0) === item.id}
 										{item.name}:
 									{/if}
@@ -235,7 +235,7 @@
 			<div>
 				<label for="duty">Duty</label>
 				<select name="duty" id="duty">
-					{#each dutyMap as item, index (item.id)}
+					{#each dutyMap as item (item.id)}
 						<option value={item.id}>{item.name}</option>
 					{/each}
 				</select>
@@ -355,13 +355,6 @@
 		border-color: #83918f;
 	}
 
-	.z {
-		color: rgb(144, 132, 132);
-		font-size: medium;
-		font-weight: 400;
-		font-style: italic;
-	}
-
 	label {
 		padding: 6px;
 	}
@@ -404,14 +397,5 @@
 	.h44 {
 		color: #83918f;
 		border-color: #83918f;
-	}
-
-	.error {
-		color: tomato;
-		padding: 2%;
-		text-align: center;
-		font-style: italic;
-		line-height: 95%;
-		font-weight: 500;
 	}
 </style>

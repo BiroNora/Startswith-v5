@@ -12,10 +12,10 @@
 <div class="main">
 	<h1>Forgot Password</h1>
 
-	<form action="?/forgot" method="POST" use:enhance class="width-25">
+	<form action="?/forgot" method="POST" use:enhance class="width-400">
 		{#if !form?.sent}
 			<div>
-				<label for="email">Enter your email</label>
+				<label class="log" for="email">Enter your email</label>
 				<input id="email" name="email" type="email" required />
 			</div>
 
@@ -32,22 +32,3 @@
 		{/if}
 	</form>
 </div>
-
-<style>
-	
-
-	label {
-		padding-left: 1%;
-		font-size: 22px;
-		font-weight: 400;
-		color: rgb(144, 132, 132);
-	}
-
-	.error {
-		color: tomato;
-		text-align: center;
-		font-style: italic;
-		font-weight: 500;
-		width: 25%;
-	}
-</style>

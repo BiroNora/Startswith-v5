@@ -178,7 +178,6 @@
 	<hgroup>
 		<h1>Chart Tables* of Events** and Interested Students</h1>
 		<i>&emsp;*Events only with active and cooperative schools</i>
-		<br />
 		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i
 		>
 	</hgroup>

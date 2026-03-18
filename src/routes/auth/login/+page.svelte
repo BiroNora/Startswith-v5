@@ -15,18 +15,23 @@
 <div class="main">
 	<h1>Login</h1>
 
-	<form action="?/login" method="POST" class="width-25">
+	<form action="?/login" method="POST" class="width-400">
 		<div>
-			<label for="email">Email</label>
+			<label class="log" for="email">Email</label>
 			<input id="email" name="email" type="email" required />
 		</div>
 
 		<div>
-			<label for="password">Password</label>
+			<label class="log" for="password">Password</label>
 			<div class="password-wrapper">
 				<input id="password" name="password" type={showPassword ? 'text' : 'password'} required />
-				<button type="button" class="eye-toggle" onclick={() => (showPassword = !showPassword)} tabindex="-1">
-					{@html showPassword ? eyeOpen : eyeClosed }
+				<button
+					type="button"
+					class="eye-toggle"
+					onclick={() => (showPassword = !showPassword)}
+					tabindex="-1"
+				>
+					{@html showPassword ? eyeOpen : eyeClosed}
 				</button>
 			</div>
 		</div>
@@ -41,18 +46,5 @@
 
 		<button class="btn" id="btn" type="submit"> Login </button>
 	</form>
-	<a href="../auth/forgot_password" role="button" class="btn-forgot">
-		Forgot Password?
-	</a>
+	<a href="../auth/forgot_password" role="button" class="btn-forgot"> Forgot Password? </a>
 </div>
-
-<style>
-	label {
-		padding-left: 1%;
-		font-size: 22px;
-		font-weight: 400;
-		color: rgb(144, 132, 132);
-	}
-
-	
-</style>

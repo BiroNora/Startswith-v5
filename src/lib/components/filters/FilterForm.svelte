@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { duty, semester } from '../../../routes/stores/dataStore';
 
 	let { data, onFilter } = $props();
@@ -24,9 +25,9 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} id="top" class="width-25">
+<form onsubmit={handleSubmit} id="top" use:enhance class="width-400">
 	<div>
-		<label for="year"><i>Select </i> Event Year</label>
+		<label for="year"><i>Select </i> &nbsp;&nbsp;Event Year</label>
 		<select bind:value={selectedYear} name="year" id="year" class="hidden-textbox">
 			<option value="ALL">ALL</option>
 			{#each data.distinctYears as year}
@@ -36,7 +37,7 @@
 	</div>
 
 	<div>
-		<label for="semester"><i>Select </i> Event Semester</label>
+		<label for="semester"><i>Select </i> &nbsp;&nbsp;Event Semester</label>
 		<select bind:value={selectedSemester} name="semester" id="semester" class="hidden-textbox">
 			{#each semester as sem}
 				<option value={sem}>{sem} </option>
@@ -45,7 +46,7 @@
 	</div>
 
 	<div>
-		<label for="duty"><i>Select </i> Event Duty</label>
+		<label for="duty"><i>Select </i> &nbsp;&nbsp;Event Duty</label>
 		<select bind:value={selectedDuty} name="duty" id="duty" class="hidden-textbox">
 			{#each duty as d}
 				<option value={d.id}>{d.name} </option>
@@ -54,7 +55,7 @@
 	</div>
 
 	<div>
-		<label for="country"><i>Select </i> School Country</label>
+		<label for="country"><i>Select</i> &nbsp;&nbsp;School Country</label>
 		<select bind:value={selectedCountry} name="country" id="country" class="hidden-textbox">
 			<option value="ALL">ALL</option>
 			{#each data.distinctCountries as country}
@@ -66,7 +67,7 @@
 	</div>
 
 	<div>
-		<label for="region"><i>Select </i> School Region</label>
+		<label for="region"><i>Select </i> &nbsp;&nbsp;School Region</label>
 		<select bind:value={selectedRegion} name="region" id="region" class="hidden-textbox">
 			<option value="ALL">ALL</option>
 			{#each data.distictRegions as reg}
@@ -79,24 +80,3 @@
 
 	<button class="btn" type="submit"> Confirm </button>
 </form>
-
-<style>
-	i {
-		font-weight: 300;
-	}
-
-	select {
-		border-radius: 100px;
-		padding: 8px;
-		margin: 10px 0;
-		border: 1px solid #ccc;
-	}
-
-	label {
-		padding-left: 1%;
-		font-size: 22px;
-		font-weight: 400;
-		color: rgb(144, 132, 132);
-	}
-
-</style>

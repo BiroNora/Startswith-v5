@@ -165,7 +165,7 @@
 			<div>
 				<label for="duty">On Duty</label>
 				<select name="duty" id="duty" class="hidden-textbox">
-					{#each dutyMap as item, index (item.id)}
+					{#each dutyMap as item (item.id)}
 						<option value={item.id}>{item.name}</option>
 					{/each}
 				</select>
@@ -173,7 +173,7 @@
 			<div>
 				<label for="type">Event Type</label>
 				<select name="type" id="type" class="hidden-textbox">
-					{#each eventMap as item, index (item.id)}
+					{#each eventMap as item (item.id)}
 						<option value={item.id}>{item.name}</option>
 					{/each}
 				</select>

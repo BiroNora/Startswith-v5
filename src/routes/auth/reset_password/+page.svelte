@@ -14,15 +14,15 @@
 	<h1>Reset Password</h1>
 
 	{#if data.isValid}
-		<form action="?/reset" method="POST" use:enhance class="width-25">
+		<form action="?/reset" method="POST" use:enhance class="width-400">
 			<input type="hidden" name="email" value={data.userEmail} />
 			<div>
-				<label for="password">New Password</label>
+				<label class="log" for="password">New Password</label>
 				<input id="password" name="password" type="password" required />
 			</div>
 
 			<div>
-				<label for="password1">Confirm Password</label>
+				<label class="log" for="password1">Confirm Password</label>
 				<input id="password1" name="password1" type="password" required />
 			</div>
 
@@ -39,24 +39,3 @@
 		</div>
 	{/if}
 </div>
-
-<style>
-	input {
-		border-radius: 100px;
-	}
-
-	label {
-		padding-left: 1%;
-		font-size: 22px;
-		font-weight: 400;
-		color: rgb(144, 132, 132);
-	}
-
-	.error {
-		color: tomato;
-		text-align: center;
-		font-style: italic;
-		font-weight: 500;
-		width: 25%;
-	}
-</style>

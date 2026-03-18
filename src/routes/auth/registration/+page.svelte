@@ -82,7 +82,7 @@
 			<input type="checkbox" name="director" bind:checked={yesD} />
 			DIRECTOR
 			<select name="regD" id="sel-D" class="hidden-textbox">
-				{#each dutyMap as item, index (item.id)}
+				{#each dutyMap as item (item.id)}
 					<option value={item.id}>{item.name}</option>
 				{/each}
 			</select>
