@@ -69,7 +69,7 @@
 		<label for="region"><i>Select </i> &nbsp;&nbsp;School Region</label>
 		<select bind:value={selectedRegion} name="region" id="region" class="hidden-textbox">
 			<option value="ALL">ALL</option>
-			{#each data.distictRegions as reg}
+			{#each data.distinctRegions as reg}
 				{#if reg.region_id}
 					<option value={reg.region_id}>{reg.region_name}</option>
 				{/if}

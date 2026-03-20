@@ -89,7 +89,7 @@
 
 	// Segéd rúnák a Sticky sávhoz
 	const countriesArray = $derived(data.distinctCountries || []);
-	const regionsArray = $derived(data.distictRegions || []);
+	const regionsArray = $derived(data.distinctRegions || []);
 	const selectedCountryObj = $derived(
 		countriesArray.find((c) => c.country_id === Number(selCountry))
 	);

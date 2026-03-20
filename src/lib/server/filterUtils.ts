@@ -14,6 +14,6 @@ export async function getFilterBaseData() {
   return {
     distinctYears: yearsData.map(y => String(y.event_year)),
     distinctCountries: countries,
-    distictRegions: regions
+    distinctRegions: regions
   };
 }
