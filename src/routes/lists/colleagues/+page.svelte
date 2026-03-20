@@ -77,12 +77,6 @@
 </div>
 
 <style>
-	.aa {
-		color: #32bea6;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
 
 	.li {
 		list-style-position: inside;
