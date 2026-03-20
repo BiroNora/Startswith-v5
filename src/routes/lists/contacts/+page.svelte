@@ -20,8 +20,10 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
-	<h1>My Contact List</h1>
+<div id="top" class="main">
+	<hgroup>
+		<h3>My Contact List</h3>
+	</hgroup>
 
 	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredContacts.length} placeholder="Search for..." />
@@ -46,16 +48,25 @@
 		{/each}
 	</ul>
 	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
 	.aa {
 		color: #32bea6;
-		padding: 2%;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 23px;
+		font-size: 20px;
 	}
 
 	.li {

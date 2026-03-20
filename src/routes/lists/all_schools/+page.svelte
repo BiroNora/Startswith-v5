@@ -23,9 +23,9 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
+<div id="top" class="main">
 	<hgroup>
-		<h1>School List* </h1>
+		<h3>School List*</h3>
 		<i>&emsp;*Grey colored schools have no Startswith connection</i>
 		<h4 class="z">Number of schools: {data.schools.length}</h4>
 	</hgroup>
@@ -67,8 +67,8 @@
 <style>
 	.aa {
 		color: #09c6a7;
-		padding: 2%;
-		font-weight: 480;
+		line-height: normal;
+		font-weight: 400;
 		font-size: 20px;
 	}
 

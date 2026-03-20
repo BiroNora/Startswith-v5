@@ -56,7 +56,7 @@ export const actions: Actions = {
         subject: 'Password Reset',
         text: `Kattints a linkre a jelszó visszaállításához: ${resetLink}`,
         html: `
-          <h1>Jelszó visszaállítás</h1>
+          <h3>Jelszó visszaállítás</h3>
           <p>Kérted a jelszavad visszaállítását.</p>
           <a href="${resetLink}">Kattints ide az új jelszó megadásához</a>
           <p>A link 5 percig érvényes.</p>

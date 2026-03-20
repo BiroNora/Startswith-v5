@@ -24,7 +24,7 @@
 
 <div id="top" class="main">
 	<hgroup>
-		<h1>Activity Delete Page</h1>
+		<h3>Activity Delete Page</h3>
 		<a href="../activities" class="ab"> &#9758; Vissza a programok oldalra </a>
 	</hgroup>
 	<hgroup class="title">
@@ -81,19 +81,18 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 23px;
+		font-size: 20px;
 	}
 
 	.ab {
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 22px;
+		font-size: 20px;
 	}
 
 	.h44 {

@@ -1,5 +1,5 @@
 <div class="container">
-	<h1>Welcome to Startswith</h1>
+	<h3>Welcome to Startswith</h3>
 	<p>Please <a href="/auth/login">Log in</a> or <a href="/auth/registration">Register</a></p>
 </div>
 
@@ -18,7 +18,7 @@
 		border-spacing: 2px;
 		flex: 10 auto;
 	}
-	h1 {
+	h3 {
 		display: flex;
 		align-items: center;
 	}

@@ -20,8 +20,8 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
-	<h1>Event List</h1>
+<div id="top" class="main">
+	<h3>Event List</h3>
 
 	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredEvents.length} placeholder="Search in events..." />
@@ -46,21 +46,3 @@
 	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
-
-<style>
-	.aa {
-		color: #147263;
-		padding: 2%;
-		font-weight: 480;
-		font-size: 20px;
-	}
-
-	.li {
-		list-style-position: inside;
-		list-style-type: disc;
-		color: rgb(144, 132, 132);
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.35;
-	}
-</style>

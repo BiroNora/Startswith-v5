@@ -30,10 +30,10 @@
 	{/if}
 {/snippet}
 
-<div class="main">
+<div id="top" class="main">
 	<hgroup>
-		<h1>My School List</h1>
-		<h4 class="z">Number of schools:&nbsp;{schools.length}</h4>
+		<h3>My School List</h3>
+		<i>Number of schools:&nbsp;{schools.length}</i>
 	</hgroup>
 
 	<div class="search-input">
@@ -60,38 +60,10 @@
 	</ul>
 
 	<br />
-	<a href="#top" class="flower">
-		{#each Array(5) as _}
-			&#10046; &nbsp;
-		{/each}
-	</a>
+	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
-	.aa {
-		color: #32bea6;
-		padding: 2%;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
-
-	.li {
-		list-style-position: inside;
-		list-style-type: disc;
-		color: rgb(144, 132, 132);
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.35;
-	}
-
-	.z {
-		color: rgb(144, 132, 132);
-		font-size: medium;
-		font-weight: 400;
-		font-style: italic;
-	}
-
 	strong {
 		font-size: 18px;
 		font-weight: 500;

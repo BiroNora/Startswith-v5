@@ -56,7 +56,7 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<h1>
+	<h3>
 		Event Details &nbsp;&nbsp;&nbsp;&nbsp;
 		<a
 			href="#section4_event"
@@ -67,7 +67,7 @@
 			<strong class="error1"> &nbsp;&#10008; </strong>
 			&nbsp; Esemény törlése* &nbsp;
 		</a>
-	</h1>
+	</h3>
 
 	<!-- Event delete modal -->
 
@@ -438,12 +438,11 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 22px;
+		font-size: 20px;
 	}
 
 	.ab {

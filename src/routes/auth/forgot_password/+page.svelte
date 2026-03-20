@@ -10,7 +10,7 @@
 </svelte:head>
 
 <div class="main">
-	<h1>Forgot Password</h1>
+	<h3>Forgot Password</h3>
 
 	<form action="?/forgot" method="POST" use:enhance class="width-400">
 		{#if !form?.sent}
@@ -27,7 +27,7 @@
 		{/if}
 
 		{#if form?.sent}
-			<h1>Please, check your emailbox.</h1>
+			<h3>Please, check your emailbox.</h3>
 			<p>A reset link has been sent!</p>
 		{/if}
 	</form>

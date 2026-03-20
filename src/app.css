@@ -7,6 +7,17 @@
 	--secondary-gray-warm: #908484;
 }
 
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+[role='heading'] {
+	font-family: 'Poppins', sans-serif !important;
+}
+
 body {
 	font-family: 'Poppins', sans-serif;
 	-webkit-font-smoothing: antialiased; /* Safari/Chrome finomítás */
@@ -192,6 +203,41 @@ label {
 	justify-content: space-evenly;
 	gap: 5%;
 	padding: 5% 0;
+}
+
+/* --- LISTS --- */
+.aa {
+	color: #147263;
+	line-height: normal;
+	font-weight: 400;
+	font-size: 20px;
+}
+
+.ac {
+	color: #1f2222;
+	font-weight: 400;
+	line-height: normal;
+	padding-top: 1%;
+	padding-left: 5%;
+	text-indent: -6%;
+	font-size: 20px;
+}
+
+.li {
+	list-style-position: inside;
+	list-style-type: disc;
+	color: rgb(144, 132, 132);
+	padding-left: 5%;
+	text-indent: -6%;
+	line-height: 1.35;
+}
+
+.lb {
+	list-style-position: inside;
+	list-style-type: circle;
+	padding-left: 5%;
+	text-indent: -6%;
+	line-height: normal;
 }
 
 /* --- FONTS --- */

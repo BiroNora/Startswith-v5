@@ -158,10 +158,11 @@
 
 <div class="main-chart">
 	<hgroup>
-		<h1>Search on the Base of Schools* and their Events**</h1>
+		<h3>Search on the Base of Schools* and their Events**</h3>
 		<i>&emsp;*Active and cooperative schools only with Startswith contact</i>
 
-		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i>
+		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i
+		>
 	</hgroup>
 	<br />
 

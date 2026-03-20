@@ -23,9 +23,9 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
+<div id="top" class="main">
 	<hgroup>
-		<h1>My Event List</h1>
+		<h3>My Event List</h3>
 		<h4 class="z">Number of events:&nbsp;{count}</h4>
 	</hgroup>
 
@@ -67,19 +67,6 @@
 <style>
 	.aa {
 		color: #32bea6;
-		padding: 2%;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
-
-	.li {
-		list-style-position: inside;
-		list-style-type: disc;
-		color: rgb(144, 132, 132);
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.35;
 	}
 
 	.b {

@@ -11,7 +11,7 @@
 </svelte:head>
 
 <div class="main">
-	<h1>Reset Password</h1>
+	<h3>Reset Password</h3>
 
 	{#if data.isValid}
 		<form action="?/reset" method="POST" use:enhance class="width-400">

@@ -31,13 +31,14 @@
 <div id="top" class="main">
 	<div id="base">
 		<hgroup>
-			<h1>Activities</h1>
-			<a href="#section_event" class="aa"> &#9758; Program hozzáadása </a>
-			{#if data.dir_flag}
-				&nbsp; &nbsp;
-				<a href="#section_dir" class="aa"> &#9758; Központi üzenet hozzáadása </a>
-			{/if}
-			&nbsp; &nbsp;
+			<h3>Activities</h3>
+			<hgroup>
+				<a href="#section_event" class="ac"> &#9758; Program hozzáadása </a>
+				{#if data.dir_flag}
+					&nbsp; &nbsp;
+					<a href="#section_dir" class="ac"> &#9758; Központi üzenet hozzáadása </a>
+				{/if}
+			</hgroup>
 		</hgroup>
 		<br />
 
@@ -140,7 +141,7 @@
 					<!-- User !== director, any others -->
 					{#if !act.dir_flag}
 						<li class="li">
-							<a href="../lists/activities/{act.act_id}" class="ac">
+							<a href="../lists/activities/{act.act_id}" class="aa">
 								{dateSlugify(String(act.end_date))}
 								&#9753
 								<strong>{act.act_name}</strong>
@@ -280,10 +281,18 @@
 </div>
 
 <style>
-	.aa {
+	textarea {
+		font-size: 0.8rem !important; /* Ez szabályozza a beírt szöveget */
+		line-height: 1.4 !important; /* Hogy a sorok ne érjenek össze */
+		padding: 10px 15px !important; /* Kényelmes belső távolság */
+		border-radius: 15px !important;
+		resize: vertical; /* Csak függőlegesen engedjük nyújtani, hogy ne tolja szét az oldalt */
+	}
+
+	.ac {
 		color: #147263;
-		padding: 2%;
-		font-weight: 480;
+		font-weight: 400;
+		line-height: normal;
 		font-size: 20px;
 	}
 
@@ -294,11 +303,11 @@
 		font-size: 25px;
 	}
 
-	.ac {
+	.aa {
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 23px;
+		font-size: 20px;
 	}
 
 	.lia {

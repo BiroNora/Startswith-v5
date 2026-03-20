@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { enhance } from '$app/forms'
-	import { formatDate } from '../../../stores/dataStore.js'
-	import type { ActionData, PageData } from './$types.js'
+	import { enhance } from '$app/forms';
+	import { formatDate } from '../../../stores/dataStore.js';
+	import type { ActionData, PageData } from './$types.js';
 
-	let { data, form }: { data: PageData, form: ActionData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	function scrollToConnect() {
 		window.scrollTo({ top: 0 });
-  }
+	}
 
-	let pageName = 'School Details'
+	let pageName = 'School Details';
 </script>
 
 <svelte:head>
@@ -18,7 +18,7 @@
 
 <div id="top" class="main">
 	<div id="base">
-		<h1>School Details</h1>
+		<h3>School Details</h3>
 
 		<hgroup>
 			{#if !data.school.active || !data.school.coop}
@@ -30,9 +30,10 @@
 			<hgroup>
 				<h6>{data.school.zip_code} {data.school.city?.city_name} {data.school.address}</h6>
 				<div>
-					{data.school.country?.country_name} / {data.school.region?.region_name} régió / {data.school.county?.county_name}
+					{data.school.country?.country_name} / {data.school.region?.region_name} régió / {data
+						.school.county?.county_name}
 					megye
-					<br>
+					<br />
 					<div class="z">Események száma:&nbsp;{data.event.length}</div>
 				</div>
 			</hgroup>
@@ -40,8 +41,8 @@
 			<br />
 			<h4 class="h41">Adatok</h4>
 
-			<a href="#section_school" class="ad" > &#9758; Startswith kapcsolat hozzáadása </a> &nbsp; &nbsp;
-			&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+			<a href="#section_school" class="ad"> &#9758; Startswith kapcsolat hozzáadása </a> &nbsp;
+			&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
 			<a href="#section3_event" class="ad">
 				<strong class="error1">&#10008;</strong>&nbsp; Startswith kapcsolat törlése
 			</a>
@@ -62,9 +63,9 @@
 								Név: {u.user_name}
 							</li>
 						</ul>
-						{:else}
-            <ul class="ac"><li class="lc z">Nincs kijelölt belső felelős.</li></ul>
-          {/each}
+					{:else}
+						<ul class="ac"><li class="lc z">Nincs kijelölt belső felelős.</li></ul>
+					{/each}
 				</hgroup>
 				<li class="ld">Iskolai (külső) kapcsolat:</li>
 				<hgroup>
@@ -76,7 +77,7 @@
 								</li>
 								<li class="lc">Telefon: {con.contact_phone || 'Nincs'}</li>
 								<li class="lc">Email: {con.contact_email || 'Nincs'}</li>
-								<li class="lc">Feljegyzés: {con.contact_note  || 'Nincs feljegyzés'}</li>
+								<li class="lc">Feljegyzés: {con.contact_note || 'Nincs feljegyzés'}</li>
 							</hgroup>
 						</ul>
 					{/each}
@@ -98,9 +99,9 @@
 			</ul>
 			<br />
 		</hgroup>
-		<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
+		<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
+		>
 	</div>
-
 
 	<!-- School user update form -->
 
@@ -110,7 +111,6 @@
 		</div>
 		<p class="uni">{data.school.school_name}</p>
 		<form action="?/schoolU" method="post" use:enhance>
-
 			<div>
 				<label for="email">Email</label>
 				<input type="text" name="email" id="email" required />
@@ -163,17 +163,17 @@
 			>
 		</form>
 	</div>
-		<a href="#top" class="flower grid event4-to-position"
-			>&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
+	<a href="#top" class="flower grid event4-to-position"
+		>&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
+	>
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 22px;
+		font-size: 20px;
 	}
 
 	.ab {
@@ -201,18 +201,18 @@
 	}
 
 	.z {
-    color: rgb(144, 132, 132);
-    font-size: medium;
-    font-weight: 400;
-    font-style: italic;
-  }
+		color: rgb(144, 132, 132);
+		font-size: medium;
+		font-weight: 400;
+		font-style: italic;
+	}
 
 	.y {
-    color: #32bea6;
-    font-size: medium;
-    font-weight: 400;
-    font-style: italic;
-  }
+		color: #32bea6;
+		font-size: medium;
+		font-weight: 400;
+		font-style: italic;
+	}
 
 	.la {
 		list-style-position: inside;

@@ -11,40 +11,43 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<h1>Event Details</h1>
 	<hgroup>
-		<h3>{data.event.event_name}</h3>
-		<br />
-		<h4 class="h41">Adatok</h4>
-		<ul class="ab">
+		<h3>Event Details</h3>
+		<h6>{data.event.event_name}</h6>
+	</hgroup>
+
+	<hgroup>
+		<ul class="ac">
 			<li class="lb">
 				Időpont: {formatDate(data.event.closing_date)}, {timeSlugify(data.event.closing_date)}
 			</li>
 			<li class="lb">Szervező: {data.event.on_duty_name}</li>
-			<li class="ld">Startswith kapcsolat:</li>
-			<hgroup>
+			<li class="lb">Startswith kapcsolat:</li>
+
+			<div>
 				{#each data.event.User as u}
-					<ul class="ad">
-						<li class="lc">
+					<ul>
+						<li class="lb">
 							Név: {u.user_name}
 						</li>
 					</ul>
 				{/each}
-			</hgroup>
+			</div>
+
 			<li class="lb">Esemény formája: {data.event.event_type_name}</li>
 			<li class="lb">Becsült résztvevők száma: {data.event.estimated_student}</li>
 			<li class="lb">Iskola:</li>
-			<hgroup>
-				<ul class="ac">
-					<li class="la">
-						<a href="../../lists/all_schools/{data.school?.school_id}" class="aa">
-							{data.school?.school_name}
-							{' 🏠 '}
-							{data.cityname}
-						</a>
-					</li>
-				</ul>
-			</hgroup>
+
+			<ul>
+				<li class="lb">
+					<a href="../../lists/all_schools/{data.school?.school_id}" class="aa">
+						{data.school?.school_name}
+						{' 🏠 '}
+						{data.cityname}
+					</a>
+				</li>
+			</ul>
+
 			<li class="lb">Feljegyzés: {data.event.note || 'Nincs feljegyzés'}</li>
 			<li class="lb">
 				Érdeklődő diákok:
@@ -52,10 +55,11 @@
 					<span class="no-data">Nincsenek érdeklődő diákok</span>
 				{/if}
 			</li>
-			{#if data.inters && data.inters.length > 0}
-				<hgroup>
+
+			<div class="ac">
+				{#if data.inters && data.inters.length > 0}
 					{#each data.inters as ints}
-						<ul class="ac">
+						<ul>
 							<li class="lb">Diákok száma: {ints.intrest_count}</li>
 							{#each data.countries as country}
 								{#if country.country_id === ints.country_id}
@@ -82,87 +86,18 @@
 							<br />
 						</ul>
 					{/each}
-				</hgroup>
-			{/if}
+				{/if}
+			</div>
+
 		</ul>
 	</hgroup>
+
+	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 22px;
-	}
-
-	.ab {
-		color: #1f2222;
-		padding: 2%;
-		padding-bottom: 0%;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 22px;
-	}
-
-	.ac {
-		color: #1f2222;
-		font-weight: 400;
-		line-height: normal;
-		padding-top: 1%;
-		padding-left: 5%;
-		text-indent: -6%;
-		font-size: 22px;
-	}
-
-	.ad {
-		color: #1f2222;
-		font-weight: 400;
-		line-height: normal;
-		padding-left: 5%;
-		text-indent: -6%;
-		font-size: 22px;
-	}
-
-	.la {
-		list-style-type: none;
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.4;
-		font-size: 22px;
-	}
-
-	.lb {
-		list-style-position: inside;
-		list-style-type: circle;
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.4;
-		font-size: 22px;
-	}
-
-	.lc {
-		list-style-position: inside;
-		list-style-type: circle;
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: normal;
-		font-size: 22px;
-	}
-
-	.ld {
-		list-style-position: inside;
-		list-style-type: circle;
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.4;
-		padding-bottom: 1%;
-		font-size: 22px;
-	}
-
-	.h41 {
-		color: #83918f;
 	}
 </style>

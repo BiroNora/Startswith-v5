@@ -12,10 +12,10 @@
 
 	let yesACT = $state(false);
 
-  // 2. Az effect fogja betölteni az értéket, amikor az oldal betöltődik VAGY a data frissül
-  $effect(() => {
-    yesACT = data.contact.active;
-  });
+	// 2. Az effect fogja betölteni az értéket, amikor az oldal betöltődik VAGY a data frissül
+	$effect(() => {
+		yesACT = data.contact.active;
+	});
 
 	let pageName = 'Contact Details';
 </script>
@@ -24,9 +24,9 @@
 	<title>{pageName}</title>
 </svelte:head>
 
-<div class="main">
-	<div id="base">
-		<h1>Contact Details</h1>
+<div id="top" class="main">
+	<div>
+		<h3>Contact Details</h3>
 		<hgroup>
 			<h3>
 				{data.contact.contact_name}
@@ -133,12 +133,11 @@
 </div>
 
 <style>
-
 	.aa {
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 22px;
+		font-size: 20px;
 	}
 
 	.ab {

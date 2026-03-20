@@ -13,7 +13,7 @@
 </svelte:head>
 
 <div class="main">
-	<h1>Login</h1>
+	<h3>Login</h3>
 
 	<form action="?/login" method="POST" class="width-400">
 		<div>

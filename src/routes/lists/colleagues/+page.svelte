@@ -49,17 +49,17 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<h1>StartsWith Colleagues</h1>
+	<h3>StartsWith Colleagues</h3>
 
 	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredUsers.length} placeholder="Search for..." />
 	</div>
 
 	<br />
-	<ul id="list">
+	<ul>
 		{#each filteredUsers as user}
 			{#if user.active}
-				<li class="li aa">
+				<li class="li">
 					{user.user_name}
 					{' 🏠 '}
 					{getDutyLabel(user.on_duty)}
@@ -81,21 +81,17 @@
 		color: #32bea6;
 		font-weight: 400;
 		line-height: normal;
-		font-size: 23px;
-	}
-
-	.z {
-		color: rgb(144, 132, 132);
-		font-size: medium;
-		font-weight: 400;
-		font-style: italic;
+		font-size: 20px;
 	}
 
 	.li {
 		list-style-position: inside;
 		list-style-type: disc;
+		color: #32bea6;
 		padding-left: 5%;
 		text-indent: -6%;
-		line-height: 2;
+		line-height: normal;
+		font-size: 20px;
+		font-weight: 400;
 	}
 </style>

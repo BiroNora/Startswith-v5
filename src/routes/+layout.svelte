@@ -130,6 +130,7 @@
     width: 100%;
     padding-left: 2%;
     padding-right: 2%;
+    font-size: 20px;
   }
 
   nav {
@@ -167,7 +168,6 @@
     display: none;
     position: absolute;
     background-color: #fafdfd;
-    min-width: 160px;
     z-index: 1001;
     transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
     transform: translate(-10px);
@@ -193,7 +193,7 @@
   /* Show the dropdown menu on hover */
   .dropdown:hover .dropdown-content {
     display: block;
-    min-width: 35px;
+    min-width: 20px;
   }
 
   /* Change the background color of the dropdown button when the dropdown content is shown */

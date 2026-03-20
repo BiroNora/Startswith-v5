@@ -74,7 +74,7 @@
 
 <div class="main-chart" id="top">
 	<hgroup>
-		<h1>Chart Tables* of Events** and Interested Students at Regions</h1>
+		<h3>Chart Tables* of Events** and Interested Students at Regions</h3>
 		<i>&emsp;*Events only with active and cooperative schools</i>
 		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i
 		>
