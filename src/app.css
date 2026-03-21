@@ -172,6 +172,9 @@ label {
 	cursor: pointer;
 	transition: background 0.2s;
 	outline: none;
+	display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-cancel {
@@ -180,6 +183,9 @@ label {
 	border: 1px solid var(--primary-green);
 	border-color: var(--primary-green);
 	width: 100%;
+	display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-rounded:hover {
@@ -203,6 +209,9 @@ label {
 	background-color: white;
 	color: var(--secondary-gray-cool);
 	border-color: var(--primary-green);
+	display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* --- BUTTON EDDIG --- */
 
@@ -243,7 +252,7 @@ label {
 	color: rgb(144, 132, 132);
 	padding-left: 5%;
 	text-indent: -6%;
-	line-height: 1.35;
+	line-height: normal;
 }
 
 .lb {
@@ -275,14 +284,14 @@ i {
 
 p {
 	font-size: 0.9rem;
-	line-height: 1.5;
+	line-height: normal;
 	margin-bottom: 0.5rem;
-	color: #ccc;
+	color: var(--secondary-gray-cool);
 }
 
 .rei p {
 	position: relative;
-	line-height: 1;
+	line-height: normal;
 	font-size: 140%;
 	font-weight: bold;
 }

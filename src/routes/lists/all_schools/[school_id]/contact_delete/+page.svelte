@@ -10,7 +10,7 @@
 
 <div class="grid event3-to-position" id="section3_event">
 	<div class="rei">
-		<p>Internal Connection Delete</p>
+		<p class="black">Internal Connection Delete</p>
 	</div>
 	<p class="uni">{data.school.school_name}</p>
 	<form action="?/schoolUD" method="post" use:enhance>

@@ -35,7 +35,7 @@
 	</div>
 
 	<br />
-	<ul id="list">
+	<ul>
 		{#each filteredSchools as s}
 			<li class="li">
 				<a href="../lists/all_schools/{s.school_id}" class={s.User.length > 0 ? 'aa' : 'bb'}>

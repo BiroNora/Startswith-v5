@@ -77,14 +77,8 @@
 </div>
 
 <style>
-
 	.li {
-		list-style-position: inside;
-		list-style-type: disc;
 		color: #32bea6;
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: normal;
 		font-size: 20px;
 		font-weight: 400;
 	}

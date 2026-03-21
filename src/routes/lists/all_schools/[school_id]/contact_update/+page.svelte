@@ -10,9 +10,9 @@
 
 <div class="grid event2-to-position" id="section_school">
 	<div class="rei">
-		<p>Internal Connection Update</p>
+		<p class="black">Internal Connection Update</p>
 	</div>
-	<p class="uni">{data.school.school_name}</p>
+	<p>{data.school.school_name}</p>
 	<form action="?/schoolU" method="post" use:enhance>
 		<div>
 			<label for="email">Email</label>
@@ -24,7 +24,7 @@
 		{#if form?.alreadycontact}
 			<p class="error">Startswith user already added.</p>
 		{/if}
-		
+
 		<button class="btn" id="btnevent" type="submit">Add</button>
 		<button class="btn btn-cancel" id="cancel" type="button" onclick={handleCancel}>
 			Cancel ❖ Jump Back
