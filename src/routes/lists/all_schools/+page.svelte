@@ -27,7 +27,7 @@
 	<hgroup>
 		<h3>School List*</h3>
 		<i>&emsp;*Grey colored schools have no Startswith connection</i>
-		<h4 class="z">Number of schools: {data.schools.length}</h4>
+		<i>&emsp;Number of schools: {data.schools.length}</i>
 	</hgroup>
 
 	<div class="search-input">
@@ -39,7 +39,7 @@
 		{#each filteredSchools as s}
 			<li class="li">
 				<a href="../lists/all_schools/{s.school_id}" class={s.User.length > 0 ? 'aa' : 'bb'}>
-					{s.school_name} 🏠 {s.region?.region_name} ➔ {s.county?.county_name} ➔ {s.city?.city_name} ✺
+					{s.school_name} 🏠 {s.region?.region_name} &#10047; {s.county?.county_name} &#10047; {s.city?.city_name} ✺
 
 					<strong class="s1">
 						{s.basic ? ' BASIC ' : ''}
@@ -67,26 +67,14 @@
 <style>
 	.aa {
 		color: #09c6a7;
-		line-height: normal;
-		font-weight: 400;
-		font-size: 20px;
 	}
 
 	.bb {
 		color: rgb(144, 132, 132);
-		padding: 2%;
+		line-height: normal;
 		font-weight: 400;
 		font-size: 20px;
 		font-style: italic;
-	}
-
-	.li {
-		list-style-position: inside;
-		list-style-type: disc;
-		color: rgb(144, 132, 132);
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.35;
 	}
 
 	.s {
@@ -99,17 +87,5 @@
 		font-size: 18px;
 		font-weight: 500;
 		color: rgb(144, 132, 132);
-	}
-
-	.z {
-		color: rgb(144, 132, 132);
-		font-size: medium;
-		font-weight: 400;
-		font-style: italic;
-	}
-
-	i {
-		font-size: medium;
-		font-weight: 300;
 	}
 </style>

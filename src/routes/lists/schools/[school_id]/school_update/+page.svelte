@@ -1,4 +1,3 @@
-<!-- School update form -->
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
