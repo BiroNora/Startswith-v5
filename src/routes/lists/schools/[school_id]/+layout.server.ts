@@ -9,18 +9,15 @@ import {
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ params, locals }) => {
-  // 1. Jogosultság ellenőrzése
   if (!locals.user || locals.user.active === false) {
     throw redirect(302, '/auth/login');
   }
 
-  // 2. ID kinyerése és ellenőrzése
   const schoolId = Number(params.school_id);
   if (isNaN(schoolId)) {
     throw error(400, 'Érvénytelen iskola azonosító');
   }
 
-  // 3. Adatok lekérése párhuzamosan (gyorsabb)
   const [school, contacts, events] = await Promise.all([
     db.school.findUnique({
       where: { school_id: schoolId },
@@ -41,12 +38,10 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
     })
   ]);
 
-  // 4. Ha nincs ilyen iskola, 404
   if (!school) {
     throw error(404, 'School not found');
   }
 
-  // 5. Adatok formázása/mappelése (amit korábban a page-ben csináltál)
   const resS = schType
     .filter((_, i) => school.school_type.includes(String(i + 1)))
     .join(', ');
@@ -61,7 +56,6 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
     event_type: eventMap.find(e => e.id === obj.event_type)?.name || obj.event_type
   }));
 
-  // 6. Minden adat visszaküldése, amit a gyerek oldalak látni fognak
   return {
     school,
     resS,

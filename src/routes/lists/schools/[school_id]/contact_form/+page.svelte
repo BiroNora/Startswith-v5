@@ -1,14 +1,18 @@
 <script>
 	import { enhance } from '$app/forms';
 
+	function handleCancel() {
+		history.back();
+	}
+
 	let { form } = $props();
 </script>
 
 <!-- Contact form -->
 
-<div class="grid element-to-even-position" id="section_contact">
+<div class="grid">
 	<div class="rei">
-		<p class="h43">Contact Register</p>
+		<p class="black">Contact Register</p>
 	</div>
 	<br />
 	<form action="?/contact_form" method="post" use:enhance>
@@ -33,6 +37,8 @@
 		{/if}
 
 		<button class="btn" id="btn" type="submit">Register</button>
-		<br />
+		<button class="btn btn-cancel" id="cancel" type="button" onclick={handleCancel}>
+			Cancel ❖ Jump Back
+		</button>
 	</form>
 </div>

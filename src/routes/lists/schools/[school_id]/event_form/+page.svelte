@@ -2,6 +2,10 @@
 	import { enhance } from '$app/forms';
 	import { dutyMap, eventMap } from '../../../../stores/dataStore';
 
+	function handleCancel() {
+		history.back();
+	}
+
 	let { form } = $props();
 </script>
 
@@ -66,5 +70,8 @@
 		{/if}
 
 		<button class="btn" id="btnevent" type="submit">Register</button>
+		<button class="btn btn-cancel" id="cancel" type="button" onclick={handleCancel}>
+			Cancel ❖ Jump Back
+		</button>
 	</form>
 </div>

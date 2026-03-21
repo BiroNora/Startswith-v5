@@ -54,8 +54,8 @@
 		}
 	});
 
-	function scrollToConnect() {
-		window.scrollTo({ top: 0 });
+	function handleCancel() {
+		history.back();
 	}
 
 	let pageName = 'School Details';
@@ -212,6 +212,8 @@
 		{/if}
 
 		<button class="btn" id="btn" type="submit">Update</button>
-		<br />
+		<button class="btn btn-cancel" id="cancel" type="button" onclick={handleCancel}>
+			Cancel ❖ Jump Back
+		</button>
 	</form>
 </div>

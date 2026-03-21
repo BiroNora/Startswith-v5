@@ -13,7 +13,7 @@
 <div id="top" class="main">
 	<hgroup>
 		<h3>Event Details</h3>
-		<h6>{data.event.event_name}</h6>
+		<h5>{data.event.event_name}</h5>
 	</hgroup>
 
 	<hgroup>

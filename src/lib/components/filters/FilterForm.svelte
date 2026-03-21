@@ -3,7 +3,6 @@
 
 	let { data, onFilter } = $props();
 
-	// Belső állapotok (Rúnák) - Leváltjuk a Store-okat belső állapotra a komponensen belül
 	let selectedYear = $state('ALL');
 	let selectedSemester = $state('ALL');
 	let selectedDuty = $state('ALL');
@@ -13,7 +12,6 @@
 	function handleSubmit(event: Event) {
 		event.preventDefault();
 
-		// 2. Itt küldjük vissza az adatokat a szülőnek!
 		onFilter({
 			selectedYear,
 			selectedSemester,
