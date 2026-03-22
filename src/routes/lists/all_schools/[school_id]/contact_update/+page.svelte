@@ -12,7 +12,7 @@
 	<div class="rei">
 		<p class="black">Internal Connection Update</p>
 	</div>
-	<p>{data.school.school_name}</p>
+	<p class="black">{data.school.school_name}</p>
 	<form action="?/schoolU" method="post" use:enhance>
 		<div>
 			<label for="email">Email</label>

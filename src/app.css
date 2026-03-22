@@ -224,7 +224,7 @@ label {
 
 /* --- LISTS --- */
 .aa {
-	color: #147263;
+	color: #09c6a7;
 	line-height: normal;
 	font-weight: 400;
 	font-size: 20px;
@@ -262,6 +262,10 @@ label {
 	text-indent: -6%;
 	line-height: normal;
 }
+
+.pad-bot-plus {
+		padding-bottom: 0.3rem;
+	}
 
 /* --- FONTS --- */
 hgroup i {

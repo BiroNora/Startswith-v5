@@ -22,31 +22,33 @@
 				Időpont: {formatDate(data.event.closing_date)}, {timeSlugify(data.event.closing_date)}
 			</li>
 			<li class="lb">Szervező: {data.event.on_duty_name}</li>
-			<li class="lb">Startswith kapcsolat:</li>
-
-			<div>
-				{#each data.event.User as u}
-					<ul>
-						<li class="lb">
-							Név: {u.user_name}
-						</li>
-					</ul>
-				{/each}
-			</div>
+			<li class="lb pad-bot-plus">
+				Startswith (belső) kapcsolat:
+				{#if !data.event.User || data.event.User.length === 0}
+					<span>Nincs</span>
+				{:else}
+					<div class="ac">
+						{#each data.event.User as u}
+							<div>
+								Név: {u.user_name}
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</li>
 
 			<li class="lb">Esemény formája: {data.event.event_type_name}</li>
 			<li class="lb">Becsült résztvevők száma: {data.event.estimated_student}</li>
-			<li class="lb">Iskola:</li>
-
-			<ul>
-				<li class="lb">
+			<li class="lb pad-bot-plus">
+				Iskola:
+				<div class="ac">
 					<a href="../../lists/all_schools/{data.school?.school_id}" class="aa">
 						{data.school?.school_name}
 						{' 🏠 '}
 						{data.cityname}
 					</a>
-				</li>
-			</ul>
+				</div>
+			</li>
 
 			<li class="lb">Feljegyzés: {data.event.note || 'Nincs feljegyzés'}</li>
 			<li class="lb">
@@ -88,7 +90,6 @@
 					{/each}
 				{/if}
 			</div>
-
 		</ul>
 	</hgroup>
 

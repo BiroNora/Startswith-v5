@@ -36,7 +36,9 @@
 			<i>Események száma:&nbsp;{data.event.length}</i>
 		</hgroup>
 
-		<a href="/lists/all_schools/{data?.school?.school_id}/contact_update" class="ab"> &#9758; Startswith kapcsolat hozzáadása </a>
+		<a href="/lists/all_schools/{data?.school?.school_id}/contact_update" class="ab">
+			&#9758; Startswith kapcsolat hozzáadása
+		</a>
 		&nbsp;&nbsp;
 		<a href="/lists/all_schools/{data?.school?.school_id}/contact_delete" class="ab">
 			<strong class="error">&#10008;</strong>&nbsp; Startswith kapcsolat törlése
@@ -52,33 +54,41 @@
 				<li class="lb">Iskola típusa: {data.resS}</li>
 				<li class="lb">Felelős: {data.resD}</li>
 				<li class="lb">Feljegyzés: {data.school.note || 'Nincs feljegyzés'}</li>
-				<li class="lb">Startswith (belső) felelősök:</li>
+				<li class="lb pad-bot-plus">
+					Startswith (belső) kapcsolat:
+					{#if !data.internalContacts || data.internalContacts.length === 0}
+						<span>Nincs</span>
+					{:else}
+						<div class="ac">
+							{#each data.internalContacts as u}
+								<div>
+									Név: {u.user_name}
+								</div>
+							{/each}
+						</div>
+					{/if}
+				</li>
 
-				<div>
-					{#each data.internalContacts as u}
-						<ul>
-							<li class="lb">
-								Név: {u.user_name}
-							</li>
-						</ul>
-					{/each}
-				</div>
-
-				<li class="lb">Iskolai (külső) kapcsolat:</li>
-				<div>
-					{#each data.externalContacts as con}
-						<ul>
-							<li class="lb">
-								Név: {con.contact_name}
-							</li>
-							<li class="lb">Telefon: {con.contact_phone || 'Nincs'}</li>
-							<li class="lb">Email: {con.contact_email || 'Nincs'}</li>
-							<li class="lb">Feljegyzés: {con.contact_note || 'Nincs feljegyzés'}</li>
-						</ul>
-					{/each}
-				</div>
+				<li class="lb">
+					Iskolai (külső) kapcsolat:
+					{#if !data.externalContacts || data.externalContacts.length === 0}
+						<span>Nincs</span>
+					{:else}
+						<div class="ac">
+							{#each data.externalContacts as con}
+								<div>Név: {con.contact_name}</div>
+								<div>Telefon: {con.contact_phone || 'Nincs'}</div>
+								<div>Email: {con.contact_email || 'Nincs'}</div>
+								<div>Feljegyzés: {con.contact_note || 'Nincs'}</div>
+								<br />
+							{/each}
+						</div>
+					{/if}
+				</li>
 			</ul>
+
 			<div class="aa">Események</div>
+
 			<ul class="ac">
 				{#each data.event as e}
 					<li class="li">

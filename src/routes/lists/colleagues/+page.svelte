@@ -78,7 +78,7 @@
 
 <style>
 	.li {
-		color: #32bea6;
+		color: #09c6a7;
 		font-size: 20px;
 		font-weight: 400;
 	}

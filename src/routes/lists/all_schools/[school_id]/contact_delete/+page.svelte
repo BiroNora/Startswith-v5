@@ -12,7 +12,7 @@
 	<div class="rei">
 		<p class="black">Internal Connection Delete</p>
 	</div>
-	<p class="uni">{data.school.school_name}</p>
+	<p class="black">{data.school.school_name}</p>
 	<form action="?/schoolUD" method="post" use:enhance>
 		<div>
 			<label for="email">Email</label>

@@ -65,10 +65,6 @@
 </div>
 
 <style>
-	.aa {
-		color: #09c6a7;
-	}
-
 	.bb {
 		color: rgb(144, 132, 132);
 		line-height: normal;
