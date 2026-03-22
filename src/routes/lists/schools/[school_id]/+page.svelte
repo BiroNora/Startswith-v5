@@ -1,11 +1,8 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { dutyMap, eventMap, formatDate } from '../../../stores/dataStore.js';
+	import { formatDate } from '../../../stores/dataStore.js';
 
-	let { data, form } = $props() as { data: any; form: any };
+	let { data } = $props() as { data: any; form: any };
 
-	// 1. Deklaráljuk az állapotokat alapértelmezett értékkel (üres/false)
-	// Így nincs közvetlen 'data' hivatkozás a $state-ben.
 	let yesA = $state(false);
 	let yesB = $state(false);
 	let yesC = $state(false);
@@ -54,7 +51,7 @@
 		yesACT = data.school.active ?? true;
 	});
 
-	let pageName = 'My School Details';
+	let pageName = 'My School';
 </script>
 
 <svelte:head>
@@ -62,31 +59,45 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<h3>School Details</h3>
 	<hgroup>
-		{#if !data.school.active || !data.school.coop}
-			<h3>{data.school.school_name} {' ⚠️ '}</h3>
-		{:else if data.school.active}
-			<h3>{data.school.school_name}</h3>
-		{/if}
-		<hgroup>
-			<h6>{data.school.zip_code} {data.city?.city_name} {data.school.address}</h6>
-			<p>
-				{data.country?.country_name} / {data.region?.region_name} régió / {data.county?.county_name}
-				megye
-			</p>
-			<a href="/lists/schools/{data?.school?.school_id}/event_form" class="aa">
-				&#9758; Esemény hozzáadása
-			</a>
-			&nbsp; &nbsp;
-			<a href="/lists/schools/{data?.school?.school_id}/contact_form" class="aa"> &#9758; Kapcsolat hozzáadása </a> &nbsp; &nbsp;
-		</hgroup>
-		<br />
-		<h4 class="h41">Adatok</h4>
-		<a href="/lists/schools/{data?.school?.school_id}/school_update" class="ad">
-			&#9758; Iskola adatainak módosítása
-		</a>
-		<ul class="ab">
+		<h3>School Profile</h3>
+		<div>
+			{#if !data.school.active || !data.school.coop}
+				<h5>{data.school.school_name} {' ⚠️ '}</h5>
+			{:else if data.school.active}
+				<h5>{data.school.school_name}</h5>
+			{/if}
+		</div>
+
+		<div class="aa">
+			{data.school.zip_code}
+			{data.school.city?.city_name}
+			{data.school.address}
+		</div>
+		<div class="aa">
+			{data.school.country?.country_name} / {data.school.region?.region_name} régió / {data.school
+				.county?.county_name}
+			megye
+		</div>
+		<i>Események száma:&nbsp;{data.event.length}</i>
+	</hgroup>
+
+	<a href="/lists/schools/{data?.school?.school_id}/event_form" class="ab">
+		&#9758; Esemény hozzáadása
+	</a>
+	&nbsp; &nbsp;
+	<a href="/lists/schools/{data?.school?.school_id}/contact_form" class="ab">
+		&#9758; Iskolai (külső) kapcsolat hozzáadása
+	</a>
+	&nbsp; &nbsp;
+	<br />
+
+	<a href="/lists/schools/{data?.school?.school_id}/school_update" class="ab">
+		&#9758; Iskola adatainak módosítása
+	</a>
+
+	<div>
+		<ul class="ac">
 			<li class="lb">OM szám: {data.school.om_id}</li>
 			<li class="lb">Igazgató: {data.school.dir_name}</li>
 			<li class="lb">Iskola telefon: {data.school.dir_phone}</li>
@@ -95,164 +106,45 @@
 			<li class="lb">Iskola típusa: {data.resS}</li>
 			<li class="lb">Felelős: {data.resD}</li>
 			<li class="lb">Feljegyzés: {data.school.note}</li>
-			<li class="lb">Kapcsolat:</li>
-			<hgroup>
-				{#each data.contact as con}
-					<ul class="ac">
-						<hgroup>
-							<li class="lb">
-								<a href="../../lists/contacts/{con.contact_id}" class="aa"
-									>Név: {con.contact_name}
-								</a>
-							</li>
-							<li class="lb">Telefon: {con.contact_phone}</li>
-							<li class="lb">Email: {con.contact_email}</li>
-							<li class="lb">Feljegyzés: {con.contact_note}</li>
-						</hgroup>
-					</ul>
-				{/each}
-			</hgroup>
+			<li class="lb">
+				Iskolai (külső) kapcsolat:
+				{#if !data.contact || data.contact.length === 0}
+					<span>Nincs</span>
+				{:else}
+					<div class="ac">
+						{#each data.contact as con}
+							<div>
+								<a href="../../lists/contacts/{con.contact_id}" class="name-style">{con.contact_name} </a>
+							</div>
+							<div>Telefon: {con.contact_phone}</div>
+							<div>Email: {con.contact_email}</div>
+							<div>Feljegyzés: {con.contact_note}</div>
+							<br />
+						{/each}
+					</div>
+				{/if}
+			</li>
 		</ul>
-		<h4 class="h42">Események</h4>
-		<br />
-		<ul class="aa">
+
+		<div class="aa">Események</div>
+
+		<ul class="ac">
 			{#each data.event as e}
-				<li class="la">
+				<li class="li">
 					<a href="../../lists/events/{e.event_id}" class="aa">
 						{formatDate(e.closing_date)} &#9753 {e.event_name} &#10086 {e.on_duty} &#10087 {e.event_type}
 					</a>
 				</li>
 			{/each}
 		</ul>
-	</hgroup>
+	</div>
+
 	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
-	.aa {
-		color: #32bea6;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
-
 	.ab {
-		color: #83918f;
-		padding: 2%;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 22px;
-	}
-
-	.ac {
-		color: #83918f;
-		font-weight: 400;
-		line-height: normal;
-		padding-top: 1%;
-		padding-left: 5%;
-		text-indent: -6%;
-		font-size: 22px;
-	}
-
-	.ad {
-		color: #83918f;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 22px;
-	}
-
-	.la {
-		list-style-position: inside;
-		list-style-type: disc;
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.4;
-		font-size: 22px;
-	}
-
-	.lb {
-		list-style-position: inside;
-		list-style-type: circle;
-		padding-left: 5%;
-		text-indent: -5%;
-		line-height: 1.4;
-		font-size: 22px;
-	}
-
-	.h41 {
-		color: #83918f;
-	}
-
-	.h42 {
 		color: #32bea6;
-	}
-
-	.h43 {
-		color: #737978;
-	}
-
-	.h44 {
-		color: #83918f;
-		border-color: #83918f;
-	}
-
-	label {
-		padding: 6px;
-	}
-
-	.rei p {
-		position: relative;
-		line-height: normal;
-		font-size: 140%;
-		font-weight: bold;
-	}
-
-	.grid {
-		padding: 35px 15px 0px 15px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-content: space-around;
-		width: 55%;
-		line-height: 75%;
-		grid-row: minmax(5px, auto);
-	}
-
-	.grid input:checked {
-		background-color: #32bea6;
-	}
-
-	.btn {
-		margin-bottom: 0;
-		background-color: #32bea6;
-	}
-
-	.element-to-position {
-		transform: translateY(420vh); /* Move the element down one viewport height (vh) */
-	}
-
-	.element-to-even-position {
-		transform: translateY(620vh); /* Move the element down one viewport height (vh) */
-	}
-
-	.school-to-position {
-		transform: translateY(820vh);
-	}
-
-	.iii {
-		display: flex;
-		text-align: left;
-		padding-left: 5px;
-		color: rgb(146, 136, 136);
-	}
-
-	.error {
-		color: tomato;
-		padding: 2%;
-		text-align: center;
-		font-style: italic;
-		line-height: 95%;
-		font-weight: 500;
 	}
 </style>

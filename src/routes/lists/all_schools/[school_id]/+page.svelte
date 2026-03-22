@@ -4,7 +4,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let pageName = 'School Details';
+	let pageName = 'Schools';
 </script>
 
 <svelte:head>
@@ -12,104 +12,102 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<div id="base">
-		<hgroup>
-			<h3>School Details</h3>
-			<div>
-				{#if !data.school.active || !data.school.coop}
-					<h5>{data.school.school_name} {' ⚠️ '}</h5>
-				{:else if data.school.active}
-					<h5>{data.school.school_name}</h5>
-				{/if}
-			</div>
-
-			<div class="aa">
-				{data.school.zip_code}
-				{data.school.city?.city_name}
-				{data.school.address}
-			</div>
-			<div class="aa">
-				{data.school.country?.country_name} / {data.school.region?.region_name} régió / {data.school
-					.county?.county_name}
-				megye
-			</div>
-			<i>Események száma:&nbsp;{data.event.length}</i>
-		</hgroup>
-
-		<a href="/lists/all_schools/{data?.school?.school_id}/contact_update" class="ab">
-			&#9758; Startswith kapcsolat hozzáadása
-		</a>
-		&nbsp;&nbsp;
-		<a href="/lists/all_schools/{data?.school?.school_id}/contact_delete" class="ab">
-			<strong class="error">&#10008;</strong>&nbsp; Startswith kapcsolat törlése
-		</a>
-
+	<hgroup>
+		<h3>School Details</h3>
 		<div>
-			<ul class="ac">
-				<li class="lb">OM szám: {data.school.om_id || 'Nincs megadva'}</li>
-				<li class="lb">Igazgató: {data.school.dir_name || 'Nincs megadva'}</li>
-				<li class="lb">Iskola telefon: {data.school.dir_phone || 'Nincs megadva'}</li>
-				<li class="lb">Iskola email: {data.school.school_email || 'Nincs megadva'}</li>
-				<li class="lb">Website: {data.school.website || 'Nincs megadva'}</li>
-				<li class="lb">Iskola típusa: {data.resS}</li>
-				<li class="lb">Felelős: {data.resD}</li>
-				<li class="lb">Feljegyzés: {data.school.note || 'Nincs feljegyzés'}</li>
-				<li class="lb pad-bot-plus">
-					Startswith (belső) kapcsolat:
-					{#if !data.internalContacts || data.internalContacts.length === 0}
-						<span>Nincs</span>
-					{:else}
-						<div class="ac">
-							{#each data.internalContacts as u}
-								<div>
-									Név: {u.user_name}
-								</div>
-							{/each}
-						</div>
-					{/if}
-				</li>
-
-				<li class="lb">
-					Iskolai (külső) kapcsolat:
-					{#if !data.externalContacts || data.externalContacts.length === 0}
-						<span>Nincs</span>
-					{:else}
-						<div class="ac">
-							{#each data.externalContacts as con}
-								<div>Név: {con.contact_name}</div>
-								<div>Telefon: {con.contact_phone || 'Nincs'}</div>
-								<div>Email: {con.contact_email || 'Nincs'}</div>
-								<div>Feljegyzés: {con.contact_note || 'Nincs'}</div>
-								<br />
-							{/each}
-						</div>
-					{/if}
-				</li>
-			</ul>
-
-			<div class="aa">Események</div>
-
-			<ul class="ac">
-				{#each data.event as e}
-					<li class="li">
-						<a href="../../lists/all_events/{e.event_id}" class="aa">
-							{formatDate(e.closing_date)}
-							&#9753
-							{e.event_name}
-							&#10086
-							{e.on_duty_name}
-							&#10087
-							{e.event_type_name}
-						</a>
-					</li>
-				{/each}
-			</ul>
+			{#if !data.school.active || !data.school.coop}
+				<h5>{data.school.school_name} {' ⚠️ '}</h5>
+			{:else if data.school.active}
+				<h5>{data.school.school_name}</h5>
+			{/if}
 		</div>
 
-		<br />
-		<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
-		>
+		<div class="aa">
+			{data.school.zip_code}
+			{data.school.city?.city_name}
+			{data.school.address}
+		</div>
+		<div class="aa">
+			{data.school.country?.country_name} / {data.school.region?.region_name} régió / {data.school
+				.county?.county_name}
+			megye
+		</div>
+		<i>Események száma:&nbsp;{data.event.length}</i>
+	</hgroup>
+
+	<a href="/lists/all_schools/{data?.school?.school_id}/contact_update" class="ab">
+		&#9758; Startswith kapcsolat hozzáadása
+	</a>
+	&nbsp;&nbsp;
+
+	<a href="/lists/all_schools/{data?.school?.school_id}/contact_delete" class="ab">
+		<strong class="error">&#10008;</strong>&nbsp; Startswith kapcsolat törlése
+	</a>
+
+	<div>
+		<ul class="ac">
+			<li class="lb">OM szám: {data.school.om_id || 'Nincs megadva'}</li>
+			<li class="lb">Igazgató: {data.school.dir_name || 'Nincs megadva'}</li>
+			<li class="lb">Iskola telefon: {data.school.dir_phone || 'Nincs megadva'}</li>
+			<li class="lb">Iskola email: {data.school.school_email || 'Nincs megadva'}</li>
+			<li class="lb">Website: {data.school.website || 'Nincs megadva'}</li>
+			<li class="lb">Iskola típusa: {data.resS}</li>
+			<li class="lb">Felelős: {data.resD}</li>
+			<li class="lb">Feljegyzés: {data.school.note || 'Nincs feljegyzés'}</li>
+			<li class="lb pad-bot-plus">
+				Startswith (belső) kapcsolat:
+				{#if !data.internalContacts || data.internalContacts.length === 0}
+					<span>Nincs</span>
+				{:else}
+					<div class="ac">
+						{#each data.internalContacts as u}
+							<div class="name-style">
+								{u.user_name}
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</li>
+
+			<li class="lb">
+				Iskolai (külső) kapcsolat:
+				{#if !data.externalContacts || data.externalContacts.length === 0}
+					<span>Nincs</span>
+				{:else}
+					<div class="ac">
+						{#each data.externalContacts as con}
+							<div class="name-style">{con.contact_name}</div>
+							<div>Telefon: {con.contact_phone || 'Nincs'}</div>
+							<div>Email: {con.contact_email || 'Nincs'}</div>
+							<div>Feljegyzés: {con.contact_note || 'Nincs'}</div>
+							<br />
+						{/each}
+					</div>
+				{/if}
+			</li>
+		</ul>
+
+		<div class="aa">Események</div>
+
+		<ul class="ac">
+			{#each data.event as e}
+				<li class="li">
+					<a href="../../lists/all_events/{e.event_id}" class="aa">
+						{formatDate(e.closing_date)}
+						&#9753
+						{e.event_name}
+						&#10086
+						{e.on_duty_name}
+						&#10087
+						{e.event_type_name}
+					</a>
+				</li>
+			{/each}
+		</ul>
 	</div>
+
+	<br />
+	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>

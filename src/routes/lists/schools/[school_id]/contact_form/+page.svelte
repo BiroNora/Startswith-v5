@@ -30,6 +30,7 @@
 		</div>
 		<br />
 		<label for="message">Note</label>
+		<br>
 		<textarea id="message" name="contactmessage" rows="2" cols="50"></textarea>
 
 		{#if form?.errors}

@@ -196,6 +196,8 @@
 		</div>
 		<br />
 		<br />
+		<label for="message">Note</label>
+		<br>
 		<textarea id="message" name="note" rows="4" cols="50">{data.school.note}</textarea>
 
 		{#if form?.errors}

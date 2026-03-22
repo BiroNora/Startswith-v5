@@ -173,8 +173,8 @@ label {
 	transition: background 0.2s;
 	outline: none;
 	display: flex;
-  align-items: center;
-  justify-content: center;
+	align-items: center;
+	justify-content: center;
 }
 
 .btn-cancel {
@@ -184,8 +184,8 @@ label {
 	border-color: var(--primary-green);
 	width: 100%;
 	display: flex;
-  align-items: center;
-  justify-content: center;
+	align-items: center;
+	justify-content: center;
 }
 
 .btn-rounded:hover {
@@ -210,8 +210,8 @@ label {
 	color: var(--secondary-gray-cool);
 	border-color: var(--primary-green);
 	display: flex;
-  align-items: center;
-  justify-content: center;
+	align-items: center;
+	justify-content: center;
 }
 /* --- BUTTON EDDIG --- */
 
@@ -264,10 +264,21 @@ label {
 }
 
 .pad-bot-plus {
-		padding-bottom: 0.3rem;
-	}
+	padding-bottom: 0.3rem;
+}
 
 /* --- FONTS --- */
+.name-style {
+	color: #32bea6;
+	font-weight: bolder;
+}
+
+textarea#message {
+  font-size: 0.8rem;
+  line-height: normal;
+  padding: 0.5rem;
+}
+
 hgroup i {
 	font-size: 0.8rem !important;
 	display: block !important; /* Hogy mindegyik külön sorba kerüljön és egyforma legyen a viselkedése */
@@ -280,6 +291,10 @@ hgroup i {
 
 i {
 	font-weight: 300;
+}
+
+.iii {
+	font-size: 17px;
 }
 
 .log {
