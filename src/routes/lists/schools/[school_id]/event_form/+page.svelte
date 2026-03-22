@@ -9,7 +9,7 @@
 	let { form } = $props();
 </script>
 
-<div class="grid element-to-position" id="section_event">
+<div class="grid">
 	<div class="rei">
 		<p>Event Register</p>
 	</div>
@@ -19,7 +19,7 @@
 		use:enhance
 	>
 		<div>
-			<label for="fantasy"> Event Name  <i class="iii">must be unique and at least 10 characters long</i></label>
+			<label for="fantasy"> Event Name <i class="iii">must be unique and at least 10 characters long</i></label>
 			<input
 				type="text"
 				name="fantasy"

@@ -274,9 +274,9 @@ label {
 }
 
 textarea#message {
-  font-size: 0.8rem;
-  line-height: normal;
-  padding: 0.5rem;
+	font-size: 0.8rem;
+	line-height: normal;
+	padding: 0.5rem;
 }
 
 hgroup i {
@@ -294,7 +294,7 @@ i {
 }
 
 .iii {
-	font-size: 17px;
+	font-size: 0.7rem;
 }
 
 .log {
@@ -347,6 +347,20 @@ legend {
 	padding: 6px;
 	color: #32bea6 !important;
 }
+
+.admin-actions {
+	display: flex;
+	flex-direction: column;
+	margin-top: 1.0rem;
+}
+
+.row1, .row2 {
+  display: flex;
+  padding-bottom: 0.5rem;
+}
+
+.row1 { gap: 2.5rem; }
+.row2 { gap: 1.5rem; }
 
 .black {
 	color: rgb(112, 108, 108);

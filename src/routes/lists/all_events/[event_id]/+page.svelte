@@ -3,7 +3,7 @@
 
 	let { data } = $props();
 
-	let pageName = 'Event Details';
+	let pageName = 'Event Profile';
 </script>
 
 <svelte:head>
@@ -12,7 +12,7 @@
 
 <div id="top" class="main">
 	<hgroup>
-		<h3>Event Details</h3>
+		<h3>Event Profile</h3>
 		<h5>{data.event.event_name}</h5>
 	</hgroup>
 

@@ -4,7 +4,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	let pageName = 'Schools';
+	let pageName = 'School Profile';
 </script>
 
 <svelte:head>
@@ -13,7 +13,7 @@
 
 <div id="top" class="main">
 	<hgroup>
-		<h3>School Details</h3>
+		<h3>School Profile</h3>
 		<div>
 			{#if !data.school.active || !data.school.coop}
 				<h5>{data.school.school_name} {' ⚠️ '}</h5>
@@ -35,14 +35,17 @@
 		<i>Események száma:&nbsp;{data.event.length}</i>
 	</hgroup>
 
-	<a href="/lists/all_schools/{data?.school?.school_id}/contact_update" class="ab">
-		&#9758; Startswith kapcsolat hozzáadása
-	</a>
-	&nbsp;&nbsp;
+	<div class="admin-actions">
+		<div class="row1">
+			<a href="/lists/all_schools/{data?.school?.school_id}/contact_update" class="ab">
+				&#9758; Startswith kapcsolat hozzáadása
+			</a>
 
-	<a href="/lists/all_schools/{data?.school?.school_id}/contact_delete" class="ab">
-		<strong class="error">&#10008;</strong>&nbsp; Startswith kapcsolat törlése
-	</a>
+			<a href="/lists/all_schools/{data?.school?.school_id}/contact_delete" class="ab">
+				<strong class="error">&#10008;</strong>&nbsp; Startswith kapcsolat törlése
+			</a>
+		</div>
+	</div>
 
 	<div>
 		<ul class="ac">

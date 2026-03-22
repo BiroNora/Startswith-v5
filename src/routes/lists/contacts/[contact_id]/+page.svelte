@@ -17,7 +17,7 @@
 		yesACT = data.contact.active;
 	});
 
-	let pageName = 'Contact Details';
+	let pageName = 'Contact Profile';
 </script>
 
 <svelte:head>
@@ -26,7 +26,7 @@
 
 <div id="top" class="main">
 	<div>
-		<h3>Contact Details</h3>
+		<h3>Contact Profile</h3>
 		<hgroup>
 			<h3>
 				{data.contact.contact_name}

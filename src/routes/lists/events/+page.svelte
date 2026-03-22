@@ -26,7 +26,7 @@
 <div id="top" class="main">
 	<hgroup>
 		<h3>My Event List</h3>
-		<h4 class="z">Number of events:&nbsp;{count}</h4>
+		<i class="z">Number of events:&nbsp;{count}</i>
 	</hgroup>
 
 	<div class="search-input">
@@ -77,7 +77,7 @@
 	}
 
 	.d {
-		color: #087361;
+		color: #83918f;
 	}
 
 	.z {

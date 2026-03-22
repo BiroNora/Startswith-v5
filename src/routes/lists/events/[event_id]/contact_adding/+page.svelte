@@ -8,21 +8,18 @@
 	let { data, form } = $props();
 </script>
 
-<div class="grid event2-to-position">
+<div class="grid">
 	<div class="rei">
-		<p class="black">School Internal Connection Update</p>
+		<p class="black">Add New Contact</p>
 	</div>
-	<p class="black">{data.school.school_name}</p>
-	<form action="?/schoolU" method="post" use:enhance>
+	<p class="black">{data.event.event_name}</p>
+	<form action="?/eventU" method="post" use:enhance>
 		<div>
 			<label for="email">Email</label>
 			<input type="text" name="email" id="email" required />
 		</div>
-		{#if form?.usercontact}
+		{#if form?.userevent || form?.alreadyevent}
 			<p class="error">Please enter valide data.</p>
-		{/if}
-		{#if form?.alreadycontact}
-			<p class="error">Startswith user already added.</p>
 		{/if}
 
 		<button class="btn" id="btnevent" type="submit">Add</button>

@@ -51,7 +51,7 @@
 		yesACT = data.school.active ?? true;
 	});
 
-	let pageName = 'My School';
+	let pageName = 'My School Profile';
 </script>
 
 <svelte:head>
@@ -60,7 +60,7 @@
 
 <div id="top" class="main">
 	<hgroup>
-		<h3>School Profile</h3>
+		<h3>School Details</h3>
 		<div>
 			{#if !data.school.active || !data.school.coop}
 				<h5>{data.school.school_name} {' ⚠️ '}</h5>
@@ -82,19 +82,22 @@
 		<i>Események száma:&nbsp;{data.event.length}</i>
 	</hgroup>
 
-	<a href="/lists/schools/{data?.school?.school_id}/event_form" class="ab">
-		&#9758; Esemény hozzáadása
-	</a>
-	&nbsp; &nbsp;
-	<a href="/lists/schools/{data?.school?.school_id}/contact_form" class="ab">
-		&#9758; Iskolai (külső) kapcsolat hozzáadása
-	</a>
-	&nbsp; &nbsp;
-	<br />
+	<div class="admin-actions">
+		<div class="row1">
+			<a href="/lists/schools/{data?.school?.school_id}/event_form" class="ab">
+				&#9758; Esemény hozzáadása
+			</a>
+			<a href="/lists/schools/{data?.school?.school_id}/contact_form" class="ab">
+				&#9758; Iskolai (külső) kapcsolat hozzáadása
+			</a>
+		</div>
 
-	<a href="/lists/schools/{data?.school?.school_id}/school_update" class="ab">
-		&#9758; Iskola adatainak módosítása
-	</a>
+		<div class="row1">
+			<a href="/lists/schools/{data?.school?.school_id}/school_update" class="ab">
+				&#9998; Iskola adatainak módosítása
+			</a>
+		</div>
+	</div>
 
 	<div>
 		<ul class="ac">
@@ -114,7 +117,9 @@
 					<div class="ac">
 						{#each data.contact as con}
 							<div>
-								<a href="../../lists/contacts/{con.contact_id}" class="name-style">{con.contact_name} </a>
+								<a href="../../lists/contacts/{con.contact_id}" class="name-style"
+									>{con.contact_name}
+								</a>
 							</div>
 							<div>Telefon: {con.contact_phone}</div>
 							<div>Email: {con.contact_email}</div>

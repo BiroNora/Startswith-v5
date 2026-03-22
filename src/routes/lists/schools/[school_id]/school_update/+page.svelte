@@ -56,15 +56,9 @@
 	function handleCancel() {
 		history.back();
 	}
-
-	let pageName = 'School Details';
 </script>
 
-<svelte:head>
-	<title>{pageName}</title>
-</svelte:head>
-
-<div class="grid school-to-position" id="section_school">
+<div class="grid">
 	<div class="rei">
 		<p>School Update</p>
 	</div>
