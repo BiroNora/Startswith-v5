@@ -1,27 +1,30 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { formatDate, subjectMap, timeSlugify } from '../../../stores/dataStore.js';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	let showEventModal = $state(false);
-	let showIntrestModal = $state(false);
-	let selectedIntrestId = $state(0);
+	let showInterestModal = $state(false);
+	let selectedInterestId = $state(0);
 	let itemNumber = $state(0);
 
-	function add(inters: Array<{ intrest_count?: number }>) {
-		return inters.reduce((total, inter) => total + (inter.intrest_count || 0), 0);
-	}
+	const totalInterested = $derived(
+		data.inters?.reduce((total, inter) => total + (inter.intrest_count || 0), 0) ?? 0
+	);
 
-	// Function to set the itemNumber
-	function setItemNumber(index: number) {
+	function openDeleteModal(index: any, id: any) {
 		itemNumber = index + 1;
+		selectedInterestId = id;
+		showInterestModal = true;
 	}
 
-	// Function to set the selected intrest_id
-	function setSelectedIntrestId(intrest_id: number) {
-		selectedIntrestId = intrest_id;
-	}
+	$effect(() => {
+    if (form?.success) {
+      showInterestModal = false;
+    }
+  });
 
 	let pageName = 'My Event Profile';
 </script>
@@ -58,83 +61,76 @@
 		</div>
 	</div>
 
-	<div class="ac">
-		<li class="lb">
-			Időpont: {formatDate(data.event.closing_date)}, {timeSlugify(data.event.closing_date)}
-		</li>
-		<li class="lb">Szervező: {data.dutyName}</li>
-		<li class="lb">Esemény formája: {data.eventTypeName}</li>
-		<li class="lb">Becsült / megjelent résztvevők száma: {data.event.estimated_student}</li>
-		<li class="lb">Feljegyzés: {data.event.note}</li>
-		<li class="lb">Iskola:</li>
-		<hgroup>
-			<ul class="ac">
-				<li class="la">
-					<a href="../../lists/schools/{data.school?.school_id}" class="aa">
-						{data.school?.school_name}
-						{' 🏠 '}
-						{data.cityname}
-					</a>
-				</li>
-			</ul>
-		</hgroup>
-		<li class="lb">
-			Érdeklődők,&emsp;
-			<p class="z">összesen {add(data.inters)} diák</p>
-			<strong class="st">(a rögzítés sorrendjében, legfelül a legutoljára rögzített) </strong>:
-		</li>
-		<hgroup>
-			{#each data.inters as ints, index}
-				<ul class="ac">
-					<p class="lc">
-						<input type="hidden" name="int_id" value={ints.intrest_id} />
-						<a
-							href="#inter"
-							class="aa"
-							onclick={() => {
-								setItemNumber(index);
-								setSelectedIntrestId(ints.intrest_id);
-								showIntrestModal = true;
-							}}
-						>
-							{index + 1}. adat törlése
-						</a>
-					</p>
-					<li class="lb">
-						Diákok száma: {ints.intrest_count}
-					</li>
-					{#each data.countries as country}
-						{#if country.country_id === ints.country_id}
-							<li class="lb">Ország: {country.country_name}</li>
-						{/if}
-					{/each}
-					<li class="lb">Évfolyam: {ints.grade_name}</li>
-					{#each data.regions as regio}
-						{#if regio.region_id === ints.region_id}
-							<li class="lb">Régió, ahonnan értesült a programról: {regio.region_name}</li>
-						{/if}
-					{/each}
-					<li class="lb">Csatorna, ahonnan értesült a programról: {ints.channel_name}</li>
-					{#if ints.applied === true}
-						{#each subjectMap as subject (subject.id)}
-							{#if ints.work_title === subject.id}
-								<li class="lb">Jelentkezési téma: {subject.name}</li>
-							{/if}
-						{/each}
-						<li class="lb">Státusza: {ints.status_name}</li>
-					{:else}
-						<li class="lb">Nem jelentkezett</li>
-					{/if}
-					<br />
-				</ul>
-			{/each}
-		</hgroup>
+	<div>
+		<ul class="ac">
+			<li class="lb">
+				Időpont: {formatDate(data.event.closing_date)}, {timeSlugify(data.event.closing_date)}
+			</li>
+			<li class="lb">Szervező: {data.dutyName}</li>
+			<li class="lb">Esemény formája: {data.eventTypeName}</li>
+			<li class="lb">Becsült / megjelent résztvevők száma: {data.event.estimated_student}</li>
+			<li class="lb">Feljegyzés: {data.event.note}</li>
+			<li class="lb">Iskola:</li>
+
+			<li class="le pad-bot-plus">
+				<a href="../../lists/schools/{data.school?.school_id}" class="aa lb">
+					{data.school?.school_name}
+					{' 🏠 '}
+					{data.cityname}
+				</a>
+			</li>
+
+			<li class="lb">
+				Érdeklődők: összesen {totalInterested} diák
+				{#if totalInterested !== 0}
+					<div class="le">
+						<i>(a rögzítés sorrendjében, legfelül a legutoljára rögzített)</i>
+					</div>
+				{/if}
+			</li>
+		</ul>
 	</div>
 
-	<div>
-		<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
-		>
+	<div class="ac">
+		{#each data.inters as ints, index}
+			<ul class="ac">
+				<p class="lc">
+					<input type="hidden" name="int_id" value={ints.intrest_id} />
+					<a href="#inter" class="aa" onclick={() => openDeleteModal(index, ints.intrest_id)}>
+						{index + 1}. adat törlése
+					</a>
+				</p>
+				<li class="lb">
+					Diákok száma: {ints.intrest_count}
+				</li>
+				{#each data.countries as country}
+					{#if country.country_id === ints.country_id}
+						<li class="lb">Ország: {country.country_name}</li>
+					{/if}
+				{/each}
+				<li class="lb">Évfolyam: {ints.grade_name}</li>
+				{#each data.regions as regio}
+					{#if regio.region_id === ints.region_id}
+						<li class="lb">Régió, ahonnan értesült a programról: {regio.region_name}</li>
+					{/if}
+				{/each}
+				<li class="lb">Csatorna, ahonnan értesült a programról: {ints.channel_name}</li>
+				{#if ints.applied === true}
+					{#each subjectMap as subject (subject.id)}
+						{#if ints.work_title === subject.id}
+							<li class="lb">Jelentkezési téma: {subject.name}</li>
+						{/if}
+					{/each}
+					<li class="lb">Státusza: {ints.status_name}</li>
+				{:else}
+					<li class="lb">Nem jelentkezett</li>
+				{/if}
+			</ul>
+		{/each}
 	</div>
+
+	<br />
+	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <a
@@ -179,36 +175,47 @@
 
 <!-- Interested delete modal -->
 
-<!-- {#if showIntrestModal}
-				<form action="?/delInterest" method="post" use:enhance id="inter">
-					<article>
-						<h3>A(z) {itemNumber}. adat véglegesen törlődik.</h3>
+{#if showInterestModal}
+	<dialog open>
+		<article>
+			<header>
+				<a
+					href="#close"
+					aria-label="Close"
+					class="close"
+					onclick={() => (showInterestModal = false)}
+				></a>
+				<h5>Confirm Deletion</h5>
+			</header>
+			<form
+				action="?/delInterest"
+				method="post"
+				use:enhance
+				id="inter"
+			>
+				<h5>A(z) {itemNumber}. adat véglegesen törlődik.</h5>
 
-						{#if form?.interest}
-							<p class="ah">&nbsp; Az adatot nem lehet törölni.</p>
-						{/if}
+				{#if form?.interest}
+					<p class="ah">&nbsp; Az adatot nem lehet törölni.</p>
+				{/if}
 
-						<input type="hidden" name="int_id" value={selectedIntrestId} />
-						<input type="hidden" name="event_id" value={data.event.event_id} />
-						<footer>
-							<button type="submit" class="secondary w z cc" data-target="modal-example">
-								Confirm
-							</button>
-							<button
-								type="button"
-								class="secondary outline h44 w z"
-								data-target="modal-example"
-								onclick={() => ((showIntrestModal = false), scrollToConnect())}
-							>
-								Cancel
-							</button>
-						</footer>
-					</article>
-				</form>
-			{/if}
-		</ul>
-		<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
-		> -->
+				<input type="hidden" name="int_id" value={selectedInterestId} />
+				<input type="hidden" name="event_id" value={data.event.event_id} />
+				<footer>
+					<button type="submit" class="btn" data-target="modal-example"> Confirm </button>
+					<button
+						type="button"
+						class="btn btn-cancel btn-outline"
+						data-target="modal-example"
+						onclick={() => (showInterestModal = false)}
+					>
+						Cancel
+					</button>
+				</footer>
+			</form>
+		</article>
+	</dialog>
+{/if}
 
 <!-- Interested students adding form -->
 
@@ -219,6 +226,10 @@
 <style>
 	.ab {
 		color: #32bea6;
+	}
+
+	.ac {
+		padding-top: 0;
 	}
 
 	.error {

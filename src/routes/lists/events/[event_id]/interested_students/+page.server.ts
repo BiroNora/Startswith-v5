@@ -25,9 +25,10 @@ export const actions: Actions = {
           region_id: Number(data.get('connect'))
         }
       });
-      throw redirect(303, `/lists/events/${params.event_id}`);
     } catch (e) {
+      console.error(e);
       return fail(400, { interest: true });
     }
+    throw redirect(303, `/lists/events/${params.event_id}`);
   }
 }

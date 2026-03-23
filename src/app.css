@@ -263,8 +263,17 @@ label {
 	line-height: normal;
 }
 
+.le {
+	list-style-type: none;
+	color: rgb(144, 132, 132);
+	padding-left: 5%;
+	text-indent: -6%;
+	line-height: normal;
+	margin: 0;
+}
+
 .pad-bot-plus {
-	padding-bottom: 0.3rem;
+	padding-bottom: 0.5rem;
 }
 
 /* --- FONTS --- */

@@ -30,7 +30,7 @@
 					<div class="ac">
 						{#each data.event.User as u}
 							<div>
-								Név: {u.user_name}
+								{u.user_name}
 							</div>
 						{/each}
 					</div>

@@ -47,6 +47,8 @@ export async function load({params, locals}) {
 	};
 };
 
+
+
 /*
 	delUser: async ({ params, locals }) => {
 		const event_id = Number(params.event_id);
@@ -59,28 +61,4 @@ export async function load({params, locals}) {
 
 		await db.event.delete({ where: { event_id } });
 		throw redirect(303, '/lists/events');
-	},
-
-	delInterest: async ({ request, locals }) => {
-		const data = await request.formData();
-		const intrest_id = Number(data.get('int_id'));
-		const event_id = Number(data.get('event_id'));
-
-		const event = await checkEventAccess(locals, event_id);
-
-		const belongsToEvent = event.InterestedStudents.some(
-      (s) => s.intrest_id === intrest_id
-    );
-
-    if (!belongsToEvent) {
-      return fail(403, { interest: true, message: "Ez az adat nem ehhez az eseményhez tartozik." });
-    }
-
-		try {
-			await db.interestedStudents.delete({ where: { intrest_id } });
-			return { success: true, interest: false };
-		} catch (e) {
-			return fail(400, { interest: true });
-		}
-	}
-}; */
+	},*/
