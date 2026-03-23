@@ -25,5 +25,18 @@ export const actions: Actions = {
     } catch (e) {
       return fail(400, { interest: true });
     }
-  }
+  },
+
+  delUser: async ({ params, locals }) => {
+		const event_id = Number(params.event_id);
+		const event = await checkEventAccess(locals, event_id);
+
+		// Ha van gazda (több mint 1) vagy van érdeklődő, nem törölhető
+		if (event && (event.User.length > 1 || event.InterestedStudents.length > 0)) {
+			return fail(400, { intern: true });
+		}
+
+		await db.event.delete({ where: { event_id } });
+		throw redirect(303, '/lists/events');
+	}
 };

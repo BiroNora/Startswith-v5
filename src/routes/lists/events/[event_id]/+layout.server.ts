@@ -30,6 +30,8 @@ export async function load({params, locals}) {
 		db.region.findMany({ orderBy: { region_name: 'asc' } })
 	]);
 
+	const isDeletable = eventData.User.length <= 1 && eventData.InterestedStudents.length === 0;
+
 	return {
 		event: eventData,
 		school: eventData.School,
@@ -43,7 +45,8 @@ export async function load({params, locals}) {
 		onduty: eventData.on_duty,
 		eventtype: eventData.event_type,
 		schoolCountry: eventData.School.country_id,
-		schoolRegion: eventData.School.region_id
+		schoolRegion: eventData.School.region_id,
+		isDeletable
 	};
 };
 
