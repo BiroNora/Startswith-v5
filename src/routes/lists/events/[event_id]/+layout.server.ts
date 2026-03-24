@@ -1,4 +1,4 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { db } from '$lib/database';
 import { dutyMap, eventMap, gradeMap, channelMap, statusMap } from '../../../stores/dataStore';
 import { checkEventAccess } from '$lib/validation';

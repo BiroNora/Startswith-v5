@@ -47,39 +47,6 @@
 			</li>
 		{/each}
 	</ul>
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
-	<br />
+
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
-
-<style>
-	.aa {
-		color: #32bea6;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
-
-	.li {
-		list-style-position: inside;
-		list-style-type: disc;
-		color: rgb(144, 132, 132);
-		padding-left: 5%;
-		text-indent: -6%;
-		line-height: 1.35;
-	}
-
-	strong {
-		font-weight: 500;
-		color: tomato;
-	}
-</style>

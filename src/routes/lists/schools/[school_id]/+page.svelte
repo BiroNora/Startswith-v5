@@ -85,10 +85,10 @@
 	<div class="admin-actions">
 		<div class="row1">
 			<a href="/lists/schools/{data?.school?.school_id}/event_form" class="ab">
-				&#9758; Esemény hozzáadása
+				<span>&#9758;</span> Esemény hozzáadása
 			</a>
 			<a href="/lists/schools/{data?.school?.school_id}/contact_form" class="ab">
-				&#9758; Iskolai (külső) kapcsolat hozzáadása
+				<span>&#9758;</span> Iskolai (külső) kapcsolat hozzáadása
 			</a>
 		</div>
 
