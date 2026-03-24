@@ -1,12 +1,5 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
-
-	function scrollToConnect() {
-		window.scrollTo({
-			top: 0
-		});
-	}
 
 	let { data }: { data: PageData } = $props();
 
@@ -60,10 +53,6 @@
 
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
-
-<!-- Contact update form -->
-
-
 
 <style>
 	.ab {

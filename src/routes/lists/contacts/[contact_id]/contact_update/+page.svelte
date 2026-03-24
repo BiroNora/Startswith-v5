@@ -7,7 +7,6 @@
 
 	let yesACT = $state(false);
 
-	// 2. Az effect fogja betölteni az értéket, amikor az oldal betöltődik VAGY a data frissül
 	$effect(() => {
 		yesACT = data.contact.active;
 	});
