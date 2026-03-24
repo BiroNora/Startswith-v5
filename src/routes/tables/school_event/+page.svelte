@@ -199,69 +199,150 @@
 				<th class="c v">County</th>
 				<th class="c v">City</th>
 
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>Schools</div>
-					<br />
-					<div><strong>{searchTotals.schools}/{serverTotals.schools}</strong></div>
-					<br />
-					<div><strong class="c i">&sum;: {data.schoolsCount}</strong></div>
-					<div class="c h">{searchTotals.globalPercSchools} %</div>
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>Schools</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.schools}/{serverTotals.schools}
+						</span>
+
+						<div style="height: 0.7rem;">&nbsp;</div>
+
+						<div class="summary-row1">
+							<strong class="i">&sum;: {data.schoolsCount}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercSchools} %</div>
+					</div>
 				</th>
+
 				<th class="c v">School Type</th>
 				<th class="c b">BAS</th>
 				<th class="c b">MED</th>
 				<th class="c d">HIGH</th>
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>Events</div>
-					<br />
-					<div><strong>{searchTotals.events}/{serverTotals.events}</strong></div>
-					<div class="c">{searchTotals.percEvents} %</div>
-					<div><strong class="c i">&sum;: {data.totalEvents}</strong></div>
-					<div class="c h">{searchTotals.globalPercEvents} %</div>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>Events</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.events}/{serverTotals.events}
+						</span>
+						<span class="percentage">{searchTotals.percEvents} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalEvents}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercEvents} %</div>
+					</div>
 				</th>
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>Est./Pres. Students</div>
-					<div><strong>{searchTotals.students}/{serverTotals.students}</strong></div>
-					<div class="c">{searchTotals.percStudents} %</div>
-					<div><strong class="c i">&sum;: {data.totalEstStudents}</strong></div>
-					<div class="c h">{searchTotals.globalPercStudents} %</div>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>Est./Pres. Students</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.students}/{serverTotals.students}
+						</span>
+						<span class="percentage">{searchTotals.percStudents} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalEstStudents}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercStudents} %</div>
+					</div>
 				</th>
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>Interested Students</div>
-					<div><strong>{searchTotals.intr0}/{serverTotals.intr0}</strong></div>
-					<div class="c">{searchTotals.percIntr0} %</div>
-					<div><strong class="c i">&sum;: {data.totalIntrest0}</strong></div>
-					<div class="c h">{searchTotals.globalPercIntr0} %</div>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>Interested Students</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.intr0}/{serverTotals.intr0}
+						</span>
+						<span class="percentage">{searchTotals.percIntr0} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalIntrest0}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercIntr0} %</div>
+					</div>
 				</th>
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>ADMITTED</div>
-					<br />
-					<div><strong>{searchTotals.intr1}/{serverTotals.intr1}</strong></div>
-					<div class="c">{searchTotals.percIntr1} %</div>
-					<div><strong class="c i">&sum;: {data.totalIntrest1}</strong></div>
-					<div class="c h">{searchTotals.globalPercIntr1} %</div>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>ADMITTED</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.intr1}/{serverTotals.intr1}
+						</span>
+						<span class="percentage">{searchTotals.percIntr1} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalIntrest1}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercIntr1} %</div>
+					</div>
 				</th>
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>REJECTED</div>
-					<br />
-					<div><strong>{searchTotals.intr2}/{serverTotals.intr2}</strong></div>
-					<div class="c">{searchTotals.percIntr2} %</div>
-					<div><strong class="c i">&sum;: {data.totalIntrest2}</strong></div>
-					<div class="c h">{searchTotals.globalPercIntr2} %</div>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>REJECTED</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.intr2}/{serverTotals.intr2}
+						</span>
+						<span class="percentage">{searchTotals.percIntr2} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalIntrest2}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercIntr2} %</div>
+					</div>
 				</th>
-				<th class="c v">
-					<div>&#8470; of</div>
-					<div>IN PROGRESS</div>
-					<div><strong>{searchTotals.intr3}/{serverTotals.intr3}</strong></div>
-					<div class="c">{searchTotals.percIntr3} %</div>
-					<div><strong class="c i">&sum;: {data.totalIntrest3}</strong></div>
-					<div class="c h">{searchTotals.globalPercIntr3} %</div>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
+						<span>IN PROGRESS</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.intr3}/{serverTotals.intr3}
+						</span>
+						<span class="percentage">{searchTotals.percIntr3} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalIntrest3}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercIntr3} %</div>
+					</div>
 				</th>
 			</tr>
 		</thead>
@@ -297,20 +378,75 @@
 						<td></td>
 					{/if}
 
-					<td class="c z">{school.event_count}</td>
-					<td class="c z">{school.sum_estimated_student}</td>
-					<td class="c z">{school.total_intrest_count_status_0}</td>
-					<td class="c z">{school.total_intrest_count_status_1}</td>
-					<td class="c z">{school.total_intrest_count_status_2}</td>
-					<td class="c z">{school.total_intrest_count_status_3}</td>
+					<td class="c nm">{school.event_count}</td>
+					<td class="c nm">{school.sum_estimated_student}</td>
+					<td class="c nm">{school.total_intrest_count_status_0}</td>
+					<td class="c nm">{school.total_intrest_count_status_1}</td>
+					<td class="c nm">{school.total_intrest_count_status_2}</td>
+					<td class="c nm">{school.total_intrest_count_status_3}</td>
 				</tr>
 			{/each}
 		</tbody>
 	</table>
+
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 </div>
 
 <style>
+	/* A fejléc cellák alapból kisebb betűvel */
+	.tight-header {
+		font-size: 0.75rem; /* 12px körül */
+		line-height: 1.1;
+		padding: 0.5rem 0.2rem !important; /* Kevesebb belső hely */
+		vertical-align: top;
+	}
+
+	.title-row {
+		margin-bottom: 0.4rem;
+		min-height: 4em;
+		display: flex;
+		flex-direction: column;
+
+		/* FÜGGŐLEGESEN FELÜLRE (mivel column az irány) */
+		justify-content: flex-start;
+
+		/* VÍZSZINTESEN KÖZÉPRE */
+		align-items: center;
+
+		/* Opcionális: ha a szöveg több soros, a szövegtörzs is legyen középen */
+		text-align: center;
+	}
+	.stats-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 1px; /* Nagyon pici távolság az adatok között */
+		flex: 1;
+		justify-content: space-between;
+		min-height: 4rem;
+	}
+
+	.main-stats {
+		font-weight: 500;
+		white-space: nowrap; /* Ne törje ketté a 1019/1019-et */
+	}
+
+	.percentage {
+		color: var(--pico-muted-color);
+		font-size: small;
+	}
+
+	.summary-row,
+	.summary-row1 {
+		width: 100%;
+		margin-top: auto; /* Ez tolja le az aljára */
+	}
+
+	/* Ha eléri a képernyő szélét, még kisebb lehet */
+	@media (max-width: 1200px) {
+		.tight-header {
+			font-size: 0.65rem;
+		}
+	}
 	.c {
 		text-align: center;
 	}
@@ -344,8 +480,12 @@
 		font-size: 17px;
 	}
 
+	.nm {
+		font-size: 0.6rem;
+	}
+
 	.z {
-		font-size: small;
+		font-size: 0.5rem;
 	}
 
 	.w {
@@ -359,8 +499,15 @@
 
 	th,
 	td {
-		padding: 8px;
+		padding: 0.25rem 0.5rem !important; /* Kisebb hely a cellák között */
 		text-align: left;
+	}
+
+	th {
+		background-color: #fafdfd;
+		position: sticky;
+		top: 40px;
+		z-index: 2;
 	}
 
 	tr:nth-child(even) {
@@ -379,13 +526,5 @@
 
 		outline: none; /* Remove focus outline (optional, for better accessibility) */
 		text-decoration-color: #32bea6;
-	}
-
-	th {
-		background-color: #fafdfd;
-		position: sticky;
-		top: 40px;
-		z-index: 2;
-		padding-top: 10px;
 	}
 </style>
