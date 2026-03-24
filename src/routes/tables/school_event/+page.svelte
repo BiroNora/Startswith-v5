@@ -194,7 +194,7 @@
 		<thead>
 			<tr>
 				<th class="c v">Startswith Contact</th>
-				<th class="c v">Country</th>
+				<th class="c v">Country Code</th>
 				<th class="c v">Region</th>
 				<th class="c v">County</th>
 				<th class="c v">City</th>
@@ -351,7 +351,11 @@
 			{#each filteredSchools as school}
 				<tr>
 					<td id="nameCell" class="c z">{school.user_names}</td>
-					<td class="c w">{school.country_name}</td>
+
+					<td class="c w" title={school.country_name}>
+						{school.country_code}
+					</td>
+
 					<td class="c w">{school.region_name}</td>
 					<td class="c w">{school.county_name}</td>
 					<td class="c z">{school.city_name}</td>

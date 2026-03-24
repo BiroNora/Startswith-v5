@@ -27,16 +27,16 @@ model School {
   duty         String[]
   active       Boolean
   active_by    String
+  basic        Boolean
+  medior       Boolean
+  high         Boolean
   Contact      Contact[]
   Event        Event[]
   city         City      @relation(fields: [city_id], references: [city_id])
   country      Country   @relation(fields: [country_id], references: [country_id])
   county       County    @relation(fields: [county_id], references: [county_id])
   region       Region    @relation(fields: [region_id], references: [region_id])
-  User         User[]
-  basic        Boolean
-  medior       Boolean
-  high         Boolean
+  User         User[]    @relation("SchoolToUser")
 
   @@map("schools")
 }
@@ -52,7 +52,7 @@ model Contact {
   active_by     String
   school_id     Int?
   School        School?  @relation(fields: [school_id], references: [school_id])
-  User          User[]
+  User          User[]   @relation("ContactToUser")
 
   @@map("contact")
 }
@@ -63,18 +63,18 @@ model User {
   nationality      String
   user_phone       String
   user_email       String    @unique
-  on_duty          Int[]
   passwordHash     String
   userAuthToken    String    @unique
-  resetToken       String? // Nullable, as it might not be set
-  resetTokenExpiry DateTime? // Nullable, as it might not be set
   createdAt        DateTime  @default(now()) @db.Timestamptz(3)
   updatedAt        DateTime  @updatedAt @db.Timestamptz(3)
   active           Boolean
   active_by        String
-  Contact          Contact[]
-  Event            Event[]
-  School           School[]
+  on_duty          Int[]
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  Contact          Contact[] @relation("ContactToUser")
+  Event            Event[]   @relation("EventToUser")
+  School           School[]  @relation("SchoolToUser")
 
   @@map("users")
 }
@@ -93,8 +93,8 @@ model Event {
   slug               String               @unique
   school_id          Int
   School             School               @relation(fields: [school_id], references: [school_id])
-  User               User[]
   InterestedStudents InterestedStudents[]
+  User               User[]               @relation("EventToUser")
 
   @@map("events")
 }
@@ -105,7 +105,7 @@ model InterestedStudents {
   intrest_count Int
   grade         String
   applied       Boolean
-  work_title    String // subject!!
+  work_title    String
   channel       String
   status        String
   country_id    Int
@@ -133,6 +133,7 @@ model Activity {
 model Country {
   country_id        Int                  @id @default(autoincrement())
   country_name      String               @unique
+  country_code      String?              @unique
   InterestedStudent InterestedStudents[]
   Region            Region[]
   School            School[]

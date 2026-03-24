@@ -37,6 +37,7 @@ export const actions: Actions = {
     const data = await request.formData()
 
     const country_name = formatLocationName(String(data.get('country')))
+    const country_code = String(data.get('country-code')).trim().toUpperCase()
     const region_name = formatLocationName(String(data.get('region')))
     const county_name = formatLocationName(String(data.get('county')))
     const city_name = formatLocationName(String(data.get('city')))
@@ -65,7 +66,7 @@ export const actions: Actions = {
       const country = await db.country.upsert({
         where: { country_name },
         update: {},
-        create: { country_name }
+        create: { country_name, country_code: country_code }
       });
 
       // Régió létrehozása vagy megkeresése

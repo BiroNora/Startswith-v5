@@ -73,6 +73,7 @@ export async function POST({ request }) {
       SELECT
         ua.user_names,
         country.country_name,
+        country.country_code,
         r.region_name,
         county.county_name,
         city.city_name,

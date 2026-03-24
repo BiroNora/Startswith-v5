@@ -26,6 +26,10 @@
       <input type="text" name="country" id="country" required />
     </div>
     <div>
+      <label for="country-code">Country Code</label>
+      <input type="text" name="country-code" id="country-code" required />
+    </div>
+    <div>
       <label for="region">Region</label>
       <input type="text" name="region" id="region" required />
     </div>
