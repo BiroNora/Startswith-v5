@@ -5,7 +5,7 @@
 
 	let { data, form } = $props<{ data: any; form: any }>();
 
-	let user_duty_array = $derived(data.user_duty.filter((n: any) => n % 10 !== 0));
+	let user_duty_array = $derived(data.user_duty.filter((n: any) => !(n.toString().length === 2 && n % 10 === 0)));
 	let user_duties_only = $derived(user_duty_array.map((n: any) => parseInt(String(n)[0], 10)));
 	let dda = $derived(data.dir_duty);
 

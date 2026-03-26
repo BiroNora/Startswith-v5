@@ -5,7 +5,13 @@
 		history.back();
 	}
 	let { data } = $props();
+
+	let pageName = 'Central Message';
 </script>
+
+<svelte:head>
+	<title>{pageName}</title>
+</svelte:head>
 
 <div class="grid">
 	<div class="rei">

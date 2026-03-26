@@ -170,7 +170,7 @@ label {
 	border: none;
 	padding: 0.2rem 0.4rem;
 	cursor: pointer;
-	transition: background 0.2s;
+	transition: background-color 0.2s ease;
 	outline: none;
 	display: flex;
 	align-items: center;
@@ -194,7 +194,7 @@ label {
 
 .btn-outline {
 	border-radius: 100px;
-	transition: background 0.2s;
+	transition: background-color 0.2s;
 	border-color: #32bea6;
 }
 

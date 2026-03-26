@@ -10,10 +10,10 @@
 
 	// REAKTÍV ALAPOK: Ha a data frissül, ezek is frissülnek
 	let onDutyArray = $derived(
-		(data.user?.on_duty ?? []).filter((num) => num % 10 !== 0).map((num) => num.toString())
+		(data.user?.on_duty ?? [])
+			.filter((n: any) => !(n.toString().length === 2 && n % 10 === 0))
+			.map((num) => num.toString())
 	);
-
-	let is_dir = $derived((data.user?.on_duty?.[4] ?? 0) % 10 !== 0);
 
 	// Form állapotok
 	let yesB = $state(false),
@@ -64,45 +64,17 @@
 			});
 		}
 	});
-
-	let alertShown = $state(false); // Állapot, hogy lefutott-e már
-
-	function showAlert(event: MouseEvent) {
-		if (alertShown) return; // Ha már lefutott, ne csináljon semmit
-
-		alert('User status will be changed.');
-		alertShown = true;
-	}
-
-	let pageName = 'Update User';
+	
+	let pageName = 'Edit Profile';
 </script>
 
 <svelte:head>
 	<title>{pageName}</title>
 </svelte:head>
 
-{#if is_dir}
-	<div class="grid">
-		<div class="rei">
-			<p class="black">Update Startswith's User Data</p>
-		</div>
-		<br />
-		<form action="?/user_active_change" method="post" use:enhance>
-			<div>
-				<label for="email">Email</label>
-				<input type="text" name="email" id="email" required />
-			</div>
-
-			<button onclick={showAlert} class="btn" id="btn" type="submit">
-				Inactive / Reactive User
-			</button>
-		</form>
-	</div>
-{/if}
-
 <div class="grid">
 	<div class="rei">
-		<p class="black">Update Startswith's User Data</p>
+		<p class="black">Account Settings</p>
 	</div>
 	<br />
 	<form action="?/user" method="post" use:enhance>

@@ -63,8 +63,31 @@ export function formatDate(date: Date) {
 export function isStrongPassword(password: string): boolean {
 	const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
 
-  return regex.test(password);
+	return regex.test(password);
 }
+
+// Segédfüggvény a tisztségek szöveges megjelenítéséhez
+/* export function getDutyLabel(onDutyArray: number[]): string {
+	return onDutyArray
+		.filter((n) => !(n.toString().length === 2 && n % 10 === 0)) // Itt csak checkolunk
+		.map((n) => {
+			const s = n.toString();
+			const typeChar = s[0];
+			const targetChar = s.slice(1);
+
+			const type = dutyType.find((t) => t[0] === typeChar)?.[1] || 'Unknown';
+			let area = '';
+
+			if (typeChar === '5') {
+				area = dutyMap.find((m) => m.id === targetChar)?.name || 'Unknown';
+			} else {
+				const regionId = Number(targetChar);
+				area = data.regions.find((r) => r.region_id === regionId)?.region_name || 'Unknown';
+			}
+			return `${type}: ${area}`;
+		})
+		.join(', ');
+} */
 
 export const schType = [
 	'ÁLTALÁNOS ISKOLA',
@@ -201,8 +224,8 @@ export const subjectMap = [
 
 // Közös típus a Map-ekhez
 interface MapItem {
-  readonly id: string;
-  readonly name: string;
+	readonly id: string;
+	readonly name: string;
 }
 
 /**
@@ -210,8 +233,8 @@ interface MapItem {
  * Használható: getName(dutyMap, '1') -> 'BASIC'
  */
 export const getName = (map: readonly MapItem[], id: string | null | undefined): string => {
-  if (!id) return '';
-  return map.find((item) => item.id === id)?.name || id;
+	if (!id) return '';
+	return map.find((item) => item.id === id)?.name || id;
 };
 
 export const eyeOpen = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;

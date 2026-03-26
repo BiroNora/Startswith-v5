@@ -12,15 +12,15 @@ export const load: PageServerLoad = async ({ locals }) => {
       orderBy: { country_name: 'asc' }
     }),
     db.region.findMany({
-      select: { region_id: true, region_name: true, country_id: true }, // country_id KELL!
+      select: { region_id: true, region_name: true, country_id: true },
       orderBy: { region_name: 'asc' }
     }),
     db.county.findMany({
-      select: { county_id: true, county_name: true, region_id: true }, // region_id KELL!
+      select: { county_id: true, county_name: true, region_id: true },
       orderBy: { county_name: 'asc' }
     }),
     db.city.findMany({
-      select: { city_id: true, city_name: true, county_id: true }, // county_id KELL!
+      select: { city_id: true, city_name: true, county_id: true },
       orderBy: { city_name: 'asc' }
     }),
     db.user.findUnique({
