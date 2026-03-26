@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { dateSlugify, dutyMap } from '../../stores/dataStore.js';
 	import { SearchInput, fuzzySearch } from '$lib/components/filters';
+	import { enhance } from '$app/forms';
 
 	let { data, form } = $props<{ data: any; form: any }>();
 
@@ -17,9 +18,24 @@
 		)
 	);
 
-	function scrollToConnect() {
-		window.scrollTo({ top: 0, behavior: 'smooth' });
+	let showDeleteModal = $state(false);
+	let activityToDelete = $state(null);
+
+	function openDeleteModal() {
+		form = null;
+		showDeleteModal = true;
 	}
+
+	function closeDeleteModal() {
+		showDeleteModal = false;
+		activityToDelete = null;
+	}
+
+	$effect(() => {
+		if (form?.success) {
+			showDeleteModal = false;
+		}
+	});
 
 	let pageName = 'Activity List';
 </script>
@@ -29,382 +45,201 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<div id="base">
-		<hgroup>
-			<h3>Activities</h3>
-			<hgroup>
-				<a href="#section_event" class="ac"> &#9758; Program hozzáadása </a>
-				{#if data.dir_flag}
-					&nbsp; &nbsp;
-					<a href="#section_dir" class="ac"> &#9758; Központi üzenet hozzáadása </a>
-				{/if}
-			</hgroup>
-		</hgroup>
-		<br />
+	<h3>Activities</h3>
 
-		<div class="search-input">
-			<SearchInput
-				bind:searchTerm
-				count={filteredActivities.length}
-				placeholder="Search activities..."
-			/>
+	<div class="admin-actions pad-bot-plus">
+		<a href="../lists/activities/activity_form" class="ab pad-bot-plus">
+			&#9758; Program hozzáadása
+		</a>
+		<div>
+			{#if data.dir_flag}
+				<a href="../lists/activities/central_message" class="ab pad-bot-plus">
+					&#9758; Központi üzenet hozzáadása
+				</a>
+			{/if}
 		</div>
-
-		<br />
-		<ul id="list">
-			{#each filteredActivities as act (act.act_id)}
-				{#if data.is_director}
-					<!-- User === director && only own messages -->
-					{#if act.dir_flag && act.on_duty.charAt(0) === dda}
-						<li class="li">
-							<a href="../lists/activities/{act.act_id}" class="ab">
-								{dateSlugify(String(act.end_date))}
-								&#9753
-								<strong>{act.act_name}</strong>
-								&#10087
-								{#if act.act_note !== null}
-									{act.act_note}
-								{/if}
-								{' 🏠 '}
-								{#each dutyMap as item (item.id)}
-									{#if act.on_duty.charAt(0) === item.id}
-										{item.name}:
-									{/if}
-								{/each}
-								{#if act.on_duty.charAt(1) === '0'}
-									every regions
-								{:else}
-									{#each data.regio as reg}
-										{#if Number(act.on_duty.charAt(1)) === reg.region_id}
-											{reg.region_name}
-										{/if}
-									{/each}
-								{/if}
-							</a>
-						</li>
-					{/if}
-					<!-- User === director && only concerning messages -->
-					{#if !act.dir_flag && act.on_duty.charAt(0) === dda}
-						<li class="lib">
-							{dateSlugify(String(act.end_date))}
-							&#9753
-							<strong>{act.act_name}</strong>
-							&#10087
-							{#if act.act_note !== null}
-								{act.act_note}
-							{/if}
-							{' 🏠 '}
-							{#each dutyMap as item (item.id)}
-								{#if act.on_duty.charAt(0) === item.id}
-									{item.name}:
-								{/if}
-							{/each}
-							{#if act.on_duty.charAt(1) === '0'}
-								every regions
-							{:else}
-								{#each data.regio as reg}
-									{#if Number(act.on_duty.charAt(1)) === reg.region_id}
-										{reg.region_name}
-									{/if}
-								{/each}
-							{/if}
-						</li>
-					{/if}
-				{:else}
-					<!-- User !== director && (own (director's || director's all_region)) messages -->
-					{#if act.dir_flag && (user_duty_array.includes(Number(act.on_duty)) || (user_duties_only.includes(Number(act.on_duty.charAt(0))) && act.all_region))}
-						<li class="lia">
-							{dateSlugify(String(act.end_date))}
-							&#9753
-							<strong>{act.act_name}</strong>
-							&#10087
-							{#if act.act_note !== null}
-								{act.act_note}
-							{/if}
-							{' 🏠 '}
-							{#each dutyMap as item (item.id)}
-								{#if act.on_duty.charAt(0) === item.id}
-									{item.name}:
-								{/if}
-							{/each}
-							{#if act.on_duty.charAt(1) === '0'}
-								every regions
-							{:else}
-								{#each data.regio as reg}
-									{#if Number(act.on_duty.charAt(1)) === reg.region_id}
-										{reg.region_name}
-									{/if}
-								{/each}
-							{/if}
-						</li>
-					{/if}
-					<!-- User !== director, any others -->
-					{#if !act.dir_flag}
-						<li class="li">
-							<a href="../lists/activities/{act.act_id}" class="aa">
-								{dateSlugify(String(act.end_date))}
-								&#9753
-								<strong>{act.act_name}</strong>
-								&#10087
-								{#if act.act_note !== null}
-									{act.act_note}
-								{/if}
-								{' 🏠 '}
-								{#each dutyMap as item (item.id)}
-									{#if act.on_duty.charAt(0) === item.id}
-										{item.name}:
-									{/if}
-								{/each}
-								{#each data.regio as reg}
-									{#if Number(act.on_duty.charAt(1)) === reg.region_id}
-										{reg.region_name}
-									{/if}
-								{/each}
-							</a>
-						</li>
-					{/if}
-				{/if}
-			{/each}
-		</ul>
-		<br />
-		<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a
-		>
 	</div>
 
-	<!-- Dir message form -->
+	<div class="search-input">
+		<SearchInput
+			bind:searchTerm
+			count={filteredActivities.length}
+			placeholder="Search activities..."
+		/>
+	</div>
 
-	{#if data.dir_flag}
-		<div class="rei grid element-to-position" id="section_dir">
-			<p>Central Message Register</p>
-			<form action="?/dir_message" method="post">
-				<div>
-					<label for="meeting-time">Show Message till this Date</label>
-					<input
-						type="datetime-local"
-						id="meeting-time"
-						name="meeting-time"
-						value="YYYY-MM-DDT00:00"
-						min="2021-06-07T00:00"
-						max="2060-06-14T00:00"
-					/>
-				</div>
-				<div>
-					<label for="region"><i>Select Region</i></label>
-					<select name="region" id="region" class="hidden-textbox">
-						<option value="ALL">ALL</option>
-						{#each data.regio as reg}
-							<option value={reg.region_id}>{reg.region_name} </option>
+	<br />
+	<ul id="list">
+		{#each filteredActivities as act (act.act_id)}
+			{#if data.is_director}
+				"act.dir_flag: " {act.dir_flag}
+				"dir_duty: " {data.dir_duty}
+				"dda?" " {act.on_duty.charAt(0)}
+				<!-- User === director && only own messages -->
+
+				{#if act.dir_flag && act.on_duty.charAt(0) === dda}
+					<li class="li">
+						<a
+							href="#nothing"
+							class="aa"
+							onclick={() => {
+								activityToDelete = act.act_id;
+								openDeleteModal();
+							}}
+							title="Kattintson az esemény törléséhez"
+						>
+							{dateSlugify(String(act.end_date))}
+							&#9753
+							<strong>{act.act_name}</strong>
+							&#10087
+							{#if act.act_note !== null}
+								{act.act_note}
+							{/if}
+							{' 🏠 '}
+							{#each dutyMap as item (item.id)}
+								{#if act.on_duty.charAt(0) === item.id}
+									{item.name}:
+								{/if}
+							{/each}
+							{#if act.on_duty.charAt(1) === '0'}
+								every regions
+							{:else}
+								{#each data.regio as reg}
+									{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+										{reg.region_name}
+									{/if}
+								{/each}
+							{/if}
+						</a>
+					</li>
+				{/if}
+				<!-- User === director && only concerning messages -->
+
+				{#if !act.dir_flag && act.on_duty.charAt(0) === dda}
+					<li class="li">
+						{dateSlugify(String(act.end_date))}
+						&#9753
+						<strong>{act.act_name}</strong>
+						&#10087
+						{#if act.act_note !== null}
+							{act.act_note}
+						{/if}
+						{' 🏠 '}
+						{#each dutyMap as item (item.id)}
+							{#if act.on_duty.charAt(0) === item.id}
+								{item.name}:
+							{/if}
 						{/each}
-					</select>
-				</div>
-				<label for="dir_message">Message</label>
-				<textarea id="dir_message" name="dir_message" rows="4" cols="50"></textarea>
-				<button class="btn" id="btn" type="submit">Send Message</button>
-				<br />
-				<button
-					type="button"
-					onclick={scrollToConnect}
-					id="backToTop"
-					class="contrast outline cgb h44">Cancel &#10070; Jump to the Top</button
-				>
-			</form>
-		</div>
+						{#if act.on_duty.charAt(1) === '0'}
+							every regions
+						{:else}
+							{#each data.regio as reg}
+								{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+									{reg.region_name}
+								{/if}
+							{/each}
+						{/if}
+					</li>
+				{/if}
+			{:else}
+				"act.dir_flag NOT DIR: " {act.dir_flag}
+				"dir_duty NOT DIR: " {data.dir_duty}
+				"dda? NOT DIR" " {act.on_duty.charAt(0)}
+				<!-- User !== director && (own (director's || director's all_region)) messages -->
+
+				{#if act.dir_flag && (user_duty_array.includes(Number(act.on_duty)) || (user_duties_only.includes(Number(act.on_duty.charAt(0))) && act.all_region))}
+					<li class="li">
+						{dateSlugify(String(act.end_date))}
+						&#9753
+						<strong>{act.act_name}</strong>
+						&#10087
+						{#if act.act_note !== null}
+							{act.act_note}
+						{/if}
+						{' 🏠 '}
+						{#each dutyMap as item (item.id)}
+							{#if act.on_duty.charAt(0) === item.id}
+								{item.name}:
+							{/if}
+						{/each}
+						{#if act.on_duty.charAt(1) === '0'}
+							every regions
+						{:else}
+							{#each data.regio as reg}
+								{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+									{reg.region_name}
+								{/if}
+							{/each}
+						{/if}
+					</li>
+				{/if}
+
+				<!-- User !== director, any others -->
+
+				{#if !act.dir_flag}
+					<li class="li">
+						<a href="../lists/activities/{act.act_id}" class="aa">
+							{dateSlugify(String(act.end_date))}
+							&#9753
+							<strong>{act.act_name}</strong>
+							&#10087
+							{#if act.act_note !== null}
+								{act.act_note}
+							{/if}
+							{' 🏠 '}
+							{#each dutyMap as item (item.id)}
+								{#if act.on_duty.charAt(0) === item.id}
+									{item.name}:
+								{/if}
+							{/each}
+							{#each data.regio as reg}
+								{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+									{reg.region_name}
+								{/if}
+							{/each}
+						</a>
+					</li>
+				{/if}
+			{/if}
+		{/each}
+	</ul>
+	<br />
+	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
+
+	{#if showDeleteModal}
+		<dialog open>
+			<article>
+				<header>
+					<a href="#close" aria-label="Close" class="close" onclick={closeDeleteModal}></a>
+					<h5>Confirm Deletion</h5>
+				</header>
+				<form action="?/delAct" method="post" use:enhance id="inter">
+					<input type="hidden" name="act_id" value={activityToDelete} />
+					<h5>Az adat véglegesen törlődik.</h5>
+
+					{#if form?.interest}
+						<p class="black">&nbsp; Az adatot nem lehet törölni.</p>
+					{/if}
+
+					<footer>
+						<button type="submit" class="btn" data-target="modal-example"> Confirm </button>
+						<button
+							type="button"
+							class="btn btn-cancel btn-outline"
+							data-target="modal-example"
+							onclick={() => (showDeleteModal = false)}
+						>
+							Cancel
+						</button>
+					</footer>
+				</form>
+			</article>
+		</dialog>
 	{/if}
-
-	<!-- Activity form -->
-
-	<div class="grid element-to-position1" id="section_event">
-		<div class="rei">
-			<p>Activity Register</p>
-		</div>
-		<form action="?/activity" method="post">
-			<div>
-				<label for="fantasy"> Event Name </label>
-				<input type="text" name="fantasy" id="fantasy" placeholder="Activity" required />
-			</div>
-			<div>
-				<label for="meeting-time">Activity Date</label>
-				<input
-					type="datetime-local"
-					id="meeting-time"
-					name="meeting-time"
-					value="YYYY-MM-DDT00:00"
-					min="2021-06-07T00:00"
-					max="2060-06-14T00:00"
-				/>
-			</div>
-			<div>
-				<label for="duty">Duty</label>
-				<select name="duty" id="duty">
-					{#each dutyMap as item (item.id)}
-						<option value={item.id}>{item.name}</option>
-					{/each}
-				</select>
-			</div>
-			<div>
-				<label for="region">Region</label>
-				<select name="region" id="region">
-					{#each data.regio as reg}
-						<option value={reg.region_id}>{reg.region_name}</option>
-					{/each}
-				</select>
-			</div>
-			<label for="message">Note</label>
-			<textarea id="message" name="message" rows="2" cols="50"></textarea>
-
-			{#if form?.inactsu}
-				<p class="error">Something went wrong.</p>
-			{/if}
-
-			{#if form?.user || form?.school}
-				<p class="error">Please enter correct data.</p>
-			{/if}
-
-			{#if form?.title}
-				<p class="error">Event name is too short.</p>
-			{/if}
-
-			{#if form?.uslug}
-				<p class="error">Event already exists.</p>
-			{/if}
-
-			<button class="btn" id="btnevent" type="submit">Register</button>
-			<br />
-			<button
-				type="button"
-				onclick={scrollToConnect}
-				id="backToTop"
-				class="contrast outline cgb h44">Cancel &#10070; Jump to the Top</button
-			>
-		</form>
-	</div>
 </div>
 
 <style>
-	textarea {
-		font-size: 0.8rem !important; /* Ez szabályozza a beírt szöveget */
-		line-height: 1.4 !important; /* Hogy a sorok ne érjenek össze */
-		padding: 10px 15px !important; /* Kényelmes belső távolság */
-		border-radius: 15px !important;
-		resize: vertical; /* Csak függőlegesen engedjük nyújtani, hogy ne tolja szét az oldalt */
-	}
-
-	.ac {
-		color: #147263;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
-
 	.ab {
-		color: #282f2e;
-		font-weight: 500;
-		line-height: normal;
-		font-size: 25px;
-	}
-
-	.aa {
 		color: #32bea6;
-		font-weight: 400;
-		line-height: normal;
-		font-size: 20px;
-	}
-
-	.lia {
-		list-style-position: inside;
-		list-style-type: none;
-		padding-left: 5%;
-		text-indent: -6%;
-		color: #282f2e;
-		line-height: 1.35;
-	}
-
-	.lia::before {
-		content: '•'; /* Use a disc bullet character */
-		color: rgb(144, 132, 132); /* Set the bullet color to grey */
-		margin-right: 45px; /* Adjust spacing between bullet and text */
-		font-size: 30px;
-	}
-
-	.lib {
-		list-style-position: inside;
-		list-style-type: none;
-		padding-left: 5%;
-		text-indent: -6%;
-		color: #32bea6;
-		line-height: 1.35;
-		font-size: 25px;
-	}
-
-	.lib::before {
-		content: '•'; /* Use a disc bullet character */
-		color: rgb(144, 132, 132); /* Set the bullet color to grey */
-		margin-right: 45px; /* Adjust spacing between bullet and text */
-		font-size: 30px;
-	}
-
-	.li {
-		list-style-position: inside;
-		list-style-type: none; /* Remove default bullet */
-		padding-left: 5%;
-		text-indent: -6%;
-		color: rgb(144, 132, 132); /* Set font color to #32bea6 */
-		line-height: 1.35;
-	}
-
-	.li::before {
-		content: '•'; /* Use a disc bullet character */
-		color: rgb(144, 132, 132); /* Set the bullet color to grey */
-		margin-right: 45px; /* Adjust spacing between bullet and text */
-		font-size: 30px;
-	}
-
-	.h44 {
-		color: #83918f;
-		border-color: #83918f;
-	}
-
-	label {
-		padding: 6px;
-	}
-
-	.rei p {
-		position: relative;
-		line-height: normal;
-		font-size: 140%;
-		font-weight: bold;
-	}
-
-	.grid {
-		padding: 35px 15px 0px 15px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-content: space-around;
-		width: 55%;
-		line-height: 75%;
-		grid-row: minmax(5px, auto);
-	}
-
-	.grid input:checked {
-		background-color: #32bea6;
-	}
-
-	.btn {
-		margin-bottom: 0;
-		background-color: #32bea6;
-	}
-
-	.element-to-position {
-		transform: translateY(420vh); /* Move the element down one viewport height (vh) */
-	}
-
-	.element-to-position1 {
-		transform: translateY(520vh); /* Move the element down one viewport height (vh) */
-	}
-
-	.h44 {
-		color: #83918f;
-		border-color: #83918f;
 	}
 </style>

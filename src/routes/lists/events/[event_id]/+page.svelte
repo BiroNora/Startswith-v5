@@ -238,11 +238,6 @@
 {/if}
 
 <style>
-	dialog[open] {
-		position: fixed;
-		z-index: 10000;
-	}
-
 	i {
 		font-size: small;
 		line-height: normal;

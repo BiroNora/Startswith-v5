@@ -194,7 +194,7 @@
 		<thead>
 			<tr>
 				<th class="c v">Startswith Contact</th>
-				<th class="c v">Country Code</th>
+				<th class="c v">Code</th>
 				<th class="c v">Region</th>
 				<th class="c v">County</th>
 				<th class="c v">City</th>

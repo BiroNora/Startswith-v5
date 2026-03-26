@@ -49,10 +49,11 @@
 	<form action="?/school" method="post" use:enhance>
 		<fieldset>
 			<legend>Location</legend>
-			<p class="notice">
-				Please note: if country / region / county /city <i class="note">does not exist</i> in the list,
+			<div class="notice">
+				Please note: if country / region / county /city <i class="note">does not exist</i> in the
+				list,
 				<a class="aa" href="/register/location">use this link</a> before the registration.
-			</p>
+			</div>
 
 			<div>
 				<label for="countr">Country</label>
@@ -90,7 +91,7 @@
 		<br />
 		<div>
 			<label for="om">OM ID *</label>
-			<p><i class="iiii">* for Schools in Hungary only</i></p>
+			<i class="iiii">* for Schools in Hungary only</i>
 			<input type="text" name="om" id="om" bind:value={omi} />
 		</div>
 		<div>
@@ -126,106 +127,92 @@
 			<input type="text" name="website" id="website" required />
 		</div>
 		<br />
-		<div class="black">
-			<div class="black">
-			<input  type="checkbox" name="iskA" bind:checked={yesA} />
-			ÁLTALÁNOS ISKOLA
-		</div>
-		<br />
 		<div>
-			<input type="checkbox" name="iskB" bind:checked={yesB} />
-			GIMNÁZIUM
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskC" bind:checked={yesC} />
-			SZAKGIMNÁZIUM
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskD" bind:checked={yesD} />
-			SZAKKÖZÉPISKOLA
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskE" bind:checked={yesE} />
-			SZAKISKOLA
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskF" bind:checked={yesF} />
-			TECHNIKUM
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskG" bind:checked={yesG} />
-			SZAKKÉPZŐ ISKOLA
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskH" bind:checked={yesH} />
-			ALAPFOKÚ MŰVÉSZETOKTATÁS
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskI" bind:checked={yesI} />
-			MŰVÉSZETI OKTATÁS
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskJ" bind:checked={yesJ} />
-			KÉSZSÉGFEJLESZTÉS
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskK" bind:checked={yesK} />
-			FEJLESZTŐ NEVELÉS-OKTATÁS
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskL" bind:checked={yesL} />
-			KIEGÉSZÍTŐ NEMZETISÉGI NYELVOKTATÁS
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskM" bind:checked={yesM} />
-			KOLLÉGIUM
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskN" bind:checked={yesN} />
-			HÍDPROGRAMOK
-		</div>
-		<br />
-		<div>
-			<input type="checkbox" name="iskO" bind:checked={yesO} />
-			NEM BESOROLT *
-		</div>
-		<p><i class="iiii">* please leave a comment</i></p>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesA} />
+				<span>ÁLTALÁNOS ISKOLA</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesB} />
+				<span>GIMNÁZIUM</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesC} />
+				<span>SZAKGIMNÁZIUM</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesD} />
+				<span>SZAKKÖZÉPISKOLA</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesE} />
+				<span>SZAKISKOLA</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesF} />
+				<span>TECHNIKUM</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesG} />
+				<span>SZAKKÉPZŐ ISKOLA</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesH} />
+				<span>ALAPFOKÚ MŰVÉSZETOKTATÁS</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesI} />
+				<span>MŰVÉSZETI OKTATÁS</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesJ} />
+				<span>KÉSZSÉGFEJLESZTÉS</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesK} />
+				<span>FEJLESZTŐ NEVELÉS-OKTATÁS</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesL} />
+				<span>KIEGÉSZÍTŐ NEMZETISÉGI NYELVOKTATÁS</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesM} />
+				<span>KOLLÉGIUM</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesN} />
+				<span>HÍDPROGRAMOK</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="iskA" bind:checked={yesO} />
+				<span>NEM BESOROLT</span><i class="iiii"> please leave a comment</i>
+			</label>
 		</div>
 
-		<div class="first black">
-			<div>
+		<div class="first">
+			<label class="checkbox-container">
 				<input type="checkbox" name="bas" bind:checked={yesBAS} />
-				BASIC
-			</div>
-			<div>
-				<input type="checkbox" name="med" bind:checked={yesMED} />
-				MEDIOR
-			</div>
-			<div>
-				<input type="checkbox" name="hig" bind:checked={yesHIG} />
-				HIGH
-			</div>
+				<span>BASIC</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="bas" bind:checked={yesMED} />
+				<span>MEDIOR</span>
+			</label>
+			<label class="checkbox-container">
+				<input type="checkbox" name="bas" bind:checked={yesHIG} />
+				<span>HIGH</span>
+			</label>
 		</div>
+
 		<fieldset>
 			<legend>Note on School</legend>
-			<br />
-			<div class="black">
-				<input type="checkbox" name="coop" bind:checked={yesCOOP} />
-				COOPERATION
-			</div>
-			<br />
+
+			<label class="checkbox-container">
+				<input type="checkbox" name="bas" bind:checked={yesCOOP} />
+				<span>COOPERATION</span>
+			</label>
+
 			<textarea id="message" name="note" rows="4" cols="50"></textarea>
 		</fieldset>
 		{#if form?.local}
@@ -269,22 +256,33 @@
 
 	.notice {
 		color: tomato;
-		padding: 2%;
+		padding-bottom: 0.5rem;
 		text-align: center;
-		font-weight:normal;
+		font-weight: normal;
 		line-height: normal;
+		font-size: medium;
 	}
 
 	.noticea {
 		color: #32bea6;
-		padding: 2%;
+		padding-bottom: 0.5rem;
 		text-align: center;
-		font-weight: 500;
+		font-weight: normal;
 		line-height: normal;
+		font-size: medium;
 	}
 
 	.note {
 		font-weight: bolder;
+	}
+
+	.checkbox-container {
+		gap: 1rem;
+		font-size: 0.8rem;
+		font-weight: normal;
+		color: rgb(87, 80, 80);
+		margin-bottom: 0.5rem;
+		line-height: 1.35;
 	}
 
 	.aa {
@@ -293,8 +291,6 @@
 	}
 
 	.first {
-		justify-content: space-between;
-		padding: 0 5% 5%;
-		line-height: 1.9;
+		padding: 1rem;
 	}
 </style>
