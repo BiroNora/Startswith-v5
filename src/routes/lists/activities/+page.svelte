@@ -5,7 +5,9 @@
 
 	let { data, form } = $props<{ data: any; form: any }>();
 
-	let user_duty_array = $derived(data.user_duty.filter((n: any) => !(n.toString().length === 2 && n % 10 === 0)));
+	let user_duty_array = $derived(
+		data.user_duty.filter((n: any) => !(n.toString().length === 2 && n % 10 === 0))
+	);
 	let user_duties_only = $derived(user_duty_array.map((n: any) => parseInt(String(n)[0], 10)));
 	let dda = $derived(data.dir_duty);
 
@@ -69,12 +71,49 @@
 	</div>
 
 	<br />
+	<ul>
+		{#each filteredActivities as act (act.act_id)}
+			{#if act.user_id === data.user.user_id}
+				<li class="li">
+					<a
+						href="#nothing"
+						class="aa"
+						onclick={() => {
+							activityToDelete = act.act_id;
+							openDeleteModal();
+						}}
+						title="Kattintson az esemény törléséhez"
+					>
+						{dateSlugify(String(act.end_date))}
+						&#9753
+						<strong>{act.act_name}</strong>
+						&#10087
+						{#if act.act_note !== null}
+							{act.act_note}
+						{/if}
+						{' 🏠 '}
+						{#each dutyMap as item (item.id)}
+							{#if act.on_duty.charAt(0) === item.id}
+								{item.name}:
+							{/if}
+						{/each}
+						{#if act.on_duty.charAt(1) === '0'}
+							every regions
+						{:else}
+							{#each data.regio as reg}
+								{#if Number(act.on_duty.slice(1)) === reg.region_id}
+									{reg.region_name}
+								{/if}
+							{/each}
+						{/if}
+					</a>
+				</li>
+			{/if}
+		{/each}
+	</ul>
 	<ul id="list">
 		{#each filteredActivities as act (act.act_id)}
 			{#if data.is_director}
-				"act.dir_flag: " {act.dir_flag}
-				"dir_duty: " {data.dir_duty}
-				"dda?" " {act.on_duty.charAt(0)}
 				<!-- User === director && only own messages -->
 
 				{#if act.dir_flag && act.on_duty.charAt(0) === dda}

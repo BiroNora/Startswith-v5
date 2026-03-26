@@ -4,35 +4,39 @@ import type { Actions } from "./$types"
 
 export const actions: Actions = {
   dir_message: async ({ request, locals }) => {
-    const data = await request.formData();
-    const reg = String(data.get('region'));
-    const my_id = String(data.get('user_id'));
+    const formData = await request.formData();
 
+    console.log("Minden beérkező adat:", Object.fromEntries(formData));
+
+    const reg = String(formData.get('region'));
+    const my_id = String(formData.get('user_id'));
 
     const userDuty = locals.user?.duty;
     if (!userDuty || userDuty.length < 5) {
       throw error(403, 'Unauthorized: Missing director rights');
     }
 
-    // dir_duty kiszámítása az akción belül
-    const dir_num = userDuty[4];
-    let on_duty = String(dir_num % 10);
+    // Segédfüggvény a szintek kódolásához
+    const getLevelCode = (levelName: string, regKey: string) => {
+      if (!formData.has(levelName)) return null;
 
-    let all_region = false;
-    if (reg === 'ALL') {
-      on_duty += '0';
-      all_region = true;
-    } else {
-      on_duty += reg;
-    }
+      const selection = formData.get(regKey);
 
-    await db.activity.create({
+      return selection ? Number(selection) : null;
+    };
+
+    const on_duty = [
+      getLevelCode('basic', 'regB') ?? 0,
+      getLevelCode('medior', 'regM') ?? 0,
+      getLevelCode('high', 'regH') ?? 0
+    ];
+
+    await db.centralMessage.create({
       data: {
-        end_date: new Date(String(data.get('meeting-time'))),
-        act_name: String(data.get('message')),
-        on_duty,
-        dir_flag: true,
-        all_region,
+        end_date: new Date(String(formData.get('meeting-time'))),
+        cm_name: String(formData.get('memo')),
+        cm_note: String(formData.get('message')),
+        on_duty: on_duty,
         user_id: my_id
       }
     });

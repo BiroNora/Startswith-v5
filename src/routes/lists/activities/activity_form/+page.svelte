@@ -5,8 +5,14 @@
 	function handleCancel() {
 		history.back();
 	}
-	let { data, form } = $props();
+	let { data } = $props();
+
+	let pageName = 'Activity Rgeister';
 </script>
+
+<svelte:head>
+	<title>{pageName}</title>
+</svelte:head>
 
 <div class="grid">
 	<div class="rei">
@@ -41,7 +47,7 @@
 		<div>
 			<label for="region">Region</label>
 			<select name="region" id="region">
-				{#each data.regio as reg}
+				{#each data.regions as reg}
 					<option value={reg.region_id}>{reg.region_name}</option>
 				{/each}
 			</select>

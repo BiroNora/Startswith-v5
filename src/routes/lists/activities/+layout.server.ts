@@ -25,7 +25,7 @@ export async function load({locals}) {
   // 3. Adatbázis lekérések
   today.setHours(0, 0, 0, 0); // Ma éjféltől nézzük a lejáratot
 
-  const [activities, regio, city] = await Promise.all([
+  const [activities, regions, city] = await Promise.all([
     db.activity.findMany({
       where: { end_date: { gte: today } },
       orderBy: { end_date: 'desc' }
@@ -43,7 +43,7 @@ export async function load({locals}) {
 
   return {
     activities,
-    regio,
+    regions,
     city,
     user_id,
     user_duty,

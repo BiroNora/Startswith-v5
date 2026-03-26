@@ -58,24 +58,25 @@ model Contact {
 }
 
 model User {
-  user_id          String     @id @default(uuid())
+  user_id          String           @id @default(uuid())
   user_name        String
   nationality      String
   user_phone       String
-  user_email       String     @unique
+  user_email       String           @unique
   passwordHash     String
-  userAuthToken    String     @unique
-  createdAt        DateTime   @default(now()) @db.Timestamptz(3)
-  updatedAt        DateTime   @updatedAt @db.Timestamptz(3)
+  userAuthToken    String           @unique
+  createdAt        DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime         @updatedAt @db.Timestamptz(3)
   active           Boolean
   active_by        String
   on_duty          Int[]
   resetToken       String?
   resetTokenExpiry DateTime?
-  Contact          Contact[]  @relation("ContactToUser")
-  Event            Event[]    @relation("EventToUser")
-  School           School[]   @relation("SchoolToUser")
+  Contact          Contact[]        @relation("ContactToUser")
+  Event            Event[]          @relation("EventToUser")
+  School           School[]         @relation("SchoolToUser")
   activities       Activity[]
+  centralMessages  CentralMessage[]
 
   @@map("users")
 }
@@ -131,6 +132,19 @@ model Activity {
   user       User     @relation(fields: [user_id], references: [user_id])
 
   @@map("activity")
+}
+
+model CentralMessage {
+  cm_id      Int      @id @default(autoincrement())
+  start_date DateTime @default(now()) @db.Timestamptz(3)
+  end_date   DateTime @db.Timestamptz(3)
+  cm_name    String
+  cm_note    String?
+  on_duty    Int[]
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [user_id])
+
+  @@map("c_message")
 }
 
 model Country {
