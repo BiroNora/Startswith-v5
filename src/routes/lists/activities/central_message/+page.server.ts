@@ -6,6 +6,8 @@ export const actions: Actions = {
   dir_message: async ({ request, locals }) => {
     const data = await request.formData();
     const reg = String(data.get('region'));
+    const my_id = String(data.get('user_id'));
+
 
     const userDuty = locals.user?.duty;
     if (!userDuty || userDuty.length < 5) {
@@ -30,7 +32,8 @@ export const actions: Actions = {
         act_name: String(data.get('message')),
         on_duty,
         dir_flag: true,
-        all_region
+        all_region,
+        user_id: my_id
       }
     });
     throw redirect(303, '/lists/activities');

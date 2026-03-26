@@ -14,6 +14,7 @@
 
 	{#if data.dir_flag}
 		<form action="?/dir_message" method="post" use:enhance>
+			<input type="hidden" name="user_id" value={data.user_id} />
 			<div>
 				<label for="meeting-time">Show Message till this Date</label>
 				<input

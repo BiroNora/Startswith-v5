@@ -105,7 +105,7 @@
 								every regions
 							{:else}
 								{#each data.regio as reg}
-									{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+									{#if Number(act.on_duty.slice(1)) === reg.region_id}
 										{reg.region_name}
 									{/if}
 								{/each}
@@ -134,7 +134,7 @@
 							every regions
 						{:else}
 							{#each data.regio as reg}
-								{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+								{#if Number(act.on_duty.slice(1)) === reg.region_id}
 									{reg.region_name}
 								{/if}
 							{/each}
@@ -166,7 +166,7 @@
 							every regions
 						{:else}
 							{#each data.regio as reg}
-								{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+								{#if Number(act.on_duty.slice(1)) === reg.region_id}
 									{reg.region_name}
 								{/if}
 							{/each}
@@ -193,7 +193,7 @@
 								{/if}
 							{/each}
 							{#each data.regio as reg}
-								{#if Number(act.on_duty.charAt(1)) === reg.region_id}
+								{#if Number(act.on_duty.slice(1)) === reg.region_id}
 									{reg.region_name}
 								{/if}
 							{/each}

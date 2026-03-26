@@ -10,11 +10,11 @@
 	// Segédfüggvény a tisztségek szöveges megjelenítéséhez
 	function getDutyLabel(onDutyArray: number[]): string {
 		return onDutyArray
-			.filter((n) => n % 10 !== 0)
+			.filter((n) => !(n.toString().length === 2 && n % 10 === 0)) // Itt csak checkolunk
 			.map((n) => {
 				const s = n.toString();
-				const typeChar = s.charAt(0);
-				const targetChar = s.charAt(1);
+				const typeChar = s[0];
+				const targetChar = s.slice(1);
 
 				const type = dutyType.find((t) => t[0] === typeChar)?.[1] || 'Unknown';
 				let area = '';
@@ -22,8 +22,8 @@
 				if (typeChar === '5') {
 					area = dutyMap.find((m) => m.id === targetChar)?.name || 'Unknown';
 				} else {
-					area =
-						data.regions.find((r) => r.region_id === Number(targetChar))?.region_name || 'Unknown';
+					const regionId = Number(targetChar);
+					area = data.regions.find((r) => r.region_id === regionId)?.region_name || 'Unknown';
 				}
 				return `${type}: ${area}`;
 			})

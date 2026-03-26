@@ -6,6 +6,7 @@ export const actions: Actions = {
   activity: async ({ request }) => {
     const data = await request.formData()
     const end_date = new Date(String(data.get('meeting-time')));
+    const my_id = String(data.get('user_id'));
 
     await db.activity.create({
       data: {
@@ -14,7 +15,8 @@ export const actions: Actions = {
         act_note: String(data.get('message')),
         on_duty: String(data.get('duty')) + data.get('region'),
         dir_flag: false,
-        all_region: false
+        all_region: false,
+        user_id: my_id
       }
     });
 

@@ -58,23 +58,24 @@ model Contact {
 }
 
 model User {
-  user_id          String    @id @default(uuid())
+  user_id          String     @id @default(uuid())
   user_name        String
   nationality      String
   user_phone       String
-  user_email       String    @unique
+  user_email       String     @unique
   passwordHash     String
-  userAuthToken    String    @unique
-  createdAt        DateTime  @default(now()) @db.Timestamptz(3)
-  updatedAt        DateTime  @updatedAt @db.Timestamptz(3)
+  userAuthToken    String     @unique
+  createdAt        DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime   @updatedAt @db.Timestamptz(3)
   active           Boolean
   active_by        String
   on_duty          Int[]
   resetToken       String?
   resetTokenExpiry DateTime?
-  Contact          Contact[] @relation("ContactToUser")
-  Event            Event[]   @relation("EventToUser")
-  School           School[]  @relation("SchoolToUser")
+  Contact          Contact[]  @relation("ContactToUser")
+  Event            Event[]    @relation("EventToUser")
+  School           School[]   @relation("SchoolToUser")
+  activities       Activity[]
 
   @@map("users")
 }
@@ -126,6 +127,8 @@ model Activity {
   on_duty    String
   dir_flag   Boolean
   all_region Boolean
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [user_id])
 
   @@map("activity")
 }
@@ -133,7 +136,7 @@ model Activity {
 model Country {
   country_id        Int                  @id @default(autoincrement())
   country_name      String               @unique
-  country_code      String?              @unique
+  country_code      String               @unique
   InterestedStudent InterestedStudents[]
   Region            Region[]
   School            School[]

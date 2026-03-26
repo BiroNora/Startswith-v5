@@ -9,6 +9,7 @@ export async function load({locals}) {
   today.setDate(today.getDate() - 1)
 
   // 2. Változók kiszámítása (függvényen belül!)
+  const user_id = locals.user.user_id;
   const user_duty = locals.user.duty;
   const dir_num = user_duty[4] ?? 0;
 
@@ -44,6 +45,7 @@ export async function load({locals}) {
     activities,
     regio,
     city,
+    user_id,
     user_duty,
     dir_flag,
     dir_duty,
@@ -70,5 +72,5 @@ export async function load({locals}) {
     throw redirect(303, '/lists/activities'); // Használj abszolút utat
   },
 
-  
+
 } */
