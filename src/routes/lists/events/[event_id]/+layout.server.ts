@@ -1,5 +1,4 @@
 import { error, redirect } from '@sveltejs/kit';
-import { db } from '$lib/database';
 import { dutyMap, eventMap, gradeMap, channelMap, statusMap } from '../../../stores/dataStore';
 import { checkEventAccess } from '$lib/validation';
 
@@ -25,11 +24,6 @@ export async function load({params, locals}) {
 		status_name: statusMap.find((s) => s.id === ints.status)?.name || ints.status
 	}));
 
-	const [countries, regions] = await Promise.all([
-		db.country.findMany(),
-		db.region.findMany({ orderBy: { region_name: 'asc' } })
-	]);
-
 	const isDeletable = eventData.User.length <= 1 && eventData.InterestedStudents.length === 0;
 
 	return {
@@ -37,8 +31,6 @@ export async function load({params, locals}) {
 		school: eventData.School,
 		cityname: eventData.School.city.city_name,
 		inters: formattedInters,
-		countries,
-		regions,
 		eventTypeName,
 		dutyName,
 		// Svelte bind:value-hoz és hibaellenőrzéshez szükséges változók

@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			User: true,
 			School: {
 				include: {
-					city: true // Az iskolához tartozó várost is hozzácsapjuk
+					city: true
 				}
 			},
 			InterestedStudents: {
@@ -29,10 +29,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw error(404, 'Event not found')
 	}
 
-	// Adatok előkészítése a frontendnek
-	const countries = await db.country.findMany({})
-	const regions = await db.region.findMany({})
-	
 	const formattedEvent = {
 		...event,
 		on_duty_name: getName(dutyMap, event.on_duty),
@@ -50,8 +46,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		event: formattedEvent,
 		school: event.School,
 		cityname: event.School?.city?.city_name || 'Ismeretlen város',
-		countries,
-		regions,
 		inters: formattedInters
 	}
 }

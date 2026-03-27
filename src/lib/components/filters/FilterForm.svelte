@@ -27,7 +27,7 @@
 		<label for="year"><i>Select </i> &nbsp;&nbsp;Event Year</label>
 		<select bind:value={selectedYear} name="year" id="year" class="hidden-textbox">
 			<option value="ALL">ALL</option>
-			{#each data.distinctYears as year}
+			{#each data.years as year}
 				<option value={year}>{year} </option>
 			{/each}
 		</select>
@@ -55,7 +55,7 @@
 		<label for="country"><i>Select</i> &nbsp;&nbsp;School Country</label>
 		<select bind:value={selectedCountry} name="country" id="country" class="hidden-textbox">
 			<option value="ALL">ALL</option>
-			{#each data.distinctCountries as country}
+			{#each data.countries as country}
 				{#if country.country_id}
 					<option value={country.country_id}>{country.country_name}</option>
 				{/if}
@@ -67,7 +67,7 @@
 		<label for="region"><i>Select </i> &nbsp;&nbsp;School Region</label>
 		<select bind:value={selectedRegion} name="region" id="region" class="hidden-textbox">
 			<option value="ALL">ALL</option>
-			{#each data.distinctRegions as reg}
+			{#each data.regions as reg}
 				{#if reg.region_id}
 					<option value={reg.region_id}>{reg.region_name}</option>
 				{/if}

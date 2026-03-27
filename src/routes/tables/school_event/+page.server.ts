@@ -1,14 +1,11 @@
 import { db } from '$lib/database'
 import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { getFilterBaseData } from '$lib/server/filterUtils';
 
 export const load: PageServerLoad = async ({ locals }) => {
     if (!locals.user?.active) {
         throw redirect(302, '/auth/login')
     }
-
-    const filterData = await getFilterBaseData();
 
     // 2. Aggregált adatok lekérése (nem töltjük be az összes rekordot a memóriába)
     // Csak azokat az iskolákat nézzük, amik aktívak és van userük
@@ -41,7 +38,6 @@ export const load: PageServerLoad = async ({ locals }) => {
         interestStats.find(s => s.status === status)?._sum.intrest_count || 0;
 
     return {
-        ...filterData,
         schoolsCount,
         totalEvents: stats._count.event_id,
         totalEstStudents: stats._sum.estimated_student || 0,

@@ -2,18 +2,20 @@ import { error, redirect } from '@sveltejs/kit'
 import { db } from '$lib/database'
 
 export async function load({locals}) {
-  // 1. Jogosultság ellenőrzése
   if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login');
 
   const today = new Date()
   today.setDate(today.getDate() - 1)
 
-  // 2. Változók kiszámítása (függvényen belül!)
   const user_id = locals.user.user_id;
+  const user_is_dir = locals.user.duty[4] > 50;
+  
+
+
+  //const user_id = locals.user.user_id;
   const user_duty = locals.user.duty;
   const dir_num = user_duty[4] ?? 0;
 
-  // Alapértelmezett értékek
   let dir_duty = "";
   if (dir_num > 50) {
     dir_duty = String(dir_num % 10); // BAS, MED, HIGH

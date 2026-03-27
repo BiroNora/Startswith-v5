@@ -91,9 +91,9 @@
 	const countriesArray = $derived(data.distinctCountries || []);
 	const regionsArray = $derived(data.distinctRegions || []);
 	const selectedCountryObj = $derived(
-		countriesArray.find((c) => c.country_id === Number(selCountry))
+		countriesArray.find((c: any) => c.country_id === Number(selCountry))
 	);
-	const selectedRegionObj = $derived(regionsArray.find((r) => r.region_id === Number(selRegion)));
+	const selectedRegionObj = $derived(regionsArray.find((r: any) => r.region_id === Number(selRegion)));
 
 	// 4. EFFEKTEK (Késleltetés/Debounce)
 	$effect(() => {
