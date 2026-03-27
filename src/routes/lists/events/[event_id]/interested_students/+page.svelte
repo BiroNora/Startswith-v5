@@ -67,12 +67,16 @@
 				{/each}
 			</select>
 		</div>
-		<button
+
+		<div class="pad">
+			<button
 			type="button"
 			onclick={toggleIsInput}
 			class="btn btn-cancel"
 			class:active-color={!isInput}>Apply</button
 		>
+		</div>
+
 		<input type="hidden" name="apply" value={isInput} />
 		<fieldset disabled={isInput}>
 			<div>
@@ -104,5 +108,9 @@
 	.active-color {
 		background-color: #32bea6;
 		color: white;
+	}
+
+	.pad {
+		padding-top: 1.0rem;
 	}
 </style>
