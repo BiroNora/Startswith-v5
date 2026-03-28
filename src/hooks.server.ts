@@ -1,32 +1,50 @@
+// src/hooks.server.ts
 import type { Handle } from '@sveltejs/kit'
 import { db } from '$lib/database'
 
 export const handle: Handle = async ({ event, resolve }) => {
-  // get cookies from browser
   const session = event.cookies.get('session')
 
   if (!session) {
-    event.locals.user = null;
-    // if there is no session load page as normal
+    event.locals.user = null
     return await resolve(event)
   }
 
-  // find the user based on the session
   const user = await db.user.findUnique({
     where: { userAuthToken: session },
-    select: { user_id: true, user_email: true, user_name: true, on_duty: true, active: true },
+    select: {
+      user_id: true,
+      user_email: true,
+      user_name: true,
+      active: true,
+      role: true,
+      user_duties: true
+    },
   })
 
-  if (user) {
+  // Csak akkor engedjük be, ha létezik ÉS aktív a felhasználó
+  if (user && user.active) {
     event.locals.user = {
       user_id: user.user_id,
       email: user.user_email,
       name: user.user_name,
-      duty: user.on_duty,
-      active: user.active
+      active: user.active,
+      role: user.role,
+      duty: user.user_duties,
+
+      // EXTRÁK, amik aranyat érnek a frontend oldalon:
+      // Így nem kell mindig a role-t stringként csekkolni
+      isSuper: user.role === 'SUPER_USER',
+      isDirector: user.role === 'DIRECTOR',
+      isSuperior: user.role === 'SUPERIOR',
+
+      // Egy gyors lista az összes régióról, amihez joga van
+      // Ha SUPER_USER, akkor ez később egy külön logikát kaphat,
+      // de egyelőre kigyűjtjük a meglévőket:
+      allowedRegions: user.user_duties.map(d => d.region_id)
     }
   } else {
-    event.locals.user = null;
+    event.locals.user = null
   }
 
   return await resolve(event)

@@ -1,19 +1,21 @@
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
+import type { Role, DutyType, UserDuty } from '@prisma/client';
+
 declare global {
 	namespace App {
-		// interface Error {}
 		interface Locals {
 			user: {
 				user_id: string;
-				email: string,
-      	name: string,
-      	duty: number[],
+				email: string;
+      	name: string;
+				role: Role;
+      	duty: UserDuty[];
+				isSuper: boolean;
+				isDirector: boolean;
+				isSuperior: boolean;
+				allowedRegions: number[];
 				active: boolean
 			} | null;
 		}
-		// interface PageData {}
-		// interface Platform {}
 	}
 }
 

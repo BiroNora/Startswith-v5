@@ -7,6 +7,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  SUPERIOR
+  DIRECTOR
+  SUPER_USER
+}
+
+enum DutyType {
+  USER // Sima munkavégzés
+  SUPERIOR // Régióvezető
+  DIRECTOR // Igazgató
+}
+
+model UserDuty {
+  id        Int      @id @default(autoincrement())
+  user_id   String
+  user      User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  level     Int      // 1: BAS, 2: MED, 3: HIGH
+  region_id Int      // 4: Budapest, stb.
+  type      DutyType @default(USER) // Itt dől el a szerepkör!
+
+  @@unique([user_id, level, region_id, type]) // Ne legyen duplikált jog
+  @@map("user_duties")
+}
+
+model User {
+  user_id          String           @id @default(uuid())
+  user_name        String
+  nationality      String
+  user_phone       String
+  user_email       String           @unique
+  passwordHash     String
+  userAuthToken    String           @unique
+  createdAt        DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime         @updatedAt @db.Timestamptz(3)
+  active           Boolean
+  active_by        String
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  user_duties      UserDuty[]
+  Contact          Contact[]        @relation("ContactToUser")
+  Event            Event[]          @relation("EventToUser")
+  School           School[]         @relation("SchoolToUser")
+  activities       Activity[]
+  centralMessages  CentralMessage[]
+  role             Role             @default(USER)
+
+  @@map("users")
+}
+
 model School {
   school_id    Int       @id @default(autoincrement())
   om_id        String?
@@ -57,30 +107,6 @@ model Contact {
   @@map("contact")
 }
 
-model User {
-  user_id          String           @id @default(uuid())
-  user_name        String
-  nationality      String
-  user_phone       String
-  user_email       String           @unique
-  passwordHash     String
-  userAuthToken    String           @unique
-  createdAt        DateTime         @default(now()) @db.Timestamptz(3)
-  updatedAt        DateTime         @updatedAt @db.Timestamptz(3)
-  active           Boolean
-  active_by        String
-  on_duty          Int[]
-  resetToken       String?
-  resetTokenExpiry DateTime?
-  Contact          Contact[]        @relation("ContactToUser")
-  Event            Event[]          @relation("EventToUser")
-  School           School[]         @relation("SchoolToUser")
-  activities       Activity[]
-  centralMessages  CentralMessage[]
-
-  @@map("users")
-}
-
 model Event {
   event_id           Int                  @id @default(autoincrement())
   event_name         String
@@ -125,9 +151,9 @@ model Activity {
   end_date   DateTime @db.Timestamptz(3)
   act_name   String
   act_note   String?
-  on_duty    String
-  dir_flag   Boolean
-  all_region Boolean
+  on_duty    Int
+  duty_num   Int
+  region_num Int
   user_id    String
   user       User     @relation(fields: [user_id], references: [user_id])
 
