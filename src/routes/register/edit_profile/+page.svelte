@@ -133,7 +133,8 @@
 				<a href="#close" aria-label="Close" class="close" onclick={() => (showModal = false)}></a>
 				<h5>Confirm Deletion</h5>
 			</header>
-			<form action="?/delUser" method="post" use:enhance>
+			<form action="?/delRole" method="post" use:enhance>
+			<input type="hidden" name="dutyId" value={selectedDutyId} />
 				<div>
 					<h6>Az esemény adatai véglegesen törlődnek.</h6>
 					<footer>
@@ -152,19 +153,3 @@
 		</article>
 	</dialog>
 {/if}
-
-<!-- {#if showModal}
-	<dialog open>
-		<article>
-			<h3>Megerősítés</h3>
-			<p>Biztosan törölni szeretnéd ezt a beosztást?</p>
-			<footer>
-				<button class="secondary" onclick={() => (showModal = false)}>Mégse</button>
-				<form method="POST" action="?/deleteDuty" style="display:inline;">
-					<input type="hidden" name="id" value={selectedDutyId} />
-					<button type="submit" class="del">Törlés</button>
-				</form>
-			</footer>
-		</article>
-	</dialog>
-{/if} -->

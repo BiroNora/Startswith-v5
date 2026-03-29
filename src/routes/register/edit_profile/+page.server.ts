@@ -6,34 +6,30 @@ import { dutyType, isStrongPassword } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')
+}
 
-  const [countries, regions, counties, cities, user] = await Promise.all([
-    db.country.findMany({
-      orderBy: { country_name: 'asc' }
-    }),
-    db.region.findMany({
-      select: { region_id: true, region_name: true, country_id: true },
-      orderBy: { region_name: 'asc' }
-    }),
-    db.county.findMany({
-      select: { county_id: true, county_name: true, region_id: true },
-      orderBy: { county_name: 'asc' }
-    }),
-    db.city.findMany({
-      select: { city_id: true, city_name: true, county_id: true },
-      orderBy: { city_name: 'asc' }
-    }),
-    db.user.findUnique({
-      where: { user_email: locals.user.email }
-    })
-  ]);
+const delRole: Action = async ({ request, locals }) => {
+  const formData = await request.formData();
+  const dutyId = Number(formData.get('dutyId'));
 
-  if (!countries || !regions || !counties || !cities || !user) {
-    return fail(400, { error: true, message: 'Adatbázis hiba történt.' })
+  if (!dutyId) {
+    return fail(400, { message: 'Hiányzó azonosító!' });
   }
 
-  return { countries, regions, counties, cities, user }
-}
+  try {
+    await db.userDuty.delete({
+      where: {
+        id: dutyId
+      }
+    });
+
+    throw redirect(303, '/register/edit_profile')
+  } catch (error) {
+    console.error("Hiba a jog törlésekor:", error);
+    return fail(500, { message: 'Adatbázis hiba történt a törlés során.' });
+  }
+};
+
 
 const user: Action = async ({ request, locals }) => {
   if (!locals.user?.email) throw redirect(302, '/auth/login');
@@ -124,4 +120,4 @@ const user_active_change: Action = async ({ request, locals }) => {
   return { success: true };
 }
 
-export const actions: Actions = { user, user_active_change }
+export const actions: Actions = { user, user_active_change, delRole }
