@@ -16,6 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       user_id: true,
       user_email: true,
       user_name: true,
+      user_phone: true,
       active: true,
       role: true,
       user_duties: true
@@ -27,6 +28,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.user = {
       user_id: user.user_id,
       email: user.user_email,
+      phone: user.user_phone,
       name: user.user_name,
       active: user.active,
       role: user.role,

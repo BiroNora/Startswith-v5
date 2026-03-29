@@ -1,7 +1,15 @@
 import { db } from "$lib/database";
+import type { Country, Region } from "@prisma/client";
 import type { LayoutServerLoad } from "./$types";
 
-let cachedFilterData: any = null;
+interface FilterCache {
+  years: string[];
+  countries: Country[];
+  regions: Region[];
+  distinctYears: string[];
+}
+
+let cachedFilterData: FilterCache | null = null;
 
 export const load: LayoutServerLoad = async ({ locals }) => {
   if (!cachedFilterData) {

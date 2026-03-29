@@ -63,6 +63,27 @@ label {
 	color: var(--secondary-gray-cool);
 }
 
+article {
+	margin-bottom: 0.2rem;
+	font-size: 0.8rem;
+}
+
+.art {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.art-btn {
+	padding: 0rem;
+	margin-bottom: 0;
+	border: none;
+}
+
+.art-div {
+	padding: 0.5rem;
+}
+
 .main {
 	padding: 2% 2% 0 2%;
 	width: 100%;
@@ -213,6 +234,13 @@ label {
 	align-items: center;
 	justify-content: center;
 }
+
+.x-icon {
+	font-size:1.0rem;
+	color:red;
+	font-weight: bolder;
+	padding-right: 0.5rem;
+}
 /* --- BUTTON EDDIG --- */
 
 /* --- MODAL --- */
@@ -337,7 +365,7 @@ p {
 	flex-direction: column;
 	gap: 5px;
 	align-content: space-around;
-	width: 1005%;
+	width: 100%;
 	max-width: 600px;
 	margin: auto;
 

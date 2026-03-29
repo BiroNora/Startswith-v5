@@ -1,6 +1,6 @@
 <div class="container">
 	<h3>Welcome to Startswith</h3>
-	<p>Please <a href="/auth/login">Log in</a> or <a href="/auth/registration">Register</a></p>
+	<p>Please <a href="/auth/login">Log in</a></p>
 </div>
 
 <style>

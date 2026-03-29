@@ -46,11 +46,6 @@
 					<li>
 						<a href="/register/edit_profile" target="_blank">Edit Profile</a>
 					</li>
-					{#if data.user.duty[4] % 10 !== 0}
-						<li>
-							<a href="/register/access_control" target="_blank">Access Control</a>
-						</li>
-					{/if}
 				</ul>
 			</ul>
 

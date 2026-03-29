@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { dutyMap, eyeClosed, eyeOpen } from '../../stores/dataStore';
+	import { dutyMap, eyeClosed, eyeOpen, LEVEL_LABELS } from '../../stores/dataStore';
 	import type { ActionData, PageData } from './$types';
 	import { fade } from 'svelte/transition';
 
@@ -8,63 +8,16 @@
 
 	let showPassword = $state(false);
 
+	let showModal = $state(false);
+	let selectedDutyId = $state<number | null>(null);
+
+	function confirmDelete(id: number) {
+		selectedDutyId = id;
+		showModal = true;
+	}
+
 	// REAKTÍV ALAPOK: Ha a data frissül, ezek is frissülnek
-	let onDutyArray = $derived(
-		(data.user?.on_duty ?? [])
-			.filter((n: any) => !(n.toString().length === 2 && n % 10 === 0))
-			.map((num) => num.toString())
-	);
 
-	// Form állapotok
-	let yesB = $state(false),
-		yesM = $state(false),
-		yesH = $state(false),
-		yesS = $state(false),
-		yesD = $state(false);
-
-	let yesBreg = $state(0),
-		yesMreg = $state(0),
-		yesHreg = $state(0),
-		yesSreg = $state(0),
-		yesDuty = $state('');
-
-	$effect(() => {
-		if (data.user && data.regions) {
-			// Alaphelyzetbe állítás frissüléskor
-			yesB = false;
-			yesM = false;
-			yesH = false;
-			yesS = false;
-			yesD = false;
-
-			onDutyArray.forEach((val) => {
-				const type = val.charAt(0);
-				const regId = Number(val.slice(1));
-
-				if (type === '1') {
-					yesB = true;
-					yesBreg = regId;
-				}
-				if (type === '2') {
-					yesM = true;
-					yesMreg = regId;
-				}
-				if (type === '3') {
-					yesH = true;
-					yesHreg = regId;
-				}
-				if (type === '4') {
-					yesS = true;
-					yesSreg = regId;
-				}
-				if (type === '5') {
-					yesD = true;
-					yesDuty = val.slice(1);
-				}
-			});
-		}
-	});
-	
 	let pageName = 'Edit Profile';
 </script>
 
@@ -80,101 +33,48 @@
 	<form action="?/user" method="post" use:enhance>
 		<div>
 			<label for="name">Name</label>
-			<input type="text" name="name" id="name" value={data.user?.user_name} required />
-		</div>
-		<div>
-			<label for="nationality">Nationality</label>
-			<input
-				type="text"
-				name="nationality"
-				id="nationality"
-				value={data.user?.nationality}
-				required
-			/>
+			<input type="text" name="name" id="name" value={data.user?.name} required />
 		</div>
 		<div>
 			<label for="phone">Phone</label>
-			<input type="text" name="phone" id="phone" value={data.user?.user_phone} required />
+			<input type="text" name="phone" id="phone" value={data.user?.phone} required />
 		</div>
 
-		<div class="input-group">
-			<label class="check-label">
-				<input type="checkbox" name="basic" bind:checked={yesB} />
-				<span>BASIC</span>
-			</label>
-			<div class="select-wrapper">
-				{#if yesB}
-					<select bind:value={yesBreg} name="regB" id="sel-B" transition:fade={{ duration: 200 }}>
-						{#each data.regions ?? [] as regio}
-							<option value={regio.region_id}>{regio.region_name}</option>
-						{/each}
-					</select>
-				{/if}
-			</div>
-		</div>
+		<div class="duties-container">
+			{#each data.user?.duty || [] as u}
+				<article class="art-div">
+					<div class="art">
+						<div>
+							{#if u.type === 'USER'}
+								<div>
+									{LEVEL_LABELS[u.level]}<small
+										>— {data.regions.find((r) => r.region_id === u.region_id)?.region_name}</small
+									>
+								</div>
+							{:else if u.type === 'SUPERIOR'}
+								<strong>{u.type}</strong>
+								<small>— {data.regions.find((r) => r.region_id === u.region_id)?.region_name}</small
+								>
+							{:else if u.type === 'DIRECTOR'}
+								<ins>{u.type}</ins>
+								<small>— {LEVEL_LABELS[u.level]}</small>
+							{/if}
+						</div>
 
-		<div class="input-group">
-			<label class="check-label">
-				<input type="checkbox" name="medior" bind:checked={yesM} />
-				<span>MEDIOR</span>
-			</label>
-			<div class="select-wrapper">
-				{#if yesM}
-					<select bind:value={yesMreg} name="regM" id="sel-M" transition:fade={{ duration: 200 }}>
-						{#each data.regions ?? [] as regio}
-							<option value={regio.region_id}>{regio.region_name}</option>
-						{/each}
-					</select>
-				{/if}
-			</div>
-		</div>
-
-		<div class="input-group">
-			<label class="check-label">
-				<input type="checkbox" name="high" bind:checked={yesH} />
-				<span>HIGH</span>
-			</label>
-			<div class="select-wrapper">
-				{#if yesH}
-					<select bind:value={yesHreg} name="regH" id="sel-H" transition:fade={{ duration: 200 }}>
-						{#each data.regions ?? [] as regio}
-							<option value={regio.region_id}>{regio.region_name}</option>
-						{/each}
-					</select>
-				{/if}
-			</div>
-		</div>
-
-		<div class="input-group">
-			<label class="check-label">
-				<input type="checkbox" name="superior" bind:checked={yesS} />
-				<span>SUPERIOR</span>
-			</label>
-			<div class="select-wrapper">
-				{#if yesS}
-					<select bind:value={yesSreg} name="regS" id="sel-S" transition:fade={{ duration: 200 }}>
-						{#each data.regions ?? [] as regio}
-							<option value={regio.region_id}>{regio.region_name}</option>
-						{/each}
-					</select>
-				{/if}
-			</div>
-		</div>
-
-		<div class="input-group">
-			<label class="check-label">
-				<input type="checkbox" name="director" bind:checked={yesD} />
-				<span>DIRECTOR</span>
-			</label>
-			<div class="select-wrapper">
-				{#if yesD}
-					<select bind:value={yesDuty} name="regD" id="sel-D" transition:fade={{ duration: 200 }}>
-						{#each dutyMap as item (item.id)}
-							<option value={item.id}>{item.name}</option>
-						{/each}
-					</select>
-				{/if}
-			</div>
+						{#if u.type === 'USER' && u.level <= 3}
+							<button
+								type="button"
+								class="outline art-btn"
+								onclick={() => confirmDelete(u.id)}
+							>
+								<div class="x-icon">x</div>
+							</button>
+						{/if}
+					</div>
+				</article>
+			{:else}
+				<p>Nincsenek beosztások.</p>
+			{/each}
 		</div>
 
 		<div>
@@ -226,33 +126,45 @@
 	</form>
 </div>
 
-<style>
-	.input-group {
-		display: flex;
-		flex-direction: row; /* Alapértelmezetten egymás mellett */
-		align-items: center;
-		height: 2.5rem !important;
-		padding: 0 1rem !important;
-		gap: 10px;
-		margin-bottom: 5px;
-	}
+{#if showModal}
+	<dialog open>
+		<article>
+			<header>
+				<a href="#close" aria-label="Close" class="close" onclick={() => (showModal = false)}></a>
+				<h5>Confirm Deletion</h5>
+			</header>
+			<form action="?/delUser" method="post" use:enhance>
+				<div>
+					<h6>Az esemény adatai véglegesen törlődnek.</h6>
+					<footer>
+						<button type="submit" class="btn" data-target="modal-example"> Confirm </button>
+						<button
+							type="button"
+							class="btn btn-cancel btn-outline"
+							data-target="modal-example"
+							onclick={() => (showModal = false)}
+						>
+							Cancel
+						</button>
+					</footer>
+				</div>
+			</form>
+		</article>
+	</dialog>
+{/if}
 
-	.check-label {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		min-width: 160px;
-		cursor: pointer;
-	}
-
-	select {
-		max-width: 100%;
-	}
-
-	/* A select konténere, ami kitölti a maradék helyet */
-	.select-wrapper {
-		flex-grow: 1;
-		display: flex;
-		align-items: center;
-	}
-</style>
+<!-- {#if showModal}
+	<dialog open>
+		<article>
+			<h3>Megerősítés</h3>
+			<p>Biztosan törölni szeretnéd ezt a beosztást?</p>
+			<footer>
+				<button class="secondary" onclick={() => (showModal = false)}>Mégse</button>
+				<form method="POST" action="?/deleteDuty" style="display:inline;">
+					<input type="hidden" name="id" value={selectedDutyId} />
+					<button type="submit" class="del">Törlés</button>
+				</form>
+			</footer>
+		</article>
+	</dialog>
+{/if} -->

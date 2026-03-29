@@ -7,6 +7,7 @@ declare global {
 				user_id: string;
 				email: string;
       	name: string;
+				phone: string;
 				role: Role;
       	duty: UserDuty[];
 				isSuper: boolean;
