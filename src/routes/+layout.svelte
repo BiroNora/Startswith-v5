@@ -46,6 +46,9 @@
 					<li>
 						<a href="/register/edit_profile" target="_blank">Edit Profile</a>
 					</li>
+					<li>
+						<a href="/register/duty_settings" target="_blank">Edit Duty Settings</a>
+					</li>
 				</ul>
 			</ul>
 

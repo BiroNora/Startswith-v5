@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import bcrypt from 'bcryptjs'
 import { db } from '$lib/database'
-import { dutyType, isStrongPassword } from '../../stores/dataStore'
+import { isStrongPassword } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')
@@ -21,7 +21,7 @@ export const actions: Actions = {
     // 3. Jelszó kezelése (opcionális: csak ha kitöltötte)
     const password1 = data.get('password1')
     const password2 = data.get('password2')
-    
+
     let passwordUpdateData = {};
 
     if (password1 && String(password1).trim() !== "") {
