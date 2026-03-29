@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit'
-import type { Action, Actions, PageServerLoad } from './$types'
+import type { Actions, PageServerLoad } from './$types'
 import bcrypt from 'bcryptjs'
 import { db } from '$lib/database'
 import { dutyType, isStrongPassword } from '../../stores/dataStore'
@@ -8,116 +8,47 @@ export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')
 }
 
-const delRole: Action = async ({ request, locals }) => {
-  const formData = await request.formData();
-  const dutyId = Number(formData.get('dutyId'));
+export const actions: Actions = {
+  user: async ({ request, locals }) => {
+    if (!locals.user?.email) throw redirect(302, '/auth/login');
+    const sessionUserEmail = locals.user.email;
+    const data = await request.formData()
 
-  if (!dutyId) {
-    return fail(400, { message: 'Hiányzó azonosító!' });
-  }
+    const user_name = data.get('name') ? String(data.get('name')) : undefined;
+    const nationality = data.get('nationality') ? String(data.get('nationality')) : undefined;
+    const user_phone = data.get('phone') ? String(data.get('phone')) : undefined;
 
-  try {
-    await db.userDuty.delete({
-      where: {
-        id: dutyId
+    // 3. Jelszó kezelése (opcionális: csak ha kitöltötte)
+    const password1 = data.get('password1')
+    const password2 = data.get('password2')
+    
+    let passwordUpdateData = {};
+
+    if (password1 && String(password1).trim() !== "") {
+      if (password1 !== password2) return fail(400, { invalid: true });
+      if (!isStrongPassword(String(password1))) return fail(400, { passw: true });
+
+      passwordUpdateData = {
+        passwordHash: await bcrypt.hash(String(password1), 10),
+        userAuthToken: crypto.randomUUID() // Kijelentkeztetés máshonnan jelszócserekor
+      };
+    }
+
+    // 4. Frissítés
+    await db.user.update({
+      where: { user_email: sessionUserEmail },
+      data: {
+        user_name,    // Ha undefined, marad a régi
+        nationality,  // Ha undefined, marad a régi
+        user_phone,   // Ha undefined, marad a régi
+        ...passwordUpdateData,
+        active: true,
+        active_by: 'self'
       }
-    });
+    })
 
-    throw redirect(303, '/register/edit_profile')
-  } catch (error) {
-    console.error("Hiba a jog törlésekor:", error);
-    return fail(500, { message: 'Adatbázis hiba történt a törlés során.' });
+    // Ha megváltozott az e-mail, érdemes lehet a session-t is frissíteni vagy újra beléptetni,
+    // de egyelőre dobjuk a listára.
+    throw redirect(303, '/lists/activities')
   }
-};
-
-
-const user: Action = async ({ request, locals }) => {
-  if (!locals.user?.email) throw redirect(302, '/auth/login');
-  const sessionUserEmail = locals.user.email;
-
-  const data = await request.formData()
-
-  // 2. Alapadatok kinyerése
-  const user_name = data.get('name') ? String(data.get('name')) : undefined;
-  const nationality = data.get('nationality') ? String(data.get('nationality')) : undefined;
-  const user_phone = data.get('phone') ? String(data.get('phone')) : undefined;
-
-  const basic = Boolean(data.get('basic'))
-  const reB = String(data.get('regB'))
-  const medior = Boolean(data.get('medior'))
-  const reM = String(data.get('regM'))
-  const high = Boolean(data.get('high'))
-  const reH = String(data.get('regH'))
-  const superior = Boolean(data.get('superior'))
-  const reS = String(data.get('regS'))
-  const director = Boolean(data.get('director'))
-  const reD = String(data.get('regD'))
-
-  const on_duty = [
-    Number(dutyType[0][0] + (basic ? reB : '0')),
-    Number(dutyType[1][0] + (medior ? reM : '0')),
-    Number(dutyType[2][0] + (high ? reH : '0')),
-    Number(dutyType[3][0] + (superior ? reS : '0')),
-    Number(dutyType[4][0] + (director ? reD : '0'))
-  ];
-
-  if (on_duty.every((val, i) => val === Number(dutyType[i][0] + '0'))) {
-    return fail(400, { regions: true })
-  }
-
-  // 3. Jelszó kezelése (opcionális: csak ha kitöltötte)
-  const password1 = data.get('password1')
-  const password2 = data.get('password2')
-  let passwordUpdateData = {};
-
-  if (password1 && String(password1).trim() !== "") {
-    if (password1 !== password2) return fail(400, { invalid: true });
-    if (!isStrongPassword(String(password1))) return fail(400, { passw: true });
-
-    passwordUpdateData = {
-      passwordHash: await bcrypt.hash(String(password1), 10),
-      userAuthToken: crypto.randomUUID() // Kijelentkeztetés máshonnan jelszócserekor
-    };
-  }
-
-  // 4. Frissítés
-  await db.user.update({
-    where: { user_email: sessionUserEmail },
-    data: {
-      user_name,    // Ha undefined, marad a régi
-      nationality,  // Ha undefined, marad a régi
-      user_phone,   // Ha undefined, marad a régi
-      on_duty,      // Ezt mindig frissítjük a form alapján
-      ...passwordUpdateData,
-      active: true,
-      active_by: 'self'
-    }
-  })
-
-  // Ha megváltozott az e-mail, érdemes lehet a session-t is frissíteni vagy újra beléptetni,
-  // de egyelőre dobjuk a listára.
-  throw redirect(303, '/lists/activities')
 }
-
-const user_active_change: Action = async ({ request, locals }) => {
-  if (!locals.user) throw redirect(302, '/auth/login');
-
-  const data = await request.formData()
-  const target_email = String(data.get('email'))
-  const active_by = locals.user.email
-
-  const targetUser = await db.user.findUnique({ where: { user_email: target_email } })
-  if (!targetUser) return fail(400, { user: true })
-
-  await db.user.update({
-    where: { user_email: target_email },
-    data: {
-      active: !targetUser.active,
-      active_by
-    }
-  })
-
-  return { success: true };
-}
-
-export const actions: Actions = { user, user_active_change, delRole }

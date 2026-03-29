@@ -8,12 +8,18 @@
 
 	let showPassword = $state(false);
 
-	let showModal = $state(false);
+	let showDelModal = $state(false);
+	let showAddModal = $state(false);
 	let selectedDutyId = $state<number | null>(null);
+	let isInput = $state(true);
 
 	function confirmDelete(id: number) {
 		selectedDutyId = id;
-		showModal = true;
+		showDelModal = true;
+	}
+
+	function toggleIsInput() {
+		isInput = !isInput;
 	}
 
 	// REAKTÍV ALAPOK: Ha a data frissül, ezek is frissülnek
@@ -38,43 +44,6 @@
 		<div>
 			<label for="phone">Phone</label>
 			<input type="text" name="phone" id="phone" value={data.user?.phone} required />
-		</div>
-
-		<div class="duties-container">
-			{#each data.user?.duty || [] as u}
-				<article class="art-div">
-					<div class="art">
-						<div>
-							{#if u.type === 'USER'}
-								<div>
-									{LEVEL_LABELS[u.level]}<small
-										>— {data.regions.find((r) => r.region_id === u.region_id)?.region_name}</small
-									>
-								</div>
-							{:else if u.type === 'SUPERIOR'}
-								<strong>{u.type}</strong>
-								<small>— {data.regions.find((r) => r.region_id === u.region_id)?.region_name}</small
-								>
-							{:else if u.type === 'DIRECTOR'}
-								<ins>{u.type}</ins>
-								<small>— {LEVEL_LABELS[u.level]}</small>
-							{/if}
-						</div>
-
-						{#if u.type === 'USER' && u.level <= 3}
-							<button
-								type="button"
-								class="outline art-btn"
-								onclick={() => confirmDelete(u.id)}
-							>
-								<div class="x-icon">x</div>
-							</button>
-						{/if}
-					</div>
-				</article>
-			{:else}
-				<p>Nincsenek beosztások.</p>
-			{/each}
 		</div>
 
 		<div>
@@ -110,10 +79,6 @@
 			<p class="error">Confirm password.</p>
 		{/if}
 
-		{#if form?.regions}
-			<p class="error">One duty must be choosen.</p>
-		{/if}
-
 		{#if form?.passw}
 			<p class="error">
 				Password must be at least 8 characters long, must include at least one lowercase and
@@ -126,15 +91,16 @@
 	</form>
 </div>
 
-{#if showModal}
+{#if showDelModal}
 	<dialog open>
 		<article>
 			<header>
-				<a href="#close" aria-label="Close" class="close" onclick={() => (showModal = false)}></a>
+				<a href="#close" aria-label="Close" class="close" onclick={() => (showDelModal = false)}
+				></a>
 				<h5>Confirm Deletion</h5>
 			</header>
 			<form action="?/delRole" method="post" use:enhance>
-			<input type="hidden" name="dutyId" value={selectedDutyId} />
+				<input type="hidden" name="dutyId" value={selectedDutyId} />
 				<div>
 					<h6>Az esemény adatai véglegesen törlődnek.</h6>
 					<footer>
@@ -143,7 +109,7 @@
 							type="button"
 							class="btn btn-cancel btn-outline"
 							data-target="modal-example"
-							onclick={() => (showModal = false)}
+							onclick={() => (showDelModal = false)}
 						>
 							Cancel
 						</button>
@@ -153,3 +119,68 @@
 		</article>
 	</dialog>
 {/if}
+
+{#if showAddModal}
+	<dialog open>
+		<article>
+			<header>
+				<h5>Add New Duty</h5>
+			</header>
+
+			<form
+				action="?/addRole"
+				method="post"
+				use:enhance={() => {
+					// Ez fut le a kérés INDÍTÁSAKOR
+					return async ({ result, update }) => {
+						// Ez fut le, ha a SZERVER VÁLASZOLT
+						if (result.type === 'success' || result.type === 'redirect') {
+							showAddModal = false; // Csak siker esetén zárjuk be
+							if (!isInput) toggleIsInput(); // Szín visszaállítása
+						}
+						await update();
+					};
+				}}
+			>
+				<label for="new_level">Level</label>
+				<select name="level" id="new_level" required>
+					<option value="1">{LEVEL_LABELS[1]}</option>
+					<option value="2">{LEVEL_LABELS[2]}</option>
+					<option value="3">{LEVEL_LABELS[3]}</option>
+				</select>
+
+				<label for="new_region">Region</label>
+				<select name="region_id" id="new_region" required>
+					<option value="" disabled selected>Select a region...</option>
+					{#each data.regions as r}
+						<option value={r.region_id}>{r.region_name}</option>
+					{/each}
+				</select>
+
+				<footer>
+					<button type="submit" class="btn" formnovalidate>Add Duty</button>
+					<button type="button" class="btn btn-cancel" onclick={() => (showAddModal = false)}
+						>Cancel</button
+					>
+				</footer>
+			</form>
+		</article>
+	</dialog>
+{/if}
+
+<style>
+	.a {
+		color: #32bea6;
+		font-weight: bolder;
+	}
+
+	.b {
+		color: #141717;
+		font-weight: normal;
+	}
+
+	.active-color {
+		background-color: #32bea6;
+		color: white;
+	}
+</style>
