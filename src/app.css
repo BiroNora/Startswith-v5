@@ -241,6 +241,11 @@ article {
 	font-weight: bolder;
 	padding-right: 0.5rem;
 }
+
+.active-color {
+		background-color: #32bea6;
+		color: white;
+	}
 /* --- BUTTON EDDIG --- */
 
 /* --- MODAL --- */

@@ -1,8 +1,9 @@
 <script lang="ts">
 	import '@picocss/pico';
 	import { enhance } from '$app/forms';
-	let { data, children } = $props();
 	import '../app.css';
+
+	let { data, children } = $props();
 </script>
 
 <div class="m">
@@ -49,6 +50,11 @@
 					<li>
 						<a href="/register/duty_settings" target="_blank">Edit Duty Settings</a>
 					</li>
+					{#if data.user.role === 'SUPER_USER'}
+						<li>
+						<a href="/admin" target="_blank">Admin</a>
+					</li>
+					{/if}
 				</ul>
 			</ul>
 
