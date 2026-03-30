@@ -25,6 +25,7 @@ export const actions: Actions = {
     const superiorRegionId = isSuperior ? Number(formData.get('regS')) : 0;
     const directorLevel = isDirector ? Number(formData.get('regD')) : 0;
 
+
     if (isSuperior && (!superiorRegionId || superiorRegionId === 0)) {
       return fail(400, { message: 'Kérlek válassz régiót a SUPERIOR joghoz!' });
     }
@@ -33,6 +34,10 @@ export const actions: Actions = {
       return fail(400, { message: 'Kérlek válassz szintet a DIRECTOR joghoz!' });
     }
 
+    if (!isSuperior && !isDirector) {
+      return fail(400, { message: 'Legalább egy beosztást (SUPERIOR vagy DIRECTOR) ki kell választanod!' });
+    }
+    
     try {
       await db.$transaction(async (tx) => {
 

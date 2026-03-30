@@ -30,7 +30,22 @@
 		<p class="black">ADMIN Account Settings</p>
 	</div>
 
-	<form method="post" use:enhance>
+	<form
+		method="post"
+		use:enhance={() => {
+			form = null;
+			return async ({ result, update }) => {
+				if (result.type === 'failure') {
+					const msg = result.data?.message || 'Hiba történt!';
+					alert(msg);
+					return;
+				}
+				else {
+					await update();
+				}
+			};
+		}}
+	>
 		<div>
 			<label for="email">Email</label>
 			<input type="email" name="email" id="email" bind:value={email} required />

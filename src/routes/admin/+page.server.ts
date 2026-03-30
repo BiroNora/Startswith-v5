@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { db } from '$lib/database';
 import { generateSecurePassword, getValidatedUser } from '$lib/adminUtils';
@@ -27,8 +27,8 @@ export const actions: Actions = {
   "add-new-user": async ({ request }) => {
     const { email, user } = await getValidatedUser(await request.formData());
 
-    if (user) return { error: "Ez a felhasználó már létezik!" };
-    if (!email) return { error: "Email megadása kötelező!" };
+    if (user) return fail(500, { message: "Ezzel az email címmel felhasználó már létezik." });
+    if (!email) return fail(500, { message: "Váratlan hiba történt a mentéskor." });
 
     const { newPass, passwordHash } = await generateSecurePassword();
 
@@ -50,7 +50,7 @@ export const actions: Actions = {
       return { success: true, generatedPassword: newPass, newUser: true };
     } catch (e) {
       console.error("Hiba a létrehozás során:", e);
-      return { error: "Váratlan hiba történt a mentéskor." };
+      return fail(500, { message: "Váratlan hiba történt a mentéskor." });
     }
   }
 };
