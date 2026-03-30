@@ -1,56 +1,131 @@
 import { db } from "$lib/database";
 import { fail } from "@sveltejs/kit";
+import type { Actions } from "./$types";
+import bcrypt from 'bcryptjs';
 
-// src/routes/admin/+page.server.ts
+export const actions: Actions = {
+    // 1. KERESÉS FUNKCIÓ
+    search: async ({ request }) => {
+        const data = await request.formData();
+        const email = String(data.get('email'));
 
-//  >>>>>>>>>>>>>>>>> DANGER DANGER DANGER <<<<<<<<<<<<<<<<<<<<<<
+        const foundUser = await db.user.findUnique({
+            where: { user_email: email },
+            include: { user_duties: true }
+        });
 
-
-export const actions = {
-  syncUserRoles: async () => {
-    try {
-      // 1. Lekérjük a usereket az új duty-kkal
-      const users = await db.user.findMany({
-        include: { user_duties: true }
-      });
-
-      let updatedCount = 0;
-
-      for (const user of users) {
-        // Meghatározzuk az új rangot (Alapértelmezett: USER)
-        // A típusnál felsoroljuk az összes Enum értéket a sémádból
-        let newRole: 'USER' | 'SUPERIOR' | 'DIRECTOR' | 'SUPER_USER' = 'USER';
-
-        // Ha véletlenül már most lenne valaki SUPER_USER, őt ne bántsuk
-        if (user.role === 'SUPER_USER') {
-          continue;
+        if (!foundUser) {
+            return { newUser: true, email };
         }
 
-        const duties = user.user_duties;
-        const hasDirector = duties.some(d => d.type === 'DIRECTOR');
-        const hasSuperior = duties.some(d => d.type === 'SUPERIOR');
+        return {
+            foundUser: {
+                name: foundUser.user_name,
+                email: foundUser.user_email,
+                duties: foundUser.user_duties
+            }
+        };
+    },
 
-        // Ranglétra sorrend: Director > Superior > User
-        if (hasDirector) {
-          newRole = 'DIRECTOR';
-        } else if (hasSuperior) {
-          newRole = 'SUPERIOR';
+    // 2. MENTÉS / LÉTREHOZÁS (A formodban action="?/user")
+    user: async ({ request }) => {
+        const data = await request.formData();
+        const email = String(data.get('email'));
+        const name = String(data.get('name'));
+        const password = String(data.get('password'));
+
+        // Jogosultság adatok a formból
+        const isSuperior = data.has('superior');
+        const isDirector = data.has('director');
+        const regS = Number(data.get('regS')); // Régió ID a Superiorhoz
+        const regD = Number(data.get('regD')); // Level ID a Directorhoz (nálad regD néven jön a select-ből)
+
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        try {
+            // Felhasználó mentése/frissítése
+            const user = await db.user.upsert({
+                where: { user_email: email },
+                update: {
+                    user_name: name,
+                    passwordHash: passwordHash,
+                    userAuthToken: crypto.randomUUID()
+                },
+                create: {
+                    user_email: email,
+                    user_name: name,
+                    passwordHash: passwordHash,
+                    userAuthToken: crypto.randomUUID(),
+                    active: true,
+                    nationality: 'magyar',
+                    user_phone: '',
+                    active_by: 'admin'
+                }
+            });
+
+            // --- JOGOSULTSÁGOK KEZELÉSE ---
+
+            // SUPERIOR JOG
+            if (isSuperior) {
+                await db.userDuty.upsert({
+                    where: {
+                        // Feltételezve, hogy van egy egyedi indexed: user_id + type + region_id
+                        user_id_type_region_id: {
+                            user_id: user.user_id,
+                            type: 'SUPERIOR',
+                            region_id: regS
+                        }
+                    },
+                    update: {}, // Ha már létezik, nem kell bántani
+                    create: {
+                        user_id: user.user_id,
+                        type: 'SUPERIOR',
+                        region_id: regS,
+                        level: 0 // Vagy amit alapértelmezettnek szánsz
+                    }
+                });
+            }
+
+            // DIRECTOR JOG
+            if (isDirector) {
+                await db.userDuty.upsert({
+                    where: {
+                        user_id_type_level: { // Feltételezve az egyedi indexet
+                            user_id: user.user_id,
+                            type: 'DIRECTOR',
+                            level: regD
+                        }
+                    },
+                    update: {},
+                    create: {
+                        user_id: user.user_id,
+                        type: 'DIRECTOR',
+                        region_id: 1, // Director esetében pl. országos (1-es régió)
+                        level: regD
+                    }
+                });
+            }
+
+            return { success: true };
+
+        } catch (error) {
+            console.error("Hiba a mentés során:", error);
+            return fail(500, { message: 'Adatbázis hiba történt.' });
         }
+    },
 
-        // Csak akkor frissítünk, ha tényleg változik a rang
-        if (user.role !== newRole) {
-          await db.user.update({
-            where: { user_id: user.user_id },
-            data: { role: newRole }
-          });
-          updatedCount++;
+    // 3. EGY JOG TÖRLÉSE (A kis piros X-re)
+    delUser: async ({ request }) => {
+        const data = await request.formData();
+        const dutyId = Number(data.get('dutyId')); // Ezt majd küldd el a modalból!
+
+        try {
+            await db.userDuty.delete({
+                where: { id: dutyId }
+            });
+            return { success: true };
+        } catch (error) {
+            return fail(500, { message: 'Nem sikerült a törlés.' });
         }
-      }
-
-      return { success: true, message: `Kész! ${updatedCount} felhasználó rangja lett szinkronizálva.` };
-    } catch (err) {
-      console.error(err);
-      return fail(500, { message: "Hiba történt a szinkronizálás során!" });
     }
-  }
 };
