@@ -126,7 +126,7 @@
 			>
 				<input type="hidden" name="dutyId" value={selectedDutyId} />
 				<div>
-					<h6>Az esemény adatai véglegesen törlődnek.</h6>
+					<h6>Az adatok véglegesen törlődnek.</h6>
 					<footer>
 						<button type="submit" class="btn" data-target="modal-example"> Confirm </button>
 						<button
@@ -201,10 +201,5 @@
 	.b {
 		color: #141717;
 		font-weight: normal;
-	}
-
-	.active-color {
-		background-color: #32bea6;
-		color: white;
 	}
 </style>

@@ -88,8 +88,8 @@
 	});
 
 	// Segéd rúnák a Sticky sávhoz
-	const countriesArray = $derived(data.distinctCountries || []);
-	const regionsArray = $derived(data.distinctRegions || []);
+	const countriesArray = $derived(data.countries || []);
+	const regionsArray = $derived(data.regions || []);
 	const selectedCountryObj = $derived(
 		countriesArray.find((c: any) => c.country_id === Number(selCountry))
 	);

@@ -66,28 +66,50 @@ export function isStrongPassword(password: string): boolean {
 	return regex.test(password);
 }
 
-// Segédfüggvény a tisztségek szöveges megjelenítéséhez
-/* export function getDutyLabel(onDutyArray: number[]): string {
-	return onDutyArray
-		.filter((n) => !(n.toString().length === 2 && n % 10 === 0)) // Itt csak checkolunk
-		.map((n) => {
-			const s = n.toString();
-			const typeChar = s[0];
-			const targetChar = s.slice(1);
+// duty / regio segéd fg-e
+function getRegionIdMath(num: number): number {
+	if (num < 10) return num;
 
-			const type = dutyType.find((t) => t[0] === typeChar)?.[1] || 'Unknown';
-			let area = '';
+	const count = String(Math.abs(num)).length;
+	const multiplier = Math.pow(10, count - 1);
+	const firstDigit = Math.floor(num / multiplier);
 
-			if (typeChar === '5') {
-				area = dutyMap.find((m) => m.id === targetChar)?.name || 'Unknown';
-			} else {
-				const regionId = Number(targetChar);
-				area = data.regions.find((r) => r.region_id === regionId)?.region_name || 'Unknown';
-			}
-			return `${type}: ${area}`;
-		})
-		.join(', ');
-} */
+	return num - (firstDigit * multiplier);
+}
+
+
+export function parseDutyAndRegion(arr: number[], regions: any[]) {
+	const activeIndex = arr.findIndex(val => val > 0);
+
+	if (activeIndex === -1) return "Unknown";
+
+	const activeValue = arr[activeIndex];
+
+	const currentDuty = duty.find(d => d.id === String(activeIndex + 1));
+	const levelName = currentDuty ? currentDuty.name : "Unknown";
+
+	const regionId = getRegionIdMath(activeValue);
+
+	if (regionId === 0) {
+		return `${levelName}: all regions`;
+	}
+
+	const region = regions.find(r => r.region_id === regionId);
+
+	return `${levelName}:  ${region?.region_name || `ID:${regionId}`}`;
+}
+
+export function parseDutyAndRegionAct(num: number, regions: any[]) {
+	if (!num) return "Nincs adat";
+
+	const firstDigit = parseInt(String(num)[0]);
+	const levelName = duty[firstDigit]?.name || "Unknown";
+
+	const regionId = getRegionIdMath(num);
+	const region = regions?.find(r => r.region_id === regionId);
+
+	return `${levelName}:  ${region?.region_name || `ID:${regionId}`}`;
+}
 
 export const schType = [
 	'ÁLTALÁNOS ISKOLA',
@@ -126,6 +148,23 @@ export const schoolType = [
 ] as const;
 
 export const semester = ['ALL', 'SPRING', 'FALL'] as const;
+
+export const LEVEL_LABELS = [
+		"", 					// 0
+    "BASIC",      // 1
+    "MEDIOR",     // 2
+    "HIGH",       // 3
+    "SUPERIOR",   // 4
+    "DIRECTOR"    // 5
+  ];
+
+export const DUTY_LEVELS = {
+  BASIC: 1,
+  MEDIOR: 2,
+  HIGH: 3,
+	SUPERIOR: 4,
+	DIRECTOR: 5
+} as const;
 
 export const duty = [
 	{ id: 'ALL', name: 'ALL' },

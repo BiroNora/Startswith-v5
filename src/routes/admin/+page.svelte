@@ -9,7 +9,7 @@
 	let email = $state('');
 	let isInput = $state(true);
 
-  function toggleIsInput() {
+	function toggleIsInput() {
 		isInput = !isInput;
 	}
 
@@ -35,14 +35,21 @@
 			<label for="email">Email</label>
 			<input type="email" name="email" id="email" bind:value={email} required />
 			<div class="pad">
-				<button
-					type="submit"
-					formaction="?/search-add"
+				<a
+					href="/admin/add_duty?email={email}"
+					type="button"
 					class="btn btn-cancel"
-					onclick={toggleIsInput}
+					onclick={(e) => {
+						if (!email || !email.includes('@')) {
+							e.preventDefault(); // MEGÁLLÍTJA a navigációt
+							alert('Kérlek, adj meg egy érvényes email címet!');
+							return;
+						}
+						toggleIsInput();
+					}}
 				>
 					Check / Add Duty
-				</button>
+				</a>
 			</div>
 			<div class="pad">
 				<button

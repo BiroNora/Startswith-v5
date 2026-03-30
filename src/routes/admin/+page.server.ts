@@ -1,42 +1,36 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { db } from '$lib/database';
-import bcrypt from 'bcryptjs';
-import { randomBytes } from 'node:crypto';
+import { generateSecurePassword, getValidatedUser } from '$lib/adminUtils';
 
 export const actions: Actions = {
   // 1. Átirányítás a jogosultság hozzáadáshoz
   "search-add": async ({ request }) => {
-    const data = await request.formData();
-    const email = data.get('email');
+    const { email, user } = await getValidatedUser(await request.formData());
+
+    if (!user) return { error: "Nincs ilyen felhasználó!" };
+    if (!email) return { error: "Email megadása kötelező!" };
+
     throw redirect(303, `/admin/add_duty?email=${email}`);
   },
 
   // 2. Átirányítás a törléshez (Figyelj a mappa nevére: delete_duty vagy del-duty?)
   "search-del": async ({ request }) => {
-    const data = await request.formData();
-    const email = data.get('email');
+    const { email, user } = await getValidatedUser(await request.formData());
+
+    if (!user) return { error: "Nincs ilyen felhasználó!" };
+    if (!email) return { error: "Email megadása kötelező!" };
+
     throw redirect(303, `/admin/delete_duty?email=${email}`);
   },
 
   "add-new-user": async ({ request }) => {
-    const data = await request.formData();
-    const email = String(data.get('email')).trim();
+    const { email, user } = await getValidatedUser(await request.formData());
 
-    if (!email || !email.includes('@')) {
-      return { error: "Érvénytelen email cím!" };
-    }
+    if (user) return { error: "Ez a felhasználó már létezik!" };
+    if (!email) return { error: "Email megadása kötelező!" };
 
-    const existingUser = await db.user.findUnique({
-      where: { user_email: email }
-    });
-
-    if (existingUser) {
-      return { error: "Ez a felhasználó már létezik az adatbázisban!" };
-    }
-
-    const newPass = randomBytes(4).toString('hex');
-    const passwordHash = await bcrypt.hash(newPass, 10);
+    const { newPass, passwordHash } = await generateSecurePassword();
 
     try {
       await db.user.create({
