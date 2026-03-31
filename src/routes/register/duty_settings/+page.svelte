@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { dutyMap, eyeClosed, eyeOpen, LEVEL_LABELS } from '../../stores/dataStore';
+	import { LEVEL_LABELS } from '../../stores/dataStore';
 	import type { ActionData, PageData } from './$types';
-	import { fade } from 'svelte/transition';
 
-	let { data, form }: { data: PageData; form: ActionData } = $props();
+	let { data }: { data: PageData; form: ActionData } = $props();
 
 	let showDelModal = $state(false);
 	let showAddModal = $state(false);
