@@ -35,7 +35,6 @@ model UserDuty {
 model User {
   user_id          String           @id @default(uuid())
   user_name        String
-  nationality      String
   user_phone       String
   user_email       String           @unique
   passwordHash     String

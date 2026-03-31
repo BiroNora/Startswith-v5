@@ -31,10 +31,6 @@
 			<input type="text" name="name" id="name" required />
 		</div>
 		<div>
-			<label for="nationality">Nationality</label>
-			<input type="text" name="nationality" id="nationality" required />
-		</div>
-		<div>
 			<label for="phone">Phone</label>
 			<input type="text" name="phone" id="phone" required />
 		</div>

@@ -15,7 +15,6 @@ export const actions: Actions = {
     const data = await request.formData()
 
     const user_name = data.get('name') ? String(data.get('name')) : undefined;
-    const nationality = data.get('nationality') ? String(data.get('nationality')) : undefined;
     const user_phone = data.get('phone') ? String(data.get('phone')) : undefined;
 
     // 3. Jelszó kezelése (opcionális: csak ha kitöltötte)
@@ -39,7 +38,6 @@ export const actions: Actions = {
       where: { user_email: sessionUserEmail },
       data: {
         user_name,    // Ha undefined, marad a régi
-        nationality,  // Ha undefined, marad a régi
         user_phone,   // Ha undefined, marad a régi
         ...passwordUpdateData,
         active: true,

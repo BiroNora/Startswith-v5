@@ -43,7 +43,6 @@ export const actions: Actions = {
           user_name: email.split('@')[0],
           passwordHash,
           active: true,
-          nationality: 'magyar',
           user_phone: "",
           active_by: "admin",
           userAuthToken: crypto.randomUUID()

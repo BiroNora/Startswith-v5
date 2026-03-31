@@ -26,7 +26,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 const user: Action = async ({ request }) => {
 	const data = await request.formData()
 	const user_name = String(data.get('name'))
-	const nationality = String(data.get('nationality'))
 	const user_phone = String(data.get('phone'))
 	const user_email = String(data.get('email'))
 	const basic = Boolean(data.get('basic'))
@@ -100,7 +99,6 @@ const user: Action = async ({ request }) => {
 	await db.user.create({
 		data: {
 			user_name,
-			nationality,
 			user_phone,
 			user_email,
 			on_duty,
