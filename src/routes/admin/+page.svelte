@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import type { ActionData, PageData } from './$types';
 
-	let { data, form }: { data: PageData; form: ActionData } = $props();
+	let { form }: { data: PageData; form: ActionData } = $props();
 
 	// Állapotok
 	let email = $state('');
@@ -12,13 +12,6 @@
 	function toggleIsInput() {
 		isInput = !isInput;
 	}
-
-	// Szinkronizáció a backend válaszával
-	/* $effect(() => {
-		if (form?.foundUser) {
-			email = form.foundUser.email;
-		}
-	}); */
 </script>
 
 <svelte:head>
@@ -100,23 +93,3 @@
 		<small>Másold ki, mert az oldal elhagyása után nem lesz látható!</small>
 	</div>
 {/if}
-
-<style>
-	.success-box {
-		margin-top: 20px;
-		padding: 15px;
-		background-color: #e6fffa;
-		border: 1px solid #38b2ac;
-		border-radius: 8px;
-		text-align: center;
-		color: #2c7a7b;
-	}
-	.pass-display {
-		font-family: monospace;
-		font-size: 1.2rem;
-		background: white;
-		padding: 2px 8px;
-		border: 1px dashed #38b2ac;
-		font-weight: bold;
-	}
-</style>
