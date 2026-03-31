@@ -1,17 +1,14 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import { db } from '$lib/database'
-import { LEVEL_LABELS } from '../../stores/dataStore'
 import { generateSecurePassword } from '$lib/adminUtils'
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')
+  if (!locals.user || locals.user.active === false || locals.user.role !== 'SUPER_USER') throw redirect(302, '/auth/login')
 }
 
 export const actions: Actions = {
-  addRole: async ({ request, locals }) => {
-    if (!locals.user?.user_id) throw redirect(302, '/auth/login');
-
+  addRole: async ({ request }) => {
     const formData = await request.formData();
     const user_id = String(formData.get('userId') || '');
 
@@ -37,7 +34,7 @@ export const actions: Actions = {
     if (!isSuperior && !isDirector) {
       return fail(400, { message: 'Legalább egy beosztást (SUPERIOR vagy DIRECTOR) ki kell választanod!' });
     }
-    
+
     try {
       await db.$transaction(async (tx) => {
 

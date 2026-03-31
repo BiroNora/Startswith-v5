@@ -1,7 +1,11 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/database';
 import { generateSecurePassword, getValidatedUser } from '$lib/adminUtils';
+
+export const load: PageServerLoad = async ({ locals }) => {
+  if (!locals.user || locals.user.active === false || locals.user.role !== 'SUPER_USER') throw redirect(302, '/auth/login')
+}
 
 export const actions: Actions = {
   // 1. Átirányítás a jogosultság hozzáadáshoz
