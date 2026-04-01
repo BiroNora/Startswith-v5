@@ -7,17 +7,21 @@ export const load: PageServerLoad = async ({ locals }) => {
     throw redirect(302, '/auth/login');
   }
 
-  const [users, regions] = await Promise.all([
-    db.user.findMany({
-      where: { active: true }, // Már itt szűrhetünk az aktívakra
-      orderBy: { user_name: 'asc' }
-    }),
-    db.region.findMany()
-  ]);
+  const users = await db.user.findMany({
+    where: {
+      active: true
+    },
+    orderBy: {
+      user_name: 'asc'
+    },
+    include: {
+      user_duties: {
+        orderBy: {
+          type: 'desc'
+        }
+      }
+    }
+  });
 
-  if (!users || !regions) {
-    throw error(404, 'Data not found');
-  }
-
-  return { users, regions };
+  return { users };
 };

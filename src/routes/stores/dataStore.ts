@@ -1,3 +1,5 @@
+import type { User, UserDuty, Region } from '@prisma/client';
+
 export function slugify(text: string) {
 	return text
 		.replace(/\s/g, '-')
@@ -77,7 +79,6 @@ function getRegionIdMath(num: number): number {
 	return num - (firstDigit * multiplier);
 }
 
-
 export function parseDutyAndRegion(arr: number[], regions: any[]) {
 	const activeIndex = arr.findIndex(val => val > 0);
 
@@ -110,6 +111,66 @@ export function parseDutyAndRegionAct(num: number, regions: any[]) {
 
 	return `${levelName}:  ${region?.region_name || `ID:${regionId}`}`;
 }
+
+// Meghatározzuk, hogy a User-nek tartalmaznia kell a user_duties tömböt is
+type UserWithDuties = User & {
+	user_duties: UserDuty[];
+};
+
+// Segédfüggvény a tisztségek szöveges megjelenítéséhez
+export const getDutyObjects = (user: UserWithDuties, regions: any[]) => {
+	if (!user.user_duties || user.user_duties.length === 0) return [];
+
+	// Csoportosítunk típus szerint
+	const grouped = new Map<string, string[]>();
+
+	user.user_duties.forEach((duty) => {
+		if (!grouped.has(duty.type)) {
+			grouped.set(duty.type, []);
+		}
+
+		const group = grouped.get(duty.type)!;
+		const area =
+			regions?.find((r) => r.region_id === duty.region_id)?.region_name || 'Ismeretlen';
+		const levelName =
+			(Object.keys(DUTY_LEVELS) as Array<keyof typeof DUTY_LEVELS>).find(
+				(key) => DUTY_LEVELS[key] === duty.level
+			) || 'Ismeretlen';
+
+		// Formázás típus szerint
+		if (duty.type === 'DIRECTOR') {
+			if (!group.includes(levelName)) group.push(levelName);
+		} else if (duty.type === 'SUPERIOR') {
+			if (!group.includes(area)) group.push(area);
+		} else {
+			// USER esetén: "BASIC: Közép-Dunántúl" páros
+			group.push(`${levelName}: ${area}`);
+		}
+	});
+
+	// Az eredménytömb összeállítása
+	return Array.from(grouped.entries()).map(([type, list]) => {
+		if (type === 'USER') {
+			// USER esetén a szint (level) száma szerint rendezünk
+			list.sort((a, b) => {
+				// Kikeressük a szintet a string elejéről (pl. "BASIC: Budapest" -> "BASIC")
+				const levelA = a.split(':')[0] as keyof typeof DUTY_LEVELS;
+				const levelB = b.split(':')[0] as keyof typeof DUTY_LEVELS;
+
+				// A DUTY_LEVELS-ben lévő számok alapján hasonlítjuk össze (1, 2, 3...)
+				return DUTY_LEVELS[levelA] - DUTY_LEVELS[levelB];
+			});
+		} else {
+			// DIRECTOR és SUPERIOR esetén marad a sima ABC sorrend
+			list.sort((a, b) => a.localeCompare(b, 'hu'));
+		}
+
+		return {
+			type,
+			fullText: list.join(' / ')
+		};
+	});
+};
 
 export const schType = [
 	'ÁLTALÁNOS ISKOLA',
@@ -150,18 +211,18 @@ export const schoolType = [
 export const semester = ['ALL', 'SPRING', 'FALL'] as const;
 
 export const LEVEL_LABELS = [
-		"", 					// 0
-    "BASIC",      // 1
-    "MEDIOR",     // 2
-    "HIGH",       // 3
-    "SUPERIOR",   // 4
-    "DIRECTOR"    // 5
-  ];
+	"", 					// 0
+	"BASIC",      // 1
+	"MEDIOR",     // 2
+	"HIGH",       // 3
+	"SUPERIOR",   // 4
+	"DIRECTOR"    // 5
+];
 
 export const DUTY_LEVELS = {
-  BASIC: 1,
-  MEDIOR: 2,
-  HIGH: 3,
+	BASIC: 1,
+	MEDIOR: 2,
+	HIGH: 3,
 	SUPERIOR: 4,
 	DIRECTOR: 5
 } as const;
@@ -188,20 +249,12 @@ export const eventMap = [
 
 export const duType = ['BASIC', 'MEDIOR', 'HIGH'] as const;
 
-//                              false |basic | med-high
-// director / basic | medior-high  0  |   1  |   2
-//                                   false |regions
-// superior / region (basic-medior-high) 0 | 1-8
-// basic / region 0 | 1-8
-// medior / region 0 | 1-8
-// high /region 0 | 1-8
-
 export const dutyType = [
-	['1', 'BASIC'], // 1  &  0-8: ["1", "0"],
-	['2', 'MEDIOR'], // 2  &  0-8: ["2", "4"],
-	['3', 'HIGH'], // 3  &  0-8: ["3", "0"],
-	['4', 'SUPERIOR'], // 4  &  0-8: ["4", "0"],
-	['5', 'DIRECTOR'] // 5  &  0-2: ["5", "0"]
+	['1', 'BASIC'],
+	['2', 'MEDIOR'],
+	['3', 'HIGH'],
+	['4', 'SUPERIOR'],
+	['5', 'DIRECTOR']
 ] as const;
 
 export const statusType = [

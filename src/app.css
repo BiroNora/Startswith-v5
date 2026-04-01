@@ -289,7 +289,7 @@ dialog[open] {
 .li {
 	list-style-position: inside;
 	list-style-type: disc;
-	color: rgb(144, 132, 132);
+	color: var(--secondary-gray-cool);
 	padding-left: 5%;
 	text-indent: -6%;
 	line-height: normal;

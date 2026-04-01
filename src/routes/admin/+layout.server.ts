@@ -1,7 +1,7 @@
 import { db } from '$lib/database';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ url }) =>{
+export const load: LayoutServerLoad = async ({ url }) => {
   const email = url.searchParams.get('email');
   if (!email) return { foundUser: null };
 
