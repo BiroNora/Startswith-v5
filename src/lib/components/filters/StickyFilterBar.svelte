@@ -6,16 +6,16 @@
 		selYear,
 		selSemest,
 		selDuty,
-		duty,
+		dutyList,
 		selectedCountryObj,
 		selectedRegionObj,
 		children
 	} = $props<{
     isElementVisible: boolean;
-    selYear: string;
+    selYear: string | number;
     selSemest: string;
-    selDuty: string;
-    duty: any;
+    selDuty: string | number;
+    dutyList: readonly { readonly id: string | number; readonly name: string }[];
     selectedCountryObj: any;
     selectedRegionObj: any;
     children?: Snippet;
@@ -27,7 +27,7 @@
 		<i class="black">Event Year: </i>&nbsp;{selYear} &nbsp;&nbsp;
 		<i class="black">Event Semester: </i>&nbsp;{selSemest} &nbsp;&nbsp;
 		<i class="black">Event Duty: </i>
-		{#each duty as item (item.id)}
+		{#each dutyList as item (item.id)}
 			{#if selDuty === item.id}
 				&nbsp;{item.name}
 			{/if}

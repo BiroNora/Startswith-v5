@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import RegionDoughnut from '$lib/components/charts/RegionDoughnut.svelte';
-	import { duty, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
+	import { dutyList, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
 	import type { PageServerData } from './$types';
 
 	// 1. Adatok fogadása
@@ -103,7 +103,7 @@
 		<div>
 			<label for="duty"><i>Select </i> &nbsp;&nbsp;Event Duty</label>
 			<select bind:value={selectedDuty} id="duty">
-				{#each duty as d}
+				{#each dutyList as d}
 					<option value={d.id}>{d.name}</option>
 				{/each}
 			</select>
@@ -117,7 +117,7 @@
 			<i class="black">Event Year: </i>&nbsp;{selYear} &nbsp;&nbsp;
 			<i class="black">Event Semester: </i>&nbsp;{selSemest} &nbsp;&nbsp;
 			<i class="black">Event Duty: </i>
-			{#each duty as item}
+			{#each dutyList as item}
 				&nbsp;{#if selDuty === item.id}{item.name}{/if}
 			{/each}
 			&nbsp;&nbsp;
