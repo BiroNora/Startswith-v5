@@ -7,28 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  SUPERIOR
-  DIRECTOR
-  SUPER_USER
-}
-
-enum DutyType {
-  USER // Sima munkavégzés
-  SUPERIOR // Régióvezető
-  DIRECTOR // Igazgató
-}
-
 model UserDuty {
   id        Int      @id @default(autoincrement())
   user_id   String
+  level     Int
+  region_id Int
+  type      DutyType @default(USER)
   user      User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  level     Int      // 1: BAS, 2: MED, 3: HIGH
-  region_id Int      // 4: Budapest, stb.
-  type      DutyType @default(USER) // Itt dől el a szerepkör!
 
-  @@unique([user_id, level, region_id, type]) // Ne legyen duplikált jog
+  @@unique([user_id, level, region_id, type])
   @@map("user_duties")
 }
 
@@ -45,13 +32,14 @@ model User {
   active_by        String
   resetToken       String?
   resetTokenExpiry DateTime?
+  role             Role             @default(USER)
+  user_serial      Int              @default(autoincrement())
+  activities       Activity[]
+  centralMessages  CentralMessage[]
   user_duties      UserDuty[]
   Contact          Contact[]        @relation("ContactToUser")
   Event            Event[]          @relation("EventToUser")
   School           School[]         @relation("SchoolToUser")
-  activities       Activity[]
-  centralMessages  CentralMessage[]
-  role             Role             @default(USER)
 
   @@map("users")
 }
@@ -66,16 +54,16 @@ model School {
   dir_phone    String?
   school_email String    @unique
   website      String?
-  school_type  String[]
+  school_type  Int[]
   coop         Boolean?
   note         String?
   city_id      Int
   country_id   Int
   county_id    Int
   region_id    Int
-  duty         String[]
+  duty_levels  Int[]
   active       Boolean
-  active_by    String
+  active_by    Int
   basic        Boolean
   medior       Boolean
   high         Boolean
@@ -112,9 +100,9 @@ model Event {
   create_date        DateTime             @default(now()) @db.Timestamptz(3)
   closing_date       DateTime             @db.Timestamptz(3)
   event_year         Int
-  semester           String
-  on_duty            String
-  event_type         String
+  semester           Int
+  duty_level         Int
+  event_type         Int
   estimated_student  Int
   note               String?
   slug               String               @unique
@@ -130,11 +118,11 @@ model InterestedStudents {
   intrest_id    Int     @id @default(autoincrement())
   event_id      Int
   intrest_count Int
-  grade         String
+  grade         Int
   applied       Boolean
-  work_title    String
-  channel       String
-  status        String
+  work_title    Int
+  channel       Int
+  status        Int
   country_id    Int
   region_id     Int
   Country       Country @relation(fields: [country_id], references: [country_id])
@@ -150,10 +138,10 @@ model Activity {
   end_date   DateTime @db.Timestamptz(3)
   act_name   String
   act_note   String?
-  on_duty    Int
+  user_id    String
   duty_num   Int
   region_num Int
-  user_id    String
+  on_duty    Int
   user       User     @relation(fields: [user_id], references: [user_id])
 
   @@map("activity")
@@ -214,4 +202,17 @@ model City {
   School    School[]
 
   @@map("city")
+}
+
+enum Role {
+  USER
+  SUPERIOR
+  DIRECTOR
+  SUPER_USER
+}
+
+enum DutyType {
+  USER
+  SUPERIOR
+  DIRECTOR
 }
