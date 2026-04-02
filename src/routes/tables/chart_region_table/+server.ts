@@ -26,7 +26,7 @@ export async function POST({ request, locals }) {
 
 	if (selectedDuty !== null) {
 		queryParams.push(selectedDuty);
-		whereConditions.push(`e.on_duty = $${queryParams.length}`);
+		whereConditions.push(`e.duty_level = $${queryParams.length}`);
 	}
 
 	// Összefűzzük a feltételeket egyetlen stringgé, AND-del elválasztva
@@ -46,7 +46,7 @@ export async function POST({ request, locals }) {
       SELECT
         r.region_name,
         CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count,
-        CAST(SUM(CASE WHEN i.status = '1' THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_count_status_1
+        CAST(SUM(CASE WHEN i.status = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_count_status_1
       FROM interested i
       JOIN region r USING (region_id)
       JOIN events e USING (event_id)

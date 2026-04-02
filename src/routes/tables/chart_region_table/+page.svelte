@@ -5,7 +5,7 @@
 	import type { PageServerData } from './$types';
 
 	// 1. Adatok fogadása
-	let { data }: { data: PageServerData } = $props();
+	let { data } = $props<{ data: PageServerData }>();
 
 	// 2. Reaktív állapotok (Rúnák) - A Te változóneveiddel
 	let selectedYear = $state('ALL');
@@ -34,8 +34,8 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					selectedYear: selectedYear === 'ALL' ? null : Number(selectedYear),
-					selectedSemester: selectedSemester === 'ALL' ? null : selectedSemester,
-					selectedDuty: selectedDuty === 'ALL' ? null : selectedDuty
+					selectedSemester: selectedSemester === 'ALL' ? null : (selectedSemester === 'Spring' ? 1 : 2),
+					selectedDuty: selectedDuty === 'ALL' ? null : Number(selectedDuty)
 				})
 			});
 
@@ -85,7 +85,7 @@
 		<div>
 			<label for="year"><i>Select </i> &nbsp;&nbsp;Event Year</label>
 			<select bind:value={selectedYear} id="year">
-				{#each data.distinctYears as year}
+				{#each data?.distinctYears ?? [] as year}
 					<option value={year}>{year}</option>
 				{/each}
 			</select>
