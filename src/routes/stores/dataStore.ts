@@ -86,7 +86,7 @@ export function parseDutyAndRegion(arr: number[], regions: any[]) {
 
 	const activeValue = arr[activeIndex];
 
-	const currentDuty = duty.find(d => d.id === String(activeIndex + 1));
+	const currentDuty = DUTY_TYPES.find(d => d.id === String(activeIndex + 1));
 	const levelName = currentDuty ? currentDuty.name : "Unknown";
 
 	const regionId = getRegionIdMath(activeValue);
@@ -104,7 +104,7 @@ export function parseDutyAndRegionAct(num: number, regions: any[]) {
 	if (!num) return "Nincs adat";
 
 	const firstDigit = parseInt(String(num)[0]);
-	const levelName = duty[firstDigit]?.name || "Unknown";
+	const levelName = DUTY_TYPES[firstDigit]?.name || "Unknown";
 
 	const regionId = getRegionIdMath(num);
 	const region = regions?.find(r => r.region_id === regionId);
@@ -190,7 +190,7 @@ export const schType = [
 	'NEM BESOROLT'
 ] as const;
 
-export const schoolType = [
+/* export const schoolType = [
 	['1', 'ÁLTALÁNOS ISKOLA'],
 	['2', 'GIMNÁZIUM'],
 	['3', 'SZAKGIMNÁZIUM'],
@@ -206,7 +206,7 @@ export const schoolType = [
 	['13', 'KOLLÉGIUM'],
 	['14', 'HÍDPROGRAMOK'],
 	['15', 'NEM BESOROLT']
-] as const;
+] as const; */
 
 export const semester = ['ALL', 'SPRING', 'FALL'] as const;
 
@@ -227,25 +227,83 @@ export const DUTY_LEVELS = {
 	DIRECTOR: 5
 } as const;
 
-export const duty = [
-	{ id: 'ALL', name: 'ALL' },
-	{ id: '1', name: 'BASIC' },
-	{ id: '2', name: 'MEDIOR' },
-	{ id: '3', name: 'HIGH' }
+export const SEMESTERS = {
+	SPRING: 1,
+	FALL: 2
+} as const;
+
+export const SCHOOL_TYPES = [
+	{ id: 1, label: 'ÁLTALÁNOS ISKOLA' },
+	{ id: 2, label: 'GIMNÁZIUM' },
+	{ id: 3, label: 'SZAKGIMNÁZIUM' },
+	{ id: 4, label: 'SZAKKÖZÉPISKOLA' },
+	{ id: 5, label: 'SZAKISKOLA' },
+	{ id: 6, label: 'TECHNIKUM' },
+	{ id: 7, label: 'SZAKKÉPZŐ ISKOLA' },
+	{ id: 8, label: 'ALAPFOKÚ MŰVÉSZETOKTATÁS' },
+	{ id: 9, label: 'MŰVÉSZETI OKTATÁS' },
+	{ id: 10, label: 'KÉSZSÉGFEJLESZTÉS' },
+	{ id: 11, label: 'FEJLESZTŐ NEVELÉS-OKTATÁS' },
+	{ id: 12, label: 'KIEGÉSZÍTŐ NEMZETISÉGI NYELVOKTATÁS' },
+	{ id: 13, label: 'KOLLÉGIUM' },
+	{ id: 14, label: 'HÍDPROGRAMOK' },
+	{ id: 15, label: 'NEM BESOROLT' }
 ] as const;
 
-export const eventMap = [
-	{ id: '1', name: 'PRESENTATION' },
-	{ id: '2', name: 'OPEN DAY' },
-	{ id: '3', name: 'BY PHONE' },
-	{ id: '4', name: 'BY EMAIL' },
-	{ id: '5', name: 'TV *' },
-	{ id: '6', name: 'RADIO *' },
-	{ id: '7', name: 'ONLINE *' },
-	{ id: '8', name: 'MEDIOR LEAFLET' },
-	{ id: '9', name: 'CORPORATE EVENT' },
-	{ id: '10', name: 'ELSE *' }
+export const getSchoolTypeLabels = (schoolTypeIds: number[]): string => {
+  if (!schoolTypeIds || !Array.isArray(schoolTypeIds)) return '';
+
+  return SCHOOL_TYPES
+    .filter(type => schoolTypeIds.includes(type.id))
+    .map(type => type.label)
+    .join(', ');
+};
+
+
+// Ezt használjuk mentésnél, módosításnál (tiszta számok)
+export const DUTY_TYPES_WITHOUT_ALL = [
+  { id: 1, name: 'BASIC' },
+  { id: 2, name: 'MEDIOR' },
+  { id: 3, name: 'HIGH' }
 ] as const;
+
+export const DUTY_TYPES = [
+	{ id: 'ALL', name: 'ALL' },
+	{ id: 1, name: 'BASIC' },
+	{ id: 2, name: 'MEDIOR' },
+	{ id: 3, name: 'HIGH' }
+] as const;
+
+export const getDutyLevelLabels = (dutyIds: number[]): string => {
+  if (!dutyIds || !Array.isArray(dutyIds)) return '';
+
+  return DUTY_TYPES
+    .filter(duty => typeof duty.id === 'number' && dutyIds.includes(duty.id))
+    .map(duty => duty.name)
+    .join(', ');
+};
+
+// eventMap
+export const EVENT_TYPES = [
+	{ id: 1, name: 'PRESENTATION' },
+	{ id: 2, name: 'OPEN DAY' },
+	{ id: 3, name: 'BY PHONE' },
+	{ id: 4, name: 'BY EMAIL' },
+	{ id: 5, name: 'TV *' },
+	{ id: 6, name: 'RADIO *' },
+	{ id: 7, name: 'ONLINE *' },
+	{ id: 8, name: 'MEDIOR LEAFLET' },
+	{ id: 9, name: 'CORPORATE EVENT' },
+	{ id: 10, name: 'ELSE *' }
+] as const;
+
+export const getName = (list: readonly any[], id: number | null | undefined): string => {
+  if (!list || id === null || id === undefined) return 'Nincs megadva';
+
+  const found = list.find(item => item.id === id);
+
+  return found ? found.name : String(id);
+};
 
 export const duType = ['BASIC', 'MEDIOR', 'HIGH'] as const;
 
@@ -323,11 +381,14 @@ interface MapItem {
 /**
  * Általános névkereső függvény Map-ekhez.
  * Használható: getName(dutyMap, '1') -> 'BASIC'
- */
-export const getName = (map: readonly MapItem[], id: string | null | undefined): string => {
-	if (!id) return '';
-	return map.find((item) => item.id === id)?.name || id;
-};
+
+export const getName = (map: readonly any[], id: string | number | null | undefined): string => {
+  // Csak akkor térünk vissza, ha az id ténylegesen null vagy undefined
+  if (id === null || id === undefined || id === '') return '';
+
+  // A String() használatával áthidaljuk a szám/string különbséget
+  return map.find((item) => String(item.id) === String(id))?.name || String(id);
+};*/
 
 export const eyeOpen = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
 export const eyeClosed = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;

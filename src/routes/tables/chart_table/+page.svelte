@@ -12,7 +12,7 @@
 	} from '$lib/components/charts';
 
 	import type { PageData } from './$types';
-	import { dutyList } from '../../stores/dataStore';
+	import { DUTY_TYPES } from '../../stores/dataStore';
 
 	let { data }: { data: PageData } = $props();
 	let pageName = 'CHART_TABLE';
@@ -29,7 +29,9 @@
 	const selectedCountryObj = $derived(
 		countriesArray.find((c: any) => c.country_id === Number(selCountry))
 	);
-	const selectedRegionObj = $derived(regionsArray.find((r: any) => r.region_id === Number(selRegion)));
+	const selectedRegionObj = $derived(
+		regionsArray.find((r: any) => r.region_id === Number(selRegion))
+	);
 	let isElementVisible = $state(false);
 
 	let err_mess = $state(false);
@@ -97,12 +99,27 @@
 		err_mess1 = false;
 
 		const cleanFilters = {
-    selectedSemester: (filters.selectedSemester === 'ALL' || !filters.selectedSemester) ? null : Number(filters.selectedSemester),
-    selectedDuty: (filters.selectedDuty === 'ALL' || !filters.selectedDuty) ? null : Number(filters.selectedDuty),
-    selectedYear: (filters.selectedYear === 'ALL' || !filters.selectedYear) ? null : Number(filters.selectedYear),
-    selectedCountry: (filters.selectedCountry === 'ALL' || !filters.selectedCountry) ? null : Number(filters.selectedCountry),
-    selectedRegion: (filters.selectedRegion === 'ALL' || !filters.selectedRegion) ? null : Number(filters.selectedRegion)
-};
+			selectedSemester:
+				filters.selectedSemester === 'ALL' || !filters.selectedSemester
+					? null
+					: Number(filters.selectedSemester),
+			selectedDuty:
+				filters.selectedDuty === 'ALL' || !filters.selectedDuty
+					? null
+					: Number(filters.selectedDuty),
+			selectedYear:
+				filters.selectedYear === 'ALL' || !filters.selectedYear
+					? null
+					: Number(filters.selectedYear),
+			selectedCountry:
+				filters.selectedCountry === 'ALL' || !filters.selectedCountry
+					? null
+					: Number(filters.selectedCountry),
+			selectedRegion:
+				filters.selectedRegion === 'ALL' || !filters.selectedRegion
+					? null
+					: Number(filters.selectedRegion)
+		};
 
 		console.log('Ez megy a szerverre:', cleanFilters);
 
@@ -192,7 +209,7 @@
 		{selYear}
 		{selSemest}
 		{selDuty}
-		{dutyList}
+		{DUTY_TYPES}
 		{selectedCountryObj}
 		{selectedRegionObj}
 	/>

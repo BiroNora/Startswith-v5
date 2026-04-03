@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import RegionDoughnut from '$lib/components/charts/RegionDoughnut.svelte';
-	import { dutyList, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
+	import { DUTY_TYPES, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
 	import type { PageServerData } from './$types';
 
 	// 1. Adatok fogadása
@@ -34,7 +34,8 @@
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					selectedYear: selectedYear === 'ALL' ? null : Number(selectedYear),
-					selectedSemester: selectedSemester === 'ALL' ? null : (selectedSemester === 'Spring' ? 1 : 2),
+					selectedSemester:
+						selectedSemester === 'ALL' ? null : selectedSemester === 'Spring' ? 1 : 2,
 					selectedDuty: selectedDuty === 'ALL' ? null : Number(selectedDuty)
 				})
 			});
@@ -103,7 +104,7 @@
 		<div>
 			<label for="duty"><i>Select </i> &nbsp;&nbsp;Event Duty</label>
 			<select bind:value={selectedDuty} id="duty">
-				{#each dutyList as d}
+				{#each DUTY_TYPES as d}
 					<option value={d.id}>{d.name}</option>
 				{/each}
 			</select>
@@ -117,7 +118,7 @@
 			<i class="black">Event Year: </i>&nbsp;{selYear} &nbsp;&nbsp;
 			<i class="black">Event Semester: </i>&nbsp;{selSemest} &nbsp;&nbsp;
 			<i class="black">Event Duty: </i>
-			{#each dutyList as item}
+			{#each DUTY_TYPES as item}
 				&nbsp;{#if selDuty === item.id}{item.name}{/if}
 			{/each}
 			&nbsp;&nbsp;
