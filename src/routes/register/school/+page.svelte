@@ -15,8 +15,8 @@
 	let filteredCounties = $derived(data.counties.filter((c) => c.region_id === selectedRegion));
 	let filteredCities = $derived(data.cities.filter((cit) => cit.county_id === selectedCounty));
 
-	let selectedSchoolTypes = $state(['1']);
-	let selectedDutyIds = $state(['1']);
+	let selectedSchoolTypes = $state<number[]>([1]);
+	let selectedDutyIds = $state<number[]>([1]);
 	let yesCOOP = $state(true);
 	let omi = $state('');
 
