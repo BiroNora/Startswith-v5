@@ -1,24 +1,19 @@
 <script lang="ts">
-	import { DUTY_TYPES } from '../../routes/stores/dataStore';
+	import { DUTY_TYPES_WITHOUT_ALL } from '../../routes/stores/dataStore';
 
-	// Props
-	// filteredList: kiszűrjük az 'ALL'-t, ha csak mentésre használjuk
 	let {
 		selectedLevels = $bindable([]),
 		variant = 'row',
-		showAll = false // Alapból ne mutassa az ALL-t regisztrációnál
 	} = $props();
-
-	const displayList = showAll ? DUTY_TYPES : DUTY_TYPES.filter((d) => d.id !== 'ALL');
 </script>
 
 <div class="duty-group {variant}">
-	{#each displayList as level}
+	{#each DUTY_TYPES_WITHOUT_ALL as level}
 		<label class="checkbox-container">
 			<input
 				type="checkbox"
 				name="dutyLevelIds"
-				value={level.id.toString()}
+				value={level.id}
 				bind:group={selectedLevels}
 			/>
 			<span>{level.name}</span>

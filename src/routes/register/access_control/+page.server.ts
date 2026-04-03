@@ -11,11 +11,11 @@ export const load: PageServerLoad = async ({ locals }) => {
     where: { user_email: locals.user.email },
     select: {
       user_id: true,
-      on_duty: true
+      role: true
     }
   });
 
-  if (!user || (user.on_duty?.[4] ?? 0) % 10 === 0) {
+  if (!user || (user.role !== 'DIRECTOR') ) {
     throw redirect(302, '/');
   }
 
@@ -25,16 +25,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
   user_active_change: async ({ request, locals }) => {
     if (!locals.user?.email) throw redirect(302, '/auth/login');
-    const sessionUserEmail = locals.user.email;
+    const sessionUserNum = locals.user.serial;
 
     const formData = await request.formData();
     const targetEmail = String(formData.get('email'));
 
-    const person = await db.user.findUnique({
+    const targetUser = await db.user.findUnique({
       where: { user_email: targetEmail }
     });
 
-    if (!person) {
+    if (!targetUser) {
       return fail(404, { userNotFound: true });
     }
 
@@ -42,8 +42,8 @@ export const actions: Actions = {
       await db.user.update({
         where: { user_email: targetEmail },
         data: {
-          active: !person.active,
-          active_by: sessionUserEmail
+          active: !targetUser.active,
+          active_by: sessionUserNum
         }
       });
     } catch (err) {

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { SCHOOL_TYPES } from "../../routes/stores/dataStore";
 
-
   let { selectedIds = $bindable([]) } = $props();
 </script>
 
@@ -12,7 +11,7 @@
       <input
         type="checkbox"
         name="schoolTypeIds"
-        value={school.id.toString()}
+        value={school.id}
         bind:group={selectedIds}
       />
       {school.label}
