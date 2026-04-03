@@ -106,8 +106,8 @@
 			<li class="lb">Iskola telefon: {data.school.dir_phone}</li>
 			<li class="lb">Iskola email: {data.school.school_email}</li>
 			<li class="lb">Website: {data.school.website}</li>
-			<li class="lb">Iskola típusa: {data.resS}</li>
-			<li class="lb">Felelős: {data.resD}</li>
+			<li class="lb">Iskola típusa: {data.school_type}</li>
+			<li class="lb">Felelős: {data.duty_type}</li>
 			<li class="lb">Feljegyzés: {data.school.note}</li>
 			<li class="lb">
 				Iskolai (külső) kapcsolat:

@@ -1,10 +1,11 @@
 import { error, redirect } from '@sveltejs/kit';
 import { db } from '$lib/database.js';
 import {
-  eventMap,
-  dutyMap,
-  schType,
-  duType,
+  getSchoolTypeLabels,
+  getDutyLevelLabels,
+  DUTY_TYPES,
+  EVENT_TYPES,
+  getName,
 } from '../../../stores/dataStore.js';
 import type { LayoutServerLoad } from './$types';
 
@@ -42,24 +43,20 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
     throw error(404, 'School not found');
   }
 
-  const resS = schType
-    .filter((_, i) => school.school_type.includes(String(i + 1)))
-    .join(', ');
+  const schoolType = getSchoolTypeLabels(school.school_type);
+  const dutyType = getDutyLevelLabels(school.duty_levels);
 
-  const resD = duType
-    .filter((_, i) => school.duty.includes(String(i + 1)))
-    .join(', ');
-
-  const mappedEvents = events.map(obj => ({
-    ...obj,
-    on_duty: dutyMap.find(d => d.id === obj.on_duty)?.name || obj.on_duty,
-    event_type: eventMap.find(e => e.id === obj.event_type)?.name || obj.event_type
+  // Események formázása a getName-el
+  const mappedEvents = (events || []).map(event => ({
+    ...event,
+    on_duty_name: getName(DUTY_TYPES, event.duty_level),
+    event_type_name: getName(EVENT_TYPES, event.event_type)
   }));
 
   return {
     school,
-    resS,
-    resD,
+    school_type: schoolType,
+    duty_type: dutyType,
     contact: contacts,
     event: mappedEvents,
     city: school.city,

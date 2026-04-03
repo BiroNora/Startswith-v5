@@ -17,7 +17,7 @@ export const actions: Actions = {
     const formData = await request.formData()
 
     // 1. Adatok kinyerése és rendszerezése a közös függvénnyel
-    const s = parseSchoolFormData(formData)
+    const s = parseSchoolFormData(formData);
 
     // 2. User és Helyszín integritás ellenőrzése párhuzamosan
     const [myuser, regionCheck, countyCheck, cityCheck] = await Promise.all([
@@ -53,8 +53,13 @@ export const actions: Actions = {
     }
 
     // 4. OM ID validáció (Magyarország = 1)
-    if (s.country_id === 1 && !s.isNotClassified && s.om_id?.length !== 6) {
-      return fail(400, { omval: true })
+    const isHungary = s.country_id === 1;
+
+    if (isHungary && !s.isNotClassified) {
+      // Ha Magyarország és NEM "Egyéb" (15), akkor kötelező a 6 karakter
+      if (!s.om_id || s.om_id.trim().length !== 6) {
+        return fail(400, { omval: true })
+      }
     }
 
     // 5. Prisma mentés előtt leválasztjuk a nem DB mezőket (user_email, isNotClassified)
@@ -65,7 +70,7 @@ export const actions: Actions = {
         data: {
           ...prismaData,
           active: true,
-          active_by: String(myuser.user_id),
+          active_by: locals.user.serial,
           User: { connect: { user_id: myuser.user_id } }
         }
       })
