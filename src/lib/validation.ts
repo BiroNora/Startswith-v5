@@ -1,5 +1,4 @@
 import { db } from '$lib/database';
-import { dutyType, schoolType } from '../routes/stores/dataStore';
 import { error, redirect } from '@sveltejs/kit';
 
 // Közös adatbetöltő a legördülő menükhöz
@@ -15,15 +14,8 @@ export async function getLocationData() {
 
 // Form adatok tisztítása és objektumba rendezése
 export function parseSchoolFormData(data: FormData) {
-  const school_type: string[] = [];
-  schoolType.forEach((t, i) => {
-    if (data.get(`isk${String.fromCharCode(65 + i)}`)) school_type.push(t[0]);
-  });
-
-  const duty: string[] = [];
-  ['bas', 'med', 'hig'].forEach((key, i) => {
-    if (data.get(key)) duty.push(dutyType[i][0]);
-  });
+  const school_type = data.getAll('schoolTypeIds').map(id => Number(id));
+  const duty_levels = data.getAll('dutyLevelIds').map(id => Number(id));
 
   return {
     user_email: String(data.get('useremail')),
@@ -39,14 +31,11 @@ export function parseSchoolFormData(data: FormData) {
     dir_name: String(data.get('dirname')),
     dir_phone: String(data.get('dirphone')),
     website: String(data.get('website')) || null,
-    coop: Boolean(data.get('coop')),
+    coop: data.get('coop') === 'on',
     note: String(data.get('note')),
-    basic: Boolean(data.get('bas')),
-    medior: Boolean(data.get('med')),
-    high: Boolean(data.get('hig')),
     isNotClassified: Boolean(data.get('iskO')),
     school_type,
-    duty
+    duty_levels,
   };
 }
 

@@ -19,7 +19,8 @@ export const handle: Handle = async ({ event, resolve }) => {
       user_phone: true,
       active: true,
       role: true,
-      user_duties: true
+      user_duties: true,
+      user_serial: true,
     },
   })
 
@@ -33,6 +34,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       active: user.active,
       role: user.role,
       duty: user.user_duties,
+      serial: user.user_serial,
 
       // EXTRÁK, amik aranyat érnek a frontend oldalon:
       // Így nem kell mindig a role-t stringként csekkolni

@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit'
 import { db } from '$lib/database.js'
-import { eventMap, dutyMap, schType, duType, getName } from '../../../stores/dataStore.js'
+import { getName, getSchoolTypeLabels, getDutyLevelLabels, DUTY_TYPES, EVENT_TYPES } from '../../../stores/dataStore.js'
 
 export async function load({ params, locals }) {
 	if (!locals.user || locals.user.active === false) {
@@ -22,17 +22,9 @@ export async function load({ params, locals }) {
 
 	if (!school) throw error(404, 'School not found')
 
-	const resS = school.school_type
-		.map(id => schType[Number(id) - 1])
-		.filter(Boolean)
-		.join(', ')
+	const schoolType = getSchoolTypeLabels(school.school_type);
+	const dutyType = getDutyLevelLabels(school.duty_levels);
 
-	const resD = school.duty
-		.map(id => duType[Number(id) - 1])
-		.filter(Boolean)
-		.join(', ')
-
-	// 3. Kapcsolatok és Események
 	const contact = await db.contact.findMany({
 		where: { school_id: sc_id },
 		orderBy: { contact_id: 'desc' }
@@ -43,19 +35,19 @@ export async function load({ params, locals }) {
 		orderBy: { closing_date: 'desc' }
 	})
 
-	// 4. Események formázása a getName-el
-	const event = rawEvents.map(obj => ({
-		...obj,
-		on_duty_name: getName(dutyMap, obj.on_duty),
-		event_type_name: getName(eventMap, obj.event_type)
-	}))
+	// Események formázása a getName-el
+	const mappedEvents = (rawEvents || []).map(event => ({
+		...event,
+		on_duty_name: getName(DUTY_TYPES, event.duty_level),
+		event_type_name: getName(EVENT_TYPES, event.event_type)
+	}));
 
 	return {
 		school,
-		resS,
-		resD,
+		schoolType,
+		dutyType,
 		contact,
-		event,
+		mappedEvents,
 		internalContacts: school.User,
 		externalContacts: contact,
 	}

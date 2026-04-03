@@ -32,7 +32,7 @@
 				.county?.county_name}
 			megye
 		</div>
-		<i>Események száma:&nbsp;{data.event.length}</i>
+		<i>Események száma:&nbsp;{data.mappedEvents.length}</i>
 	</hgroup>
 
 	<div class="admin-actions">
@@ -54,8 +54,8 @@
 			<li class="lb">Iskola telefon: {data.school.dir_phone || 'Nincs megadva'}</li>
 			<li class="lb">Iskola email: {data.school.school_email || 'Nincs megadva'}</li>
 			<li class="lb">Website: {data.school.website || 'Nincs megadva'}</li>
-			<li class="lb">Iskola típusa: {data.resS}</li>
-			<li class="lb">Felelős: {data.resD}</li>
+			<li class="lb">Iskola típusa: {data.schoolType}</li>
+			<li class="lb">Felelős: {data.dutyType}</li>
 			<li class="lb">Feljegyzés: {data.school.note || 'Nincs feljegyzés'}</li>
 			<li class="lb pad-bot-plus">
 				Startswith (belső) kapcsolat:
@@ -93,7 +93,7 @@
 		<div class="aa">Események</div>
 
 		<ul class="ac">
-			{#each data.event as e}
+			{#each data.mappedEvents as e}
 				<li class="li">
 					<a href="../../lists/all_events/{e.event_id}" class="aa">
 						{formatDate(e.closing_date)}

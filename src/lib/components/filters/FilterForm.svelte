@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dutyList, semester } from '../../../routes/stores/dataStore';
+	import { DUTY_TYPES, semester } from '../../../routes/stores/dataStore';
 
 	let { data, onFilter } = $props();
 
@@ -58,7 +58,7 @@
 	<div>
 		<label for="duty"><i>Select </i> &nbsp;&nbsp;Event Duty</label>
 		<select bind:value={selectedDuty} name="duty" id="duty" class="hidden-textbox">
-			{#each dutyList as d}
+			{#each DUTY_TYPES as d}
 				<option value={d.id}>{d.name} </option>
 			{/each}
 		</select>
@@ -78,12 +78,7 @@
 
 	<div>
 		<label for="region"><i>Select </i> &nbsp;&nbsp;School Region</label>
-		<select
-			bind:value={selectedRegion}
-			name="region"
-			id="region"
-			class="hidden-textbox"
-		>
+		<select bind:value={selectedRegion} name="region" id="region" class="hidden-textbox">
 			<option value="ALL">ALL</option>
 			{#each filteredRegions as reg}
 				{#if reg.region_id}

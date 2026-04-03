@@ -10,6 +10,7 @@ declare global {
 				phone: string;
 				role: Role;
       	duty: UserDuty[];
+				serial: number;
 				isSuper: boolean;
 				isDirector: boolean;
 				isSuperior: boolean;

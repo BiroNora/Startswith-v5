@@ -1,25 +1,25 @@
 <script lang="ts">
-	import type { Snippet } from "svelte";
+	import type { Snippet } from 'svelte';
 
 	let {
 		isElementVisible,
 		selYear,
 		selSemest,
 		selDuty,
-		dutyList,
+		DUTY_TYPES,
 		selectedCountryObj,
 		selectedRegionObj,
 		children
 	} = $props<{
-    isElementVisible: boolean;
-    selYear: string | number;
-    selSemest: string;
-    selDuty: string | number;
-    dutyList: readonly { readonly id: string | number; readonly name: string }[];
-    selectedCountryObj: any;
-    selectedRegionObj: any;
-    children?: Snippet;
-  }>();
+		isElementVisible: boolean;
+		selYear: string | number;
+		selSemest: string;
+		selDuty: string | number;
+		DUTY_TYPES: readonly { readonly id: string | number; readonly name: string }[];
+		selectedCountryObj: any;
+		selectedRegionObj: any;
+		children?: Snippet;
+	}>();
 </script>
 
 {#if isElementVisible}
@@ -27,7 +27,7 @@
 		<i class="black">Event Year: </i>&nbsp;{selYear} &nbsp;&nbsp;
 		<i class="black">Event Semester: </i>&nbsp;{selSemest} &nbsp;&nbsp;
 		<i class="black">Event Duty: </i>
-		{#each dutyList as item (item.id)}
+		{#each DUTY_TYPES as item (item.id)}
 			{#if selDuty === item.id}
 				&nbsp;{item.name}
 			{/if}

@@ -29,7 +29,7 @@ model User {
   createdAt        DateTime         @default(now()) @db.Timestamptz(3)
   updatedAt        DateTime         @updatedAt @db.Timestamptz(3)
   active           Boolean
-  active_by        String
+  active_by        Int
   resetToken       String?
   resetTokenExpiry DateTime?
   role             Role             @default(USER)
@@ -64,9 +64,6 @@ model School {
   duty_levels  Int[]
   active       Boolean
   active_by    Int
-  basic        Boolean
-  medior       Boolean
-  high         Boolean
   Contact      Contact[]
   Event        Event[]
   city         City      @relation(fields: [city_id], references: [city_id])
@@ -86,7 +83,7 @@ model Contact {
   contact_note  String?
   createdAt     DateTime @default(now()) @db.Timestamptz(3)
   active        Boolean
-  active_by     String
+  active_by     Int
   school_id     Int?
   School        School?  @relation(fields: [school_id], references: [school_id])
   User          User[]   @relation("ContactToUser")
