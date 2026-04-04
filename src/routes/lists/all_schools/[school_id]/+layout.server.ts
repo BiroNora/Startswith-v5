@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit'
 import { db } from '$lib/database.js'
-import { getName, getSchoolTypeLabels, getDutyLevelLabels, DUTY_TYPES, EVENT_TYPES } from '../../../stores/dataStore.js'
+import { getName, getSchoolTypeLabels, getDutyLevelLabels, DUTY_TYPES, EVENT_MAP } from '../../../stores/dataStore.js'
 
 export async function load({ params, locals }) {
 	if (!locals.user || locals.user.active === false) {
@@ -39,7 +39,7 @@ export async function load({ params, locals }) {
 	const mappedEvents = (rawEvents || []).map(event => ({
 		...event,
 		on_duty_name: getName(DUTY_TYPES, event.duty_level),
-		event_type_name: getName(EVENT_TYPES, event.event_type)
+		event_type_name: getName(EVENT_MAP, event.event_type)
 	}));
 
 	return {

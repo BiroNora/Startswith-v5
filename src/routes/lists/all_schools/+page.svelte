@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fuzzySearch, SearchInput } from '$lib/components/filters/index.js';
+	import { getDutyLevelLabels } from '../../stores/dataStore.js';
 
 	let { data } = $props();
 
@@ -8,10 +9,12 @@
 		fuzzySearch(data.schools, searchTerm, (s) => {
 			let searchStr = `${s.school_name} ${s.city?.city_name} ${s.region?.region_name} ${s.county?.county_name}`;
 
-			if (s.basic) searchStr += ' basic';
-			if (s.medior) searchStr += ' medior';
-			if (s.high) searchStr += ' high';
-
+			for (const i of s.duty_levels) {
+				if (i === 1) searchStr += ' basic';
+				if (i === 2) searchStr += ' medior';
+				if (i === 3) searchStr += ' high';
+			}
+			
 			return searchStr;
 		})
 	);
@@ -39,12 +42,11 @@
 		{#each filteredSchools as s}
 			<li class="li">
 				<a href="../lists/all_schools/{s.school_id}" class={s.User.length > 0 ? 'aa' : 'bb'}>
-					{s.school_name} 🏠 {s.region?.region_name} &#10047; {s.county?.county_name} &#10047; {s.city?.city_name} ✺
+					{s.school_name} 🏠 {s.region?.region_name} &#10047; {s.county?.county_name} &#10047; {s
+						.city?.city_name} ✺
 
 					<strong class="s1">
-						{s.basic ? ' BASIC ' : ''}
-						{s.medior ? ' MEDIOR ' : ''}
-						{s.high ? ' HIGH ' : ''}
+						{getDutyLevelLabels(s.duty_levels)}
 					</strong>
 
 					{#if !s.active || !s.coop}
