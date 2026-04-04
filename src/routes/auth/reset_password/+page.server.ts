@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit'
 import { db } from '$lib/database'
 import type { Actions, PageServerLoad } from './$types'
-import bcrypt from 'bcryptjs'
+import { hash } from 'bcrypt-ts';
 import { isStrongPassword } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -47,7 +47,7 @@ export const actions: Actions = {
         where: { user_email: email },
         data: {
           // JAVÍTÁS: A sémád szerint passwordHash a mező neve!
-          passwordHash: await bcrypt.hash(password, 10),
+          passwordHash: await hash(password, 10),
           userAuthToken: crypto.randomUUID(), // Biztonság: minden más eszközről kiléptetjük
           resetToken: null,       // Felhasználtuk, töröljük
           resetTokenExpiry: null  // Lejárati időt is ürítjük

@@ -1,6 +1,6 @@
 import { db } from '$lib/database'
 import { fail, redirect } from '@sveltejs/kit'
-import bcrypt from 'bcryptjs';
+import { hash, compare } from 'bcrypt-ts';
 import type { Action, Actions, PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -20,11 +20,18 @@ const login: Action = async ({ cookies, request }) => {
 
 	const user = await db.user.findUnique({ where: { user_email } })
 
+	console.log('Login jelszó:', password);
+console.log('DB-ből jött hash:', user?.passwordHash);
+
 	if (!user) {
 		return fail(400, { credentials: true })
 	}
 
-	const userPassword = await bcrypt.compare(password, user.passwordHash)
+	const userPassword = await compare(password.trim(), user.passwordHash.trim())
+	console.log("EREDMÉNY:", userPassword);
+
+const ujHash = await hash("12", 10);
+console.log("MÁSOLD EZT AZ ADATBÁZISBA:", ujHash);
 
 	if (!userPassword) {
 		return fail(400, { credentials: true })
@@ -58,3 +65,6 @@ const login: Action = async ({ cookies, request }) => {
 }
 
 export const actions: Actions = { login }
+
+
+//$2b$10$95XvNAnD2O6M7uzhYf7mbe/t372Bcl0Wvpx7mO9N.S658pB.9z99W

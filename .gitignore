@@ -33,3 +33,5 @@ vite.config.ts.timestamp-*
 # Prisma (Ha esetleg SQLite-ot is használnál tesztelésre)
 *.db
 *.db-journal
+
+only_once

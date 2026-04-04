@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import bcrypt from 'bcryptjs'
+import { hash } from 'bcrypt-ts';
 import { db } from '$lib/database'
 import { isStrongPassword } from '../../stores/dataStore'
 
@@ -28,7 +28,7 @@ export const actions: Actions = {
       if (!isStrongPassword(String(password1))) return fail(400, { passw: true });
 
       passwordUpdateData = {
-        passwordHash: await bcrypt.hash(String(password1), 10),
+        passwordHash: await hash(String(password1), 10),
         userAuthToken: crypto.randomUUID() // Kijelentkeztetés máshonnan jelszócserekor
       };
     }
@@ -41,7 +41,7 @@ export const actions: Actions = {
         user_phone,   // Ha undefined, marad a régi
         ...passwordUpdateData,
         active: true,
-        active_by: 'self'
+        active_by: locals.user.serial
       }
     })
 

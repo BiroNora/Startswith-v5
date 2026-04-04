@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { FilterForm, fuzzySearch, StickyFilterBar, SearchInput } from '$lib/components/filters';
-	import { duty, schType, semester } from '../../stores/dataStore';
+	import { DUTY_TYPES, schType } from '../../stores/dataStore';
 	import type { PageData } from './$types';
 
 	// 1. ADATOK ÉS ÁLLAPOTOK (States)
@@ -180,7 +180,7 @@
 		{selYear}
 		{selSemest}
 		{selDuty}
-		{duty}
+		{DUTY_TYPES}
 		{selectedCountryObj}
 		{selectedRegionObj}
 	>

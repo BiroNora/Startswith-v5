@@ -1,6 +1,6 @@
 // src/lib/adminUtils.ts
 import { db } from '$lib/database';
-import bcrypt from 'bcryptjs';
+import { hash } from 'bcrypt-ts';
 import { randomBytes } from 'node:crypto';
 
 export const getValidatedUser = async (formData: FormData) => {
@@ -13,6 +13,6 @@ export const getValidatedUser = async (formData: FormData) => {
 
 export const generateSecurePassword = async () => {
   const newPass = randomBytes(4).toString('hex');
-  const passwordHash = await bcrypt.hash(newPass, 10);
+  const passwordHash = await hash(newPass.trim(), 10);
   return { newPass, passwordHash };
 };
