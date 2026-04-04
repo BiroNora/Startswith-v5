@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fuzzySearch, SearchInput } from '$lib/components/filters/index.js';
-	import { getDutyLevelLabels } from '../../stores/dataStore.js';
+	import { DUTY_MAP, getDutyLevelLabels } from '../../stores/dataStore.js';
 
 	let { data } = $props();
 
@@ -9,11 +9,8 @@
 		fuzzySearch(data.schools, searchTerm, (s) => {
 			let searchStr = `${s.school_name} ${s.city?.city_name} ${s.region?.region_name} ${s.county?.county_name}`;
 
-			for (const i of s.duty_levels) {
-				if (i === 1) searchStr += ' basic';
-				if (i === 2) searchStr += ' medior';
-				if (i === 3) searchStr += ' high';
-			}
+			const lookup = Object.fromEntries(DUTY_MAP.map((d) => [d.id, d.name.toLowerCase()]));
+			searchStr += ' ' + s.duty_levels.map((id) => lookup[id]).join(' ');
 
 			return searchStr;
 		})

@@ -8,12 +8,12 @@ datasource db {
 }
 
 model UserDuty {
-  id        Int      @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   user_id   String
   level     Int
   region_id Int
-  type      DutyType @default(USER)
-  user      User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  type      Role   @default(USER)
+  user      User   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@unique([user_id, level, region_id, type])
   @@map("user_duties")
@@ -206,10 +206,4 @@ enum Role {
   SUPERIOR
   DIRECTOR
   SUPER_USER
-}
-
-enum DutyType {
-  USER
-  SUPERIOR
-  DIRECTOR
 }

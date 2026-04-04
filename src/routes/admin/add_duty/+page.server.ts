@@ -40,7 +40,7 @@ export const actions: Actions = {
 
         await tx.user.update({
           where: { user_id: user_id },
-          data: { passwordHash: passwordHash }
+          data: { role: type, passwordHash: passwordHash }
         });
 
         await tx.userDuty.create({

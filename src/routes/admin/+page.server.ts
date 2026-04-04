@@ -28,12 +28,15 @@ export const actions: Actions = {
     throw redirect(303, `/admin/delete_duty?email=${email}`);
   },
 
-  "add-new-user": async ({ request }) => {
+  "add-new-user": async ({ request, locals }) => {
     const { email, user } = await getValidatedUser(await request.formData());
+
+    if (!locals.user) return fail(401, { message: "Nincs bejelentkezett felhasználó!" });
 
     if (user) return fail(500, { message: "Ezzel az email címmel felhasználó már létezik." });
     if (!email) return fail(500, { message: "Váratlan hiba történt a mentéskor." });
 
+    const adminSerial = locals.user.serial;
     const { newPass, passwordHash } = await generateSecurePassword();
 
     try {
@@ -44,7 +47,7 @@ export const actions: Actions = {
           passwordHash,
           active: true,
           user_phone: "",
-          active_by: "admin",
+          active_by: adminSerial,
           userAuthToken: crypto.randomUUID()
         }
       });

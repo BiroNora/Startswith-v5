@@ -1,4 +1,4 @@
-import type { Role, DutyType, UserDuty } from '@prisma/client';
+import type { Role, UserDuty } from '@prisma/client';
 
 declare global {
 	namespace App {
