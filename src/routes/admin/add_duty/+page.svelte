@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
-	import { dutyMap, LEVEL_LABELS } from '../../stores/dataStore';
+	import { DUTY_MAP, LEVEL_LABELS } from '../../stores/dataStore';
 	import type { PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: any } = $props();
@@ -122,7 +122,7 @@
 							<div class="select-wrapper" transition:fade>
 								<select name="regD" bind:value={yesDuty}>
 									<option value="" disabled>Válassz szintet...</option>
-									{#each dutyMap as item}
+									{#each DUTY_MAP as item}
 										<option value={item.id}>{item.name}</option>
 									{/each}
 								</select>

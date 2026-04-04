@@ -190,24 +190,6 @@ export const schType = [
 	'NEM BESOROLT'
 ] as const;
 
-/* export const schoolType = [
-	['1', 'ÁLTALÁNOS ISKOLA'],
-	['2', 'GIMNÁZIUM'],
-	['3', 'SZAKGIMNÁZIUM'],
-	['4', 'SZAKKÖZÉPISKOLA'],
-	['5', 'SZAKISKOLA'],
-	['6', 'TECHNIKUM'],
-	['7', 'SZAKKÉPZŐ ISKOLA'],
-	['8', 'ALAPFOKÚ MŰVÉSZETOKTATÁS'],
-	['9', 'MŰVÉSZETI OKTATÁS'],
-	['10', 'KÉSZSÉGFEJLESZTÉS'],
-	['11', 'FEJLESZTŐ NEVELÉS-OKTATÁS'],
-	['12', 'KIEGÉSZÍTŐ NEMZETISÉGI NYELVOKTATÁS'],
-	['13', 'KOLLÉGIUM'],
-	['14', 'HÍDPROGRAMOK'],
-	['15', 'NEM BESOROLT']
-] as const; */
-
 export const semester = ['ALL', 'SPRING', 'FALL'] as const;
 
 export const LEVEL_LABELS = [
@@ -251,20 +233,18 @@ export const SCHOOL_TYPES = [
 ] as const;
 
 export const getSchoolTypeLabels = (schoolTypeIds: number[]): string => {
-  if (!schoolTypeIds || !Array.isArray(schoolTypeIds)) return '';
+	if (!schoolTypeIds || !Array.isArray(schoolTypeIds)) return '';
 
-  return SCHOOL_TYPES
-    .filter(type => schoolTypeIds.includes(type.id))
-    .map(type => type.label)
-    .join(', ');
+	return SCHOOL_TYPES
+		.filter(type => schoolTypeIds.includes(type.id))
+		.map(type => type.label)
+		.join(', ');
 };
 
-
-// Ezt használjuk mentésnél, módosításnál (tiszta számok)
-export const DUTY_TYPES_WITHOUT_ALL = [
-  { id: 1, name: 'BASIC' },
-  { id: 2, name: 'MEDIOR' },
-  { id: 3, name: 'HIGH' }
+export const DUTY_MAP = [
+	{ id: 1, name: 'BASIC' },
+	{ id: 2, name: 'MEDIOR' },
+	{ id: 3, name: 'HIGH' }
 ] as const;
 
 export const DUTY_TYPES = [
@@ -275,16 +255,15 @@ export const DUTY_TYPES = [
 ] as const;
 
 export const getDutyLevelLabels = (dutyIds: number[]): string => {
-  if (!dutyIds || !Array.isArray(dutyIds)) return '';
+	if (!dutyIds || !Array.isArray(dutyIds)) return '';
 
-  return DUTY_TYPES
-    .filter(duty => typeof duty.id === 'number' && dutyIds.includes(duty.id))
-    .map(duty => duty.name)
-    .join(', ');
+	return DUTY_TYPES
+		.filter(duty => typeof duty.id === 'number' && dutyIds.includes(duty.id))
+		.map(duty => duty.name)
+		.join(', ');
 };
 
-// eventMap
-export const EVENT_TYPES = [
+export const EVENT_MAP = [
 	{ id: 1, name: 'PRESENTATION' },
 	{ id: 2, name: 'OPEN DAY' },
 	{ id: 3, name: 'BY PHONE' },
@@ -297,98 +276,57 @@ export const EVENT_TYPES = [
 	{ id: 10, name: 'ELSE *' }
 ] as const;
 
+export const STATUS_MAP = [
+	{ id: 1, name: 'ADMITTED' },
+	{ id: 2, name: 'REJECTED' },
+	{ id: 3, name: 'IN PROGRESS' }
+] as const;
+
+export const CHANNEL_MAP = [
+	{ id: 1, name: 'SCHOOL PRESENTATION' },
+	{ id: 2, name: 'FAMILY' },
+	{ id: 3, name: 'TEACHER' },
+	{ id: 4, name: 'FRIENDS' },
+	{ id: 5, name: 'CMM MEMBER' },
+	{ id: 6, name: 'CHLC' }, // OKTV
+	{ id: 7, name: 'HIGH' },
+	{ id: 8, name: 'FACEBOOK' },
+	{ id: 9, name: 'ONLINE PUBLICITY' },
+	{ id: 10, name: 'ONLINE ARTICLE' }
+] as const;
+
+export const GRADE_MAP = [
+	{ id: 1, name: 'PREPARATORY' },
+	{ id: 2, name: 'CLASS 9' },
+	{ id: 3, name: 'CLASS 10' },
+	{ id: 4, name: 'CLASS 11' },
+	{ id: 5, name: 'CLASS 12' }
+] as const;
+
+export const SUBJECT_MAP = [
+	{ id: 1, name: 'ART' },
+	{ id: 2, name: 'BUSINESS' },
+	{ id: 3, name: 'CLIMATE CHANGE' },
+	{ id: 4, name: 'CULTURE' },
+	{ id: 5, name: 'ECONOMICS' },
+	{ id: 6, name: 'ENVIRONMENTAL PROTECTION' }, // OKTV
+	{ id: 7, name: 'MEDIA' },
+	{ id: 8, name: 'PHILOSOPHY' },
+	{ id: 9, name: 'POLITICS' },
+	{ id: 10, name: 'SCIENCE' },
+	{ id: 11, name: 'SOCIETY' },
+	{ id: 12, name: 'SPORT' },
+	{ id: 13, name: 'TECHNOLOGY' },
+	{ id: 14, name: 'ELSE*' }
+] as const;
+
 export const getName = (list: readonly any[], id: number | null | undefined): string => {
-  if (!list || id === null || id === undefined) return 'Nincs megadva';
+	if (!list || id === null || id === undefined) return 'Nincs megadva';
 
-  const found = list.find(item => item.id === id);
+	const found = list.find(item => item.id === id);
 
-  return found ? found.name : String(id);
+	return found ? found.name : String(id);
 };
-
-export const duType = ['BASIC', 'MEDIOR', 'HIGH'] as const;
-
-export const dutyType = [
-	['1', 'BASIC'],
-	['2', 'MEDIOR'],
-	['3', 'HIGH'],
-	['4', 'SUPERIOR'],
-	['5', 'DIRECTOR']
-] as const;
-
-export const statusType = [
-	['1', 'ADMITTED'],
-	['2', 'REJECTED'],
-	['3', 'IN PROGRESS']
-] as const;
-
-// For director's duty
-export const dutyMap = [
-	{ id: '1', name: 'BASIC' },
-	{ id: '2', name: 'MEDIOR' },
-	{ id: '3', name: 'HIGH' }
-] as const;
-
-export const statusMap = [
-	{ id: '1', name: 'ADMITTED' },
-	{ id: '2', name: 'REJECTED' },
-	{ id: '3', name: 'IN PROGRESS' }
-] as const;
-
-export const channelMap = [
-	{ id: '1', name: 'SCHOOL PRESENTATION' },
-	{ id: '2', name: 'FAMILY' },
-	{ id: '3', name: 'TEACHER' },
-	{ id: '4', name: 'FRIENDS' },
-	{ id: '5', name: 'CMM MEMBER' },
-	{ id: '6', name: 'CHLC' }, // OKTV
-	{ id: '7', name: 'HIGH' },
-	{ id: '8', name: 'FACEBOOK' },
-	{ id: '9', name: 'ONLINE PUBLICITY' },
-	{ id: '10', name: 'ONLINE ARTICLE' }
-] as const;
-
-export const gradeMap = [
-	{ id: '1', name: 'PREPARATORY' },
-	{ id: '2', name: 'CLASS 9' },
-	{ id: '3', name: 'CLASS 10' },
-	{ id: '4', name: 'CLASS 11' },
-	{ id: '5', name: 'CLASS 12' }
-] as const;
-
-export const subjectMap = [
-	{ id: '1', name: 'ART' },
-	{ id: '2', name: 'BUSINESS' },
-	{ id: '3', name: 'CLIMATE CHANGE' },
-	{ id: '4', name: 'CULTURE' },
-	{ id: '5', name: 'ECONOMICS' },
-	{ id: '6', name: 'ENVIRONMENTAL PROTECTION' }, // OKTV
-	{ id: '7', name: 'MEDIA' },
-	{ id: '8', name: 'PHILOSOPHY' },
-	{ id: '9', name: 'POLITICS' },
-	{ id: '10', name: 'SCIENCE' },
-	{ id: '11', name: 'SOCIETY' },
-	{ id: '12', name: 'SPORT' },
-	{ id: '13', name: 'TECHNOLOGY' },
-	{ id: '14', name: 'ELSE*' }
-] as const;
-
-// Közös típus a Map-ekhez
-interface MapItem {
-	readonly id: string;
-	readonly name: string;
-}
-
-/**
- * Általános névkereső függvény Map-ekhez.
- * Használható: getName(dutyMap, '1') -> 'BASIC'
-
-export const getName = (map: readonly any[], id: string | number | null | undefined): string => {
-  // Csak akkor térünk vissza, ha az id ténylegesen null vagy undefined
-  if (id === null || id === undefined || id === '') return '';
-
-  // A String() használatával áthidaljuk a szám/string különbséget
-  return map.find((item) => String(item.id) === String(id))?.name || String(id);
-};*/
 
 export const eyeOpen = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
 export const eyeClosed = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
