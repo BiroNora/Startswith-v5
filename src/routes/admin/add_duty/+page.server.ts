@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import { db } from '$lib/database'
 import { generateSecurePassword } from '$lib/adminUtils'
+import { Role } from '@prisma/client'
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user || locals.user.active === false || locals.user.role !== 'SUPER_USER') throw redirect(302, '/auth/login')
@@ -12,16 +13,37 @@ export const actions: Actions = {
     const formData = await request.formData();
     const user_id = String(formData.get('userId') || '');
 
+    // 1. Meglévő felhasználó adatainak lekérése (fontos a rang ellenőrzéséhez!)
+    const currentUser = await db.user.findUnique({
+      where: { user_id: user_id },
+      select: { role: true }
+    });
+
+    if (!currentUser) {
+      return fail(404, { message: 'Felhasználó nem található!' });
+    }
+
     const { newPass, passwordHash } = await generateSecurePassword();
 
     const isSuperior = formData.get('isSuperior') === 'on';
     const isDirector = formData.get('isDirector') === 'on';
 
-    const type = isSuperior ? 'SUPERIOR' : 'DIRECTOR';
+    let finalRole: Role = currentUser.role as Role;
+
+    if (currentUser.role === 'SUPER_USER') {
+      finalRole = 'SUPER_USER';
+    } else if (isDirector) {
+      finalRole = 'DIRECTOR';
+    } else if (isSuperior) {
+      finalRole = 'SUPERIOR';
+    } else {
+      finalRole = 'USER';
+    }
 
     const superiorRegionId = isSuperior ? Number(formData.get('regS')) : 0;
     const directorLevel = isDirector ? Number(formData.get('regD')) : 0;
 
+    const currentDutyType: Role = isDirector ? Role.DIRECTOR : Role.SUPERIOR;
 
     if (isSuperior && (!superiorRegionId || superiorRegionId === 0)) {
       return fail(400, { message: 'Kérlek válassz régiót a SUPERIOR joghoz!' });
@@ -40,7 +62,7 @@ export const actions: Actions = {
 
         await tx.user.update({
           where: { user_id: user_id },
-          data: { role: type, passwordHash: passwordHash }
+          data: { role: finalRole, passwordHash: passwordHash }
         });
 
         await tx.userDuty.create({
@@ -48,7 +70,7 @@ export const actions: Actions = {
             user_id: user_id,
             level: directorLevel,
             region_id: superiorRegionId,
-            type: type as any
+            type: currentDutyType
           }
         });
       });

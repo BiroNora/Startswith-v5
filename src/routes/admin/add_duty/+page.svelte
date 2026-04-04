@@ -98,7 +98,7 @@
 				{#if !form?.success}
 					<div class="input-group">
 						<label class="check-label">
-							<input type="checkbox" name="isSuperior" bind:checked={yesS} />
+							<input type="checkbox" name="isSuperior" bind:checked={yesS} disabled={yesD} />
 							<span>SUPERIOR</span>
 						</label>
 						{#if yesS}
@@ -115,7 +115,7 @@
 
 					<div class="input-group">
 						<label class="check-label">
-							<input type="checkbox" name="isDirector" bind:checked={yesD} />
+							<input type="checkbox" name="isDirector" bind:checked={yesD} disabled={yesS} />
 							<span>DIRECTOR</span>
 						</label>
 						{#if yesD}
