@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { db } from '$lib/database'
-import { dutyMap } from '../../stores/dataStore'
+import { DUTY_MAP } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user || locals.user.active === false) {
@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	}
 
 	const events = rawEvents.map(ev => {
-		const dutyName = dutyMap.find(d => d.id === ev.on_duty)?.name || ev.on_duty;
+		const dutyName = DUTY_MAP.find(d => d.id === ev.duty_level)?.name || ev.duty_level;
 
 		return {
 			...ev,

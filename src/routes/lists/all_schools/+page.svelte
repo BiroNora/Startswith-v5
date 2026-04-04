@@ -14,7 +14,7 @@
 				if (i === 2) searchStr += ' medior';
 				if (i === 3) searchStr += ' high';
 			}
-			
+
 			return searchStr;
 		})
 	);
@@ -29,8 +29,8 @@
 <div id="top" class="main">
 	<hgroup>
 		<h3>School List*</h3>
-		<i>&emsp;*Grey colored schools have no Startswith connection</i>
-		<i>&emsp;Number of schools: {data.schools.length}</i>
+		<i>*Grey colored schools have no Startswith connection</i>
+		<i>Number of schools: {data.schools.length}</i>
 	</hgroup>
 
 	<div class="search-input">

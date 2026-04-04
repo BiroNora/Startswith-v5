@@ -21,7 +21,11 @@
 </svelte:head>
 
 <div id="top" class="main">
+<hgroup>
 	<h3>Event List</h3>
+	<i>Number of events: {data.events.length}</i>
+</hgroup>
+
 
 	<div class="search-input">
 		<SearchInput bind:searchTerm count={filteredEvents.length} placeholder="Search in events..." />

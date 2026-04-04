@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit'
 import { db } from '$lib/database'
-import { getName, channelMap, gradeMap, statusMap, dutyMap, eventMap } from './../../../stores/dataStore'
+import { getName, CHANNEL_MAP, GRADE_MAP, STATUS_MAP, DUTY_MAP, EVENT_MAP } from './../../../stores/dataStore'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -31,15 +31,15 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const formattedEvent = {
 		...event,
-		on_duty_name: getName(dutyMap, event.on_duty),
-		event_type_name: getName(eventMap, event.event_type)
+		on_duty_name: getName(DUTY_MAP, event.duty_level),
+		event_type_name: getName(EVENT_MAP, event.event_type)
 	};
 
 	const formattedInters = event.InterestedStudents.map(ints => ({
 		...ints,
-		grade: getName(gradeMap, ints.grade),
-		channel: getName(channelMap, ints.channel),
-		status: getName(statusMap, ints.status)
+		grade: getName(GRADE_MAP, ints.grade),
+		channel: getName(CHANNEL_MAP, ints.channel),
+		status: getName(STATUS_MAP, ints.status)
 	}));
 
 	return {
