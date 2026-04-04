@@ -21,14 +21,14 @@ export const actions: Actions = {
         event_name,
         closing_date: date,
         event_year: date.getFullYear(),
-        semester: date.getMonth() + 1 >= 3 && date.getMonth() + 1 <= 9 ? 'SPRING' : 'FALL',
-        on_duty: String(data.get('duty')),
-        event_type: String(data.get('type')),
+        semester: date.getMonth() + 1 >= 3 && date.getMonth() + 1 <= 9 ? 1 : 2,
+        duty_level: Number(data.get('duty')),
+        event_type: Number(data.get('type')),
         estimated_student: Number(data.get('estimate')),
         note: String(data.get('message'))
       }
     });
-    
+
     throw redirect(303, `/lists/events/${params.event_id}`);
   }
 }

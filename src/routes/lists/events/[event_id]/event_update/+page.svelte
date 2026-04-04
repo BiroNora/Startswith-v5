@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { dutyMap, eventMap } from '../../../../stores/dataStore.js';
+	import { DUTY_MAP, EVENT_MAP } from '../../../../stores/dataStore.js';
 
 	function handleCancel() {
 		history.back();
@@ -50,7 +50,7 @@
 		<div>
 			<label for="duty">On Duty</label>
 			<select bind:value={data.onduty} name="duty" id="duty" class="hidden-textbox">
-				{#each dutyMap as du (du.id)}
+				{#each DUTY_MAP as du (du.id)}
 					<option value={du.id}>{du.name} </option>
 				{/each}
 			</select>
@@ -59,7 +59,7 @@
 		<div>
 			<label for="type">Event Type <i class="iii">in case of * please leave a comment</i></label>
 			<select bind:value={data.eventtype} name="type" id="type" class="hidden-textbox">
-				{#each eventMap as ev (ev.id)}
+				{#each EVENT_MAP as ev (ev.id)}
 					<option value={ev.id}>{ev.name}</option>
 				{/each}
 			</select>

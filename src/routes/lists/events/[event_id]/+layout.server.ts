@@ -1,8 +1,8 @@
 import { error, redirect } from '@sveltejs/kit';
-import { dutyMap, eventMap, gradeMap, channelMap, statusMap } from '../../../stores/dataStore';
+import { DUTY_MAP, GRADE_MAP, CHANNEL_MAP, STATUS_MAP, EVENT_MAP } from '../../../stores/dataStore';
 import { checkEventAccess } from '$lib/validation';
 
-export async function load({params, locals}) {
+export async function load({ params, locals }) {
 	if (!locals.user || locals.user.active === false) {
 		throw redirect(302, '/auth/login');
 	}
@@ -14,14 +14,14 @@ export async function load({params, locals}) {
 	if (!eventData) throw error(404, 'Event not found');
 
 	// --- NÉVFORDÍTÁSOK ---
-	const eventTypeName = eventMap.find((e) => e.id === eventData.event_type)?.name || eventData.event_type;
-	const dutyName = dutyMap.find((d) => d.id === eventData.on_duty)?.name || eventData.on_duty;
+	const eventTypeName = EVENT_MAP.find((e) => e.id === eventData.event_type)?.name || eventData.event_type;
+	const dutyName = DUTY_MAP.find((d) => d.id === eventData.duty_level)?.name || eventData.duty_level;
 
 	const formattedInters = eventData.InterestedStudents.map((ints) => ({
 		...ints,
-		grade_name: gradeMap.find((g) => g.id === ints.grade)?.name || ints.grade,
-		channel_name: channelMap.find((c) => c.id === ints.channel)?.name || ints.channel,
-		status_name: statusMap.find((s) => s.id === ints.status)?.name || ints.status
+		grade_name: GRADE_MAP.find((g) => g.id === ints.grade)?.name || ints.grade,
+		channel_name: CHANNEL_MAP.find((c) => c.id === ints.channel)?.name || ints.channel,
+		status_name: STATUS_MAP.find((s) => s.id === ints.status)?.name || ints.status
 	}));
 
 	const isDeletable = eventData.User.length <= 1 && eventData.InterestedStudents.length === 0;
@@ -34,7 +34,7 @@ export async function load({params, locals}) {
 		eventTypeName,
 		dutyName,
 		// Svelte bind:value-hoz és hibaellenőrzéshez szükséges változók
-		onduty: eventData.on_duty,
+		onduty: eventData.duty_level,
 		eventtype: eventData.event_type,
 		schoolCountry: eventData.School.country_id,
 		schoolRegion: eventData.School.region_id,

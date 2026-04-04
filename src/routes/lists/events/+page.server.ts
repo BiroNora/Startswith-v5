@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { db } from '$lib/database'
-import { dutyMap } from '../../stores/dataStore'
+import { DUTY_MAP } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ locals }) => {
   if (!locals.user?.active) {
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       Event: {
         orderBy: { closing_date: 'desc' },
         include: {
-          School: { // Itt "kapcsoljuk" az iskolát az eseményhez
+          School: {
             select: { school_name: true }
           }
         }
@@ -29,14 +29,14 @@ export const load: PageServerLoad = async ({ locals }) => {
   const events = userWithEvents.Event.map(ev => ({
     ...ev,
     school_name: ev.School?.school_name || 'Unknown School',
-    duty_name: dutyMap.find(d => d.id === ev.on_duty)?.name || ev.on_duty
+    duty_name: DUTY_MAP.find(d => d.id === ev.duty_level)?.name || ev.duty_level
   }));
 
   // 3. In progress ID-k lekérése (ez maradhat külön, vagy beépíthető)
   const inProgressData = await db.event.findMany({
     where: {
       User: { some: { user_id: locals.user.user_id } },
-      InterestedStudents: { some: { status: '3' } }
+      InterestedStudents: { some: { status: 3 } }
     },
     select: { event_id: true }
   });

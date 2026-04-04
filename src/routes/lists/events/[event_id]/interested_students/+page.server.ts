@@ -16,11 +16,11 @@ export const actions: Actions = {
         data: {
           event_id,
           intrest_count: Number(data.get('number')),
-          grade: String(data.get('grade')),
+          grade: Number(data.get('grade')),
           applied,
-          work_title: !applied || data.get('subject') === 'null' ? '0' : String(data.get('subject')),
-          channel: String(data.get('channel')),
-          status: !applied || data.get('status') === 'null' ? '0' : String(data.get('status')),
+          subject: !applied || data.get('subject') === 'null' ? 0 : Number(data.get('subject')),
+          channel: Number(data.get('channel')),
+          status: !applied || data.get('status') === 'null' ? 0 : Number(data.get('status')),
           country_id: Number(data.get('country')),
           region_id: Number(data.get('connect'))
         }

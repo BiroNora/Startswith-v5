@@ -54,6 +54,7 @@
 					{ev.duty_name}
 
 					{#if isInProgress}
+						✺
 						<span class="b"> STUDENTS IN PROGRESS</span>
 					{/if}
 				</a>

@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { channelMap, gradeMap, statusMap, subjectMap } from '../../../../stores/dataStore.js';
+	import { CHANNEL_MAP, GRADE_MAP, STATUS_MAP, SUBJECT_MAP } from '../../../../stores/dataStore.js';
 
 	let isInput = $state(true);
 
@@ -44,7 +44,7 @@
 		<div>
 			<label for="grade">Grade</label>
 			<select name="grade" id="grade" class="hidden-textbox">
-				{#each gradeMap as grade (grade.id)}
+				{#each GRADE_MAP as grade (grade.id)}
 					<option value={grade.id}>{grade.name}</option>
 				{/each}
 			</select>
@@ -62,7 +62,7 @@
 		<div>
 			<label for="channel">Channeled by</label>
 			<select name="channel" id="channel" class="hidden-textbox">
-				{#each channelMap as channel (channel.id)}
+				{#each CHANNEL_MAP as channel (channel.id)}
 					<option value={channel.id}>{channel.name}</option>
 				{/each}
 			</select>
@@ -70,11 +70,11 @@
 
 		<div class="pad">
 			<button
-			type="button"
-			onclick={toggleIsInput}
-			class="btn btn-cancel"
-			class:active-color={!isInput}>Apply</button
-		>
+				type="button"
+				onclick={toggleIsInput}
+				class="btn btn-cancel"
+				class:active-color={!isInput}>Apply</button
+			>
 		</div>
 
 		<input type="hidden" name="apply" value={isInput} />
@@ -82,7 +82,7 @@
 			<div>
 				<label for="subject">Subject</label>
 				<select name="subject" id="subject" class="hidden-textbox">
-					{#each subjectMap as subject (subject.id)}
+					{#each SUBJECT_MAP as subject (subject.id)}
 						<option value={subject.id}>{subject.name}</option>
 					{/each}
 				</select>
@@ -90,7 +90,7 @@
 			<div>
 				<label for="status">Status</label>
 				<select name="status" id="status" class="hidden-textbox">
-					{#each statusMap as status (status.id)}
+					{#each STATUS_MAP as status (status.id)}
 						<option value={status.id}>{status.name}</option>
 					{/each}
 				</select>
@@ -111,6 +111,6 @@
 	}
 
 	.pad {
-		padding-top: 1.0rem;
+		padding-top: 1rem;
 	}
 </style>

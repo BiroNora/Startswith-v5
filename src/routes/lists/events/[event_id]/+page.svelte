@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { formatDate, subjectMap, timeSlugify } from '../../../stores/dataStore.js';
+	import { formatDate, SUBJECT_MAP, timeSlugify } from '../../../stores/dataStore.js';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -128,8 +128,8 @@
 						{/each}
 						<li class="lb">Csatorna, ahonnan értesült a programról: {ints.channel_name}</li>
 						{#if ints.applied === true}
-							{#each subjectMap as subject (subject.id)}
-								{#if ints.work_title === subject.id}
+							{#each SUBJECT_MAP as subject (subject.id)}
+								{#if ints.subject === subject.id}
 									<li class="lb">Jelentkezési téma: {subject.name}</li>
 								{/if}
 							{/each}
