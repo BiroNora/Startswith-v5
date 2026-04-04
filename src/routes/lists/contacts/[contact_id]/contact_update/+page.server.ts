@@ -19,7 +19,7 @@ export const actions: Actions = {
         contact_phone: String(data.get('contactphone')),
         contact_note: String(data.get('contactmessage')),
         active: data.get('active') === 'on', // A checkbox 'on' értéket küld, ha be van pipálva
-        active_by: locals.user.name
+        active_by: locals.user.serial
       }
     })
     throw redirect(303, `/lists/contacts/${params.contact_id}`);
