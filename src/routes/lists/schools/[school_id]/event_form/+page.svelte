@@ -1,6 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { dutyMap, eventMap } from '../../../../stores/dataStore';
+	import { DUTY_MAP, EVENT_MAP } from '../../../../stores/dataStore';
 
 	function handleCancel() {
 		history.back();
@@ -13,13 +13,11 @@
 	<div class="rei">
 		<p>Event Register</p>
 	</div>
-	<form
-		action="?/event_form"
-		method="post"
-		use:enhance
-	>
+	<form action="?/event_form" method="post" use:enhance>
 		<div>
-			<label for="fantasy"> Event Name <i class="iii">must be unique and at least 10 characters long</i></label>
+			<label for="fantasy">
+				Event Name <i class="iii">must be unique and at least 10 characters long</i></label
+			>
 			<input
 				type="text"
 				name="fantasy"
@@ -28,7 +26,6 @@
 				placeholder="ANY LONGER"
 				required
 			/>
-
 		</div>
 		<div>
 			<label for="meeting-time">Event Date</label>
@@ -44,7 +41,7 @@
 		<div>
 			<label for="duty">On Duty</label>
 			<select name="duty" id="duty" class="hidden-textbox">
-				{#each dutyMap as item (item.id)}
+				{#each DUTY_MAP as item (item.id)}
 					<option value={item.id}>{item.name}</option>
 				{/each}
 			</select>
@@ -52,18 +49,17 @@
 		<div>
 			<label for="type">Event Type <i class="iii">in case of * please leave a comment</i></label>
 			<select name="type" id="type" class="hidden-textbox">
-				{#each eventMap as item (item.id)}
+				{#each EVENT_MAP as item (item.id)}
 					<option value={item.id}>{item.name}</option>
 				{/each}
 			</select>
-
 		</div>
 		<div>
 			<label for="estimate">Estimated Number of Participants</label>
 			<input type="number" name="estimate" id="estimate" required />
 		</div>
 		<label for="message">Note</label>
-		<br>
+		<br />
 		<textarea id="message" name="message" rows="2" cols="50"></textarea>
 
 		{#if form?.errors}

@@ -1,6 +1,6 @@
 import { db } from "$lib/database"
 import { fail, redirect } from "@sveltejs/kit"
-import { dateSlugify, slugify } from "../../../../stores/dataStore"
+import { dateSlugify, SEMESTERS, slugify } from "../../../../stores/dataStore"
 import type { Actions } from "./$types"
 
 export const actions: Actions = {
@@ -10,8 +10,8 @@ export const actions: Actions = {
     const data = await request.formData()
 
     const event_name = String(data.get('fantasy'))
-    const on_duty = String(data.get('duty'))
-    const event_type = String(data.get('type'))
+    const duty_level = Number(data.get('duty'))
+    const event_type = Number(data.get('type'))
     const estimated_student = Number(data.get('estimate'))
     const note = String(data.get('message'))
 
@@ -35,7 +35,7 @@ export const actions: Actions = {
     const slugDate = dateSlugify(clos_date);
     const event_year = date.getFullYear()
     const month = date.getMonth() + 1
-    const semester = month >= 3 && month <= 9 ? 'SPRING' : 'FALL'
+    const semester = month >= 3 && month <= 9 ? 1 : 2;
 
     const cn = slugify(school.city.city_name.slice(0, 12))
     const sn = slugify(school.school_name.slice(0, 12))
@@ -51,7 +51,7 @@ export const actions: Actions = {
         closing_date: date,
         event_year,
         semester,
-        on_duty,
+        duty_level,
         event_type,
         estimated_student,
         note,

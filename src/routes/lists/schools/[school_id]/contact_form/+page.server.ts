@@ -25,7 +25,7 @@ export const actions: Actions = {
         contact_phone,
         contact_note,
         active: true,
-        active_by: locals.user.name || locals.user.email,
+        active_by: locals.user.serial,
         User: {
           connect: {
             user_email: locals.user.email

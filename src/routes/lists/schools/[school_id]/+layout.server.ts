@@ -4,7 +4,7 @@ import {
   getSchoolTypeLabels,
   getDutyLevelLabels,
   DUTY_TYPES,
-  EVENT_TYPES,
+  EVENT_MAP,
   getName,
 } from '../../../stores/dataStore.js';
 import type { LayoutServerLoad } from './$types';
@@ -50,7 +50,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
   const mappedEvents = (events || []).map(event => ({
     ...event,
     on_duty_name: getName(DUTY_TYPES, event.duty_level),
-    event_type_name: getName(EVENT_TYPES, event.event_type)
+    event_type_name: getName(EVENT_MAP, event.event_type)
   }));
 
   return {
