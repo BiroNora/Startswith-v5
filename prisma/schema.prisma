@@ -117,7 +117,7 @@ model InterestedStudents {
   intrest_count Int
   grade         Int
   applied       Boolean
-  work_title    Int
+  subject       Int
   channel       Int
   status        Int
   country_id    Int
