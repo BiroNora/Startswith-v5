@@ -53,9 +53,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 
       allowedLevels: [...new Set(
         user.user_duties
-          .filter(d => d.type === 'DIRECTOR')
           .map(d => d.level)
           .filter(lvl => lvl !== 0 && lvl !== null)
+          .map(lvl => lvl * 100)
       )]
     }
   } else {

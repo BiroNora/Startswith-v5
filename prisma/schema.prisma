@@ -136,8 +136,6 @@ model Activity {
   act_name   String
   act_note   String?
   user_id    String
-  duty_num   Int
-  region_num Int
   duty_level Int
   user       User     @relation(fields: [user_id], references: [user_id])
 

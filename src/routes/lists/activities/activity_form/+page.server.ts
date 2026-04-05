@@ -15,8 +15,6 @@ export const actions: Actions = {
         act_name: String(data.get('fantasy')),
         act_note: String(data.get('message')),
         duty_level: Number(String(data.get('duty')) + data.get('region')),
-        duty_num: Number(data.get('duty')),
-        region_num: Number(data.get('region')),
         user_id: my_id
       }
     });
