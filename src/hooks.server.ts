@@ -26,6 +26,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   // Csak akkor engedjük be, ha létezik ÉS aktív a felhasználó
   if (user && user.active) {
+    const dutyTypes = user.user_duties.map(d => d.type);
+
     event.locals.user = {
       user_id: user.user_id,
       email: user.user_email,
@@ -39,17 +41,26 @@ export const handle: Handle = async ({ event, resolve }) => {
       // EXTRÁK, amik aranyat érnek a frontend oldalon:
       // Így nem kell mindig a role-t stringként csekkolni
       isSuper: user.role === 'SUPER_USER',
-      isDirector: user.role === 'DIRECTOR',
-      isSuperior: user.role === 'SUPERIOR',
+      isDirector: user.role === 'DIRECTOR' || dutyTypes.includes('DIRECTOR'),
+      isSuperior: user.role === 'SUPERIOR' || dutyTypes.includes('SUPERIOR'),
 
       // Egy gyors lista az összes régióról, amihez joga van
-      // Ha SUPER_USER, akkor ez később egy külön logikát kaphat,
-      // de egyelőre kigyűjtjük a meglévőket:
-      allowedRegions: user.user_duties.map(d => d.region_id)
+      allowedRegions: [...new Set(
+        user.user_duties
+          .map(d => d.region_id)
+          .filter(id => id !== 0 && id !== null)
+      )],
+
+      allowedLevels: [...new Set(
+        user.user_duties
+          .filter(d => d.type === 'DIRECTOR')
+          .map(d => d.level)
+          .filter(lvl => lvl !== 0 && lvl !== null)
+      )]
     }
   } else {
     event.locals.user = null
   }
- 
+
   return await resolve(event)
 }

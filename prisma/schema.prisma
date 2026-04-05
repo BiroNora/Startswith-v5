@@ -138,7 +138,7 @@ model Activity {
   user_id    String
   duty_num   Int
   region_num Int
-  on_duty    Int
+  duty_level Int
   user       User     @relation(fields: [user_id], references: [user_id])
 
   @@map("activity")
@@ -150,7 +150,7 @@ model CentralMessage {
   end_date   DateTime @db.Timestamptz(3)
   cm_name    String
   cm_note    String?
-  on_duty    Int[]
+  duty_level Int[]
   user_id    String
   user       User     @relation(fields: [user_id], references: [user_id])
 

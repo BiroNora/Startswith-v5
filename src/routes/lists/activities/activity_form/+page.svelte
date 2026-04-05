@@ -1,11 +1,14 @@
 <script>
 	import { enhance } from '$app/forms';
-	import { dutyMap } from '../../../stores/dataStore.js';
+	import { goto } from '$app/navigation';
+	import { DUTY_MAP } from '../../../stores/dataStore.js';
 
 	function handleCancel() {
 		history.back();
 	}
 	let { data } = $props();
+
+	let submitting = $state(false);
 
 	let pageName = 'Activity Rgeister';
 </script>
@@ -19,7 +22,22 @@
 		<p class="black">Activity Register</p>
 	</div>
 
-	<form action="?/activity" method="post" use:enhance>
+	<form
+		action="?/activity"
+		method="post"
+		use:enhance={() => {
+			submitting = true;
+			return async ({ result }) => {
+				if (result.type === 'redirect') {
+					alert('Üzenet sikeresen elküldve!');
+					goto(result.location);
+				} else if (result.type === 'error' || result.type === 'failure') {
+					submitting = false;
+					alert('Hiba történt a küldés során!');
+				}
+			};
+		}}
+	>
 		<input type="hidden" name="user_id" value={data.user_id} />
 		<div>
 			<label for="fantasy">Activity</label>
@@ -39,7 +57,7 @@
 		<div>
 			<label for="duty">Duty</label>
 			<select name="duty" id="duty">
-				{#each dutyMap as item (item.id)}
+				{#each DUTY_MAP as item (item.id)}
 					<option value={item.id}>{item.name}</option>
 				{/each}
 			</select>
@@ -55,8 +73,20 @@
 		<label for="message">Note</label>
 		<textarea id="message" name="message" rows="2" cols="50"></textarea>
 
-		<button class="btn" id="btn" type="submit">Register</button>
-		<button class="btn btn-cancel" id="cancel" type="button" onclick={handleCancel}>
+		<button class="btn" id="btn" type="submit"
+			>{#if submitting}
+				Sending...
+			{:else}
+				Send Message
+			{/if}</button
+		>
+		<button
+			class="btn btn-cancel"
+			id="cancel"
+			type="button"
+			onclick={handleCancel}
+			disabled={submitting}
+		>
 			Cancel ❖ Jump Back
 		</button>
 	</form>

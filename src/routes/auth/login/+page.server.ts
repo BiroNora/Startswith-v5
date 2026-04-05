@@ -20,18 +20,11 @@ const login: Action = async ({ cookies, request }) => {
 
 	const user = await db.user.findUnique({ where: { user_email } })
 
-	console.log('Login jelszó:', password);
-console.log('DB-ből jött hash:', user?.passwordHash);
-
 	if (!user) {
 		return fail(400, { credentials: true })
 	}
 
-	const userPassword = await compare(password.trim(), user.passwordHash.trim())
-	console.log("EREDMÉNY:", userPassword);
-
-const ujHash = await hash("12", 10);
-console.log("MÁSOLD EZT AZ ADATBÁZISBA:", ujHash);
+	const userPassword = await compare(password.trim(), user.passwordHash.trim());
 
 	if (!userPassword) {
 		return fail(400, { credentials: true })

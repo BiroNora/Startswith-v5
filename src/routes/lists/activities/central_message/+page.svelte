@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 
 	function handleCancel() {
@@ -7,28 +8,19 @@
 	}
 	let { data } = $props();
 
-	let yesB = $state(false),
-		yesM = $state(false),
-		yesH = $state(false);
+	const canBas = $state(data.user?.allowedLevels.includes(1) ?? false);
+	const canMed = $state(data.user?.allowedLevels.includes(2) ?? false);
+	const canHigh = $state(data.user?.allowedLevels.includes(3) ?? false);
+
+	let yesB = $state(canBas),
+		yesM = $state(canMed),
+		yesH = $state(canHigh);
 
 	let selRegB = $state(100),
-    selRegM = $state(200),
-    selRegH = $state(300);
+		selRegM = $state(200),
+		selRegH = $state(300);
 
-	// Svelte 5 effekt a váltáshoz
-	$effect(() => {
-		const duty = data.dir_duty;
-
-		// Előbb mindent alaphelyzetbe rakunk (kinullázás)
-		yesB = false;
-		yesM = false;
-		yesH = false;
-
-		// Majd csak azt pipáljuk be, amelyik a duty-hoz tartozik
-		if (duty === 1) yesB = true;
-		if (duty === 2) yesM = true;
-		if (duty === 3) yesH = true;
-	});
+	let submitting = $state(false);
 
 	// A függvényed, amit megbeszéltünk (mindig számot ad vissza)
 	function formatRegionValue(num: number, id: number): number {
@@ -48,8 +40,23 @@
 		<p class="black">Central Message Register</p>
 	</div>
 
-	{#if data.dir_flag}
-		<form action="?/dir_message" method="post" use:enhance>
+	{#if data.user?.isDirector}
+		<form
+			action="?/dir_message"
+			method="post"
+			use:enhance={() => {
+				submitting = true;
+				return async ({ result }) => {
+					if (result.type === 'redirect') {
+						alert('Üzenet sikeresen elküldve!');
+						goto(result.location);
+					} else if (result.type === 'error' || result.type === 'failure') {
+						submitting = false;
+						alert('Hiba történt a küldés során!');
+					}
+				};
+			}}
+		>
 			<input type="hidden" name="user_id" value={data.user_id} />
 			<div>
 				<label for="memo">Memo</label>
@@ -68,7 +75,7 @@
 				/>
 			</div>
 
-			{#if data.dir_duty === 1}
+			{#if canBas}
 				<div class="input-group">
 					<label class="check-label">
 						<input type="checkbox" name="basic" bind:checked={yesB} />
@@ -76,7 +83,12 @@
 					</label>
 					<div class="select-wrapper">
 						{#if yesB}
-							<select name="regB" id="sel-B" bind:value={selRegB} transition:fade={{ duration: 200 }}>
+							<select
+								name="regB"
+								id="sel-B"
+								bind:value={selRegB}
+								transition:fade={{ duration: 200 }}
+							>
 								<option value={100}>--- ALL REGIONS ---</option>
 								{#each data.regions ?? [] as regio}
 									<option value={formatRegionValue(1, regio.region_id)}>{regio.region_name}</option>
@@ -87,7 +99,7 @@
 				</div>
 			{/if}
 
-			{#if data.dir_duty === 2}
+			{#if canMed}
 				<div class="input-group">
 					<label class="check-label">
 						<input type="checkbox" name="medior" bind:checked={yesM} />
@@ -95,7 +107,12 @@
 					</label>
 					<div class="select-wrapper">
 						{#if yesM}
-							<select name="regM" id="sel-M" bind:value={selRegM}  transition:fade={{ duration: 200 }}>
+							<select
+								name="regM"
+								id="sel-M"
+								bind:value={selRegM}
+								transition:fade={{ duration: 200 }}
+							>
 								<option value={200}>--- ALL REGIONS ---</option>
 								{#each data.regions ?? [] as regio}
 									<option value={formatRegionValue(2, regio.region_id)}>{regio.region_name}</option>
@@ -106,7 +123,7 @@
 				</div>
 			{/if}
 
-			{#if data.dir_duty === 3}
+			{#if canHigh}
 				<div class="input-group">
 					<label class="check-label">
 						<input type="checkbox" name="high" bind:checked={yesH} />
@@ -114,7 +131,12 @@
 					</label>
 					<div class="select-wrapper">
 						{#if yesH}
-							<select name="regH" id="sel-H" bind:value={selRegH} transition:fade={{ duration: 200 }}>
+							<select
+								name="regH"
+								id="sel-H"
+								bind:value={selRegH}
+								transition:fade={{ duration: 200 }}
+							>
 								<option value={300}>--- ALL REGIONS ---</option>
 								{#each data.regions ?? [] as regio}
 									<option value={formatRegionValue(3, regio.region_id)}>{regio.region_name}</option>
@@ -128,8 +150,20 @@
 			<label for="message">Message</label>
 			<textarea id="message" name="message" rows="4" cols="50"></textarea>
 
-			<button class="btn" id="btn" type="submit">Send Message</button>
-			<button class="btn btn-cancel" id="cancel" type="button" onclick={handleCancel}>
+			<button class="btn" id="btn" type="submit"
+				>{#if submitting}
+					Sending...
+				{:else}
+					Send Message
+				{/if}</button
+			>
+			<button
+				class="btn btn-cancel"
+				id="cancel"
+				type="button"
+				disabled={submitting}
+				onclick={handleCancel}
+			>
 				Cancel ❖ Jump Back
 			</button>
 		</form>

@@ -5,10 +5,9 @@ import type { Actions } from "./$types"
 export const actions: Actions = {
   dir_message: async ({ request, locals }) => {
     const formData = await request.formData();
-
+    console.log("locals.user: ", locals.user)
     console.log("Minden beérkező adat:", Object.fromEntries(formData));
 
-    const reg = String(formData.get('region'));
     const my_id = String(formData.get('user_id'));
 
     const userDuty = locals.user?.duty;
@@ -36,10 +35,10 @@ export const actions: Actions = {
         end_date: new Date(String(formData.get('meeting-time'))),
         cm_name: String(formData.get('memo')),
         cm_note: String(formData.get('message')),
-        on_duty: on_duty,
+        duty_level: on_duty,
         user_id: my_id
       }
     });
-    throw redirect(303, '/lists/activities');
+    throw redirect(302, '/lists/activities?success=true');
   }
 }
