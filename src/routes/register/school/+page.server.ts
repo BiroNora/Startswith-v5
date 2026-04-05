@@ -4,7 +4,7 @@ import { db } from '$lib/database'
 import { getLocationData, parseSchoolFormData } from '$lib/validation'
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')
+  if (!locals.user) throw redirect(302, '/auth/login')
 
   // A közös függvény betölti az összes helyszínt
   return await getLocationData()

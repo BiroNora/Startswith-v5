@@ -3,9 +3,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || locals.user.active === false) {
-    throw redirect(302, '/auth/login');
-  }
+  if (!locals.user) throw redirect(302, '/auth/login');
 
   const user = await db.user.findUnique({
     where: { user_email: locals.user.email },
@@ -15,7 +13,7 @@ export const load: PageServerLoad = async ({ locals }) => {
     }
   });
 
-  if (!user || (user.role !== 'DIRECTOR') ) {
+  if (!user || (user.role !== 'DIRECTOR')) {
     throw redirect(302, '/');
   }
 

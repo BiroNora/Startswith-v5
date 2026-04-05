@@ -2,7 +2,7 @@ import { error, redirect } from "@sveltejs/kit"
 import { db } from "$lib/database"
 
 export async function load({ params, locals }) {
-  if (!locals.user || locals.user.active === false) {
+  if (!locals.user) {
     throw redirect(302, '/auth/login')
   }
 

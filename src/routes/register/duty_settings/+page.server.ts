@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types'
 import { db } from '$lib/database'
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || locals.user.active === false) throw redirect(302, '/auth/login')
+  if (!locals.user) throw redirect(302, '/auth/login')
 }
 
 export const actions: Actions = {
@@ -50,7 +50,7 @@ export const actions: Actions = {
       console.error("Hiba a jog törlésekor:", error);
       return fail(500, { message: 'Adatbázis hiba történt a törlés során.' });
     }
-    
+
     throw redirect(303, '/register/duty_settings');
   }
 };

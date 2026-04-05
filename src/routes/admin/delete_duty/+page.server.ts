@@ -6,7 +6,7 @@ import { Role } from "@prisma/client";
 
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || locals.user.active === false || locals.user.role !== 'SUPER_USER') throw redirect(302, '/auth/login')
+  if (!locals.user || !locals.user.isSuper) throw redirect(302, '/auth/login')
 }
 
 export const actions: Actions = {

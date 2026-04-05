@@ -4,7 +4,7 @@ import { getName, CHANNEL_MAP, GRADE_MAP, STATUS_MAP, DUTY_MAP, EVENT_MAP } from
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ params, locals }) => {
-	if (!locals.user || locals.user.active === false) {
+	if (!locals.user) {
 		throw redirect(302, '/auth/login')
 	}
 

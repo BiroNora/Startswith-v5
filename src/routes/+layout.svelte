@@ -50,7 +50,7 @@
 					<li>
 						<a href="/register/duty_settings" target="_blank">Edit Duty Settings</a>
 					</li>
-					{#if data.user.role === 'SUPER_USER'}
+					{#if data.user.isSuper}
 						<li>
 						<a href="/admin" target="_blank">Admin</a>
 					</li>

@@ -3,7 +3,7 @@ import { DUTY_MAP, GRADE_MAP, CHANNEL_MAP, STATUS_MAP, EVENT_MAP } from '../../.
 import { checkEventAccess } from '$lib/validation';
 
 export async function load({ params, locals }) {
-	if (!locals.user || locals.user.active === false) {
+	if (!locals.user) {
 		throw redirect(302, '/auth/login');
 	}
 

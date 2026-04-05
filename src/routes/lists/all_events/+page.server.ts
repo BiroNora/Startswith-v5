@@ -4,7 +4,7 @@ import { db } from '$lib/database'
 import { DUTY_MAP } from '../../stores/dataStore'
 
 export const load: PageServerLoad = async ({ locals }) => {
-	if (!locals.user || locals.user.active === false) {
+	if (!locals.user) {
 		throw redirect(302, '/auth/login')
 	}
 

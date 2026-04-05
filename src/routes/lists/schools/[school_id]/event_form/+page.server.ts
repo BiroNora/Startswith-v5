@@ -6,6 +6,7 @@ import type { Actions } from "./$types"
 export const actions: Actions = {
   event_form: async ({ request, params, locals }) => {
     if (!locals.user) return fail(401)
+      
     const schoolId = Number(params.school_id)
     const data = await request.formData()
 

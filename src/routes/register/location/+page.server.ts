@@ -25,9 +25,7 @@ const formatLocationName = (name: string) => {
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || locals.user.active === false) {
-    throw redirect(302, '/auth/login')
-  }
+  if (!locals.user) throw redirect(302, '/auth/login');
 }
 
 export const actions: Actions = {

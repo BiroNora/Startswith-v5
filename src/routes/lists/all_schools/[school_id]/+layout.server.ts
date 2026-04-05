@@ -3,7 +3,7 @@ import { db } from '$lib/database.js'
 import { getName, getSchoolTypeLabels, getDutyLevelLabels, DUTY_TYPES, EVENT_MAP } from '../../../stores/dataStore.js'
 
 export async function load({ params, locals }) {
-	if (!locals.user || locals.user.active === false) {
+	if (!locals.user) {
 		throw redirect(302, '/auth/login')
 	}
 

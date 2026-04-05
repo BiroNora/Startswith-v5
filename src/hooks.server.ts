@@ -50,6 +50,6 @@ export const handle: Handle = async ({ event, resolve }) => {
   } else {
     event.locals.user = null
   }
-  console.log("USES USEES")
+ 
   return await resolve(event)
 }
