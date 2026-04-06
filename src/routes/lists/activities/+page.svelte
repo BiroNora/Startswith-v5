@@ -1,23 +1,39 @@
 <script lang="ts">
-	import { dateSlugify, dutyMap } from '../../stores/dataStore.js';
+	import {
+		dateSlugify,
+		parseDutyAndRegionAct,
+		parseDutyLevelArray
+	} from '../../stores/dataStore.js';
 	import { SearchInput, fuzzySearch } from '$lib/components/filters';
 	import { enhance } from '$app/forms';
 
 	let { data, form } = $props<{ data: any; form: any }>();
 
-	let user_duty_array = $derived(
-		data.user_duty.filter((n: any) => !(n.toString().length === 2 && n % 10 === 0))
-	);
-	let user_duties_only = $derived(user_duty_array.map((n: any) => parseInt(String(n)[0], 10)));
-	let dda = $derived(data.dir_duty);
-
 	let searchTerm = $state('');
-	let filteredActivities = $derived(
-		fuzzySearch(
-			data.activities,
-			searchTerm,
-			(act: any) => `${act.act_name} ${act.act_note ?? ''} ${dateSlugify(String(act.end_date))}`
-		)
+	let allItems = $derived(
+		[...(data.activities ?? []), ...(data.c_messages ?? [])].sort((a, b) => {
+			return new Date(b.end_date).getTime() - new Date(a.end_date).getTime();
+		})
+	);
+
+	let filteredItems = $derived(
+		fuzzySearch(allItems, searchTerm, (item: any) => {
+			const name = item.act_name || item.cm_name || '';
+			const note = item.act_note || item.cm_note || '';
+			const date = item.end_date ? dateSlugify(String(item.end_date)) : '';
+
+			let dutyText = '';
+
+			if (item.duty_level && Array.isArray(item.duty_level)) {
+				// Ha CentralMessage (tömb)
+				dutyText = parseDutyLevelArray(item.duty_level, data.regions);
+			} else if (item.duty_level) {
+				// Ha Activity (szám)
+				dutyText = parseDutyAndRegionAct(item.duty_level, data.regions);
+			}
+
+			return `${name} ${note} ${date} ${dutyText}`.toLowerCase();
+		})
 	);
 
 	let showDeleteModal = $state(false);
@@ -54,7 +70,7 @@
 			&#9758; Program hozzáadása
 		</a>
 		<div>
-			{#if data.dir_flag}
+			{#if data.user.isDirector}
 				<a href="../lists/activities/central_message" class="ab pad-bot-plus">
 					&#9758; Központi üzenet hozzáadása
 				</a>
@@ -63,185 +79,61 @@
 	</div>
 
 	<div class="search-input">
-		<SearchInput
-			bind:searchTerm
-			count={filteredActivities.length}
-			placeholder="Search activities..."
-		/>
+		<SearchInput bind:searchTerm count={filteredItems.length} placeholder="Search activities..." />
 	</div>
 
 	<br />
-	<ul>
-		{#each filteredActivities as act (act.act_id)}
-			{#if act.user_id === data.user.user_id}
-				<li class="li">
-					<a
-						href="#nothing"
-						class="aa"
-						onclick={() => {
-							activityToDelete = act.act_id;
-							openDeleteModal();
-						}}
-						title="Kattintson az esemény törléséhez"
-					>
-						{dateSlugify(String(act.end_date))}
-						&#9753
-						<strong>{act.act_name}</strong>
-						&#10087
-						{#if act.act_note !== null}
-							{act.act_note}
-						{/if}
-						{' 🏠 '}
-						{#each dutyMap as item (item.id)}
-							{#if act.on_duty.charAt(0) === item.id}
-								{item.name}:
-							{/if}
-						{/each}
-						{#if act.on_duty.charAt(1) === '0'}
-							every regions
-						{:else}
-							{#each data.regio as reg}
-								{#if Number(act.on_duty.slice(1)) === reg.region_id}
-									{reg.region_name}
-								{/if}
-							{/each}
-						{/if}
-					</a>
-				</li>
-			{/if}
-		{/each}
-	</ul>
-	<ul id="list">
-		{#each filteredActivities as act (act.act_id)}
-			{#if data.is_director}
-				<!-- User === director && only own messages -->
+	<!-- Messages -->
+	{#each filteredItems as item}
+		{#if item.act_id}
+			<li class="li">
+				<a
+					href="#nothing"
+					class="aa"
+					onclick={() => {
+						activityToDelete = item.act_id;
+						openDeleteModal();
+					}}
+					title="Kattintson az esemény törléséhez"
+				>
+					{dateSlugify(String(item.end_date))}
+					&#9753
+					<strong>{item.act_name}</strong>
+					&#10087
+					{#if item.act_note !== null}
+						{item.act_note}
+					{/if}
+					{' 🏠 '}
+					{parseDutyAndRegionAct(item.duty_level, data.regions)}
+				</a>
+			</li>
+		{/if}
+		{#if item.cm_id}
+			igazgatói
+			<li class="li">
+				<a
+					href="#nothing"
+					class="aa"
+					onclick={() => {
+						activityToDelete = item.cm_id;
+						openDeleteModal();
+					}}
+					title="Kattintson az esemény törléséhez"
+				>
+					{dateSlugify(String(item.end_date))}
+					&#9753
+					<strong>{item.cm_name}</strong>
+					&#10087
+					{#if item.cm_note !== null}
+						{item.cm_note}
+					{/if}
+					{' 🏠 '}
+					{parseDutyLevelArray(item.duty_level, data.regions)}
+				</a>
+			</li>
+		{/if}
+	{/each}
 
-				{#if act.dir_flag && act.on_duty.charAt(0) === dda}
-					<li class="li">
-						<a
-							href="#nothing"
-							class="aa"
-							onclick={() => {
-								activityToDelete = act.act_id;
-								openDeleteModal();
-							}}
-							title="Kattintson az esemény törléséhez"
-						>
-							{dateSlugify(String(act.end_date))}
-							&#9753
-							<strong>{act.act_name}</strong>
-							&#10087
-							{#if act.act_note !== null}
-								{act.act_note}
-							{/if}
-							{' 🏠 '}
-							{#each dutyMap as item (item.id)}
-								{#if act.on_duty.charAt(0) === item.id}
-									{item.name}:
-								{/if}
-							{/each}
-							{#if act.on_duty.charAt(1) === '0'}
-								every regions
-							{:else}
-								{#each data.regio as reg}
-									{#if Number(act.on_duty.slice(1)) === reg.region_id}
-										{reg.region_name}
-									{/if}
-								{/each}
-							{/if}
-						</a>
-					</li>
-				{/if}
-				<!-- User === director && only concerning messages -->
-
-				{#if !act.dir_flag && act.on_duty.charAt(0) === dda}
-					<li class="li">
-						{dateSlugify(String(act.end_date))}
-						&#9753
-						<strong>{act.act_name}</strong>
-						&#10087
-						{#if act.act_note !== null}
-							{act.act_note}
-						{/if}
-						{' 🏠 '}
-						{#each dutyMap as item (item.id)}
-							{#if act.on_duty.charAt(0) === item.id}
-								{item.name}:
-							{/if}
-						{/each}
-						{#if act.on_duty.charAt(1) === '0'}
-							every regions
-						{:else}
-							{#each data.regio as reg}
-								{#if Number(act.on_duty.slice(1)) === reg.region_id}
-									{reg.region_name}
-								{/if}
-							{/each}
-						{/if}
-					</li>
-				{/if}
-			{:else}
-				"act.dir_flag NOT DIR: " {act.dir_flag}
-				"dir_duty NOT DIR: " {data.dir_duty}
-				"dda? NOT DIR" " {act.on_duty.charAt(0)}
-				<!-- User !== director && (own (director's || director's all_region)) messages -->
-
-				{#if act.dir_flag && (user_duty_array.includes(Number(act.on_duty)) || (user_duties_only.includes(Number(act.on_duty.charAt(0))) && act.all_region))}
-					<li class="li">
-						{dateSlugify(String(act.end_date))}
-						&#9753
-						<strong>{act.act_name}</strong>
-						&#10087
-						{#if act.act_note !== null}
-							{act.act_note}
-						{/if}
-						{' 🏠 '}
-						{#each dutyMap as item (item.id)}
-							{#if act.on_duty.charAt(0) === item.id}
-								{item.name}:
-							{/if}
-						{/each}
-						{#if act.on_duty.charAt(1) === '0'}
-							every regions
-						{:else}
-							{#each data.regio as reg}
-								{#if Number(act.on_duty.slice(1)) === reg.region_id}
-									{reg.region_name}
-								{/if}
-							{/each}
-						{/if}
-					</li>
-				{/if}
-
-				<!-- User !== director, any others -->
-
-				{#if !act.dir_flag}
-					<li class="li">
-						<a href="../lists/activities/{act.act_id}" class="aa">
-							{dateSlugify(String(act.end_date))}
-							&#9753
-							<strong>{act.act_name}</strong>
-							&#10087
-							{#if act.act_note !== null}
-								{act.act_note}
-							{/if}
-							{' 🏠 '}
-							{#each dutyMap as item (item.id)}
-								{#if act.on_duty.charAt(0) === item.id}
-									{item.name}:
-								{/if}
-							{/each}
-							{#each data.regio as reg}
-								{#if Number(act.on_duty.slice(1)) === reg.region_id}
-									{reg.region_name}
-								{/if}
-							{/each}
-						</a>
-					</li>
-				{/if}
-			{/if}
-		{/each}
-	</ul>
 	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
 

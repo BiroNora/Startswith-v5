@@ -13,8 +13,8 @@ export const actions: Actions = {
       await db.activity.delete({
         where: { act_id: act_id }
       });
-      
-      return { success: true };
+
+      throw redirect(303, '/lists/activities');
     } catch (err) {
       console.error(err);
       return { error: true, message: 'Hiba a törlés során.' };
