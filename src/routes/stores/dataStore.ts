@@ -1,4 +1,4 @@
-import type { User, UserDuty, Region } from '@prisma/client';
+import type { User, UserDuty } from '@prisma/client';
 
 export function slugify(text: string) {
 	return text
@@ -68,48 +68,47 @@ export function isStrongPassword(password: string): boolean {
 	return regex.test(password);
 }
 
-// duty / regio segéd fg-e
-function getRegionIdMath(num: number): number {
-	if (num < 10) return num;
+const getRegionIdFromCode = (num: number): number => {
+  if (num === 0) return 0;
+  return num >= 100 ? num % 100 : num % 10;
+};
 
-	const count = String(Math.abs(num)).length;
-	const multiplier = Math.pow(10, count - 1);
-	const firstDigit = Math.floor(num / multiplier);
+export function parseDutyLevelArray(dutyArray: number[], regions: any[]) {
+  if (!dutyArray || !Array.isArray(dutyArray)) return "Nincs adat";
 
-	return num - (firstDigit * multiplier);
-}
+  const results = dutyArray
+    .map((num, index) => {
+      if (num === 0) return null; // Ha 0, akkor ez a szint üres (Basic, Medior vagy High)
 
-export function parseDutyAndRegion(arr: number[], regions: any[]) {
-	const activeIndex = arr.findIndex(val => val > 0);
+      const levelId = index + 1;
+      const levelName = DUTY_MAP.find(d => d.id === levelId)?.name || "Unknown";
+      const regionId = getRegionIdFromCode(num);
+      const regionLabel = regionId === 0
+        ? "all regions"
+        : (regions?.find(r => r.region_id === regionId)?.region_name || `Régió:${regionId}`);
 
-	if (activeIndex === -1) return "Unknown";
+      return `${levelName}: ${regionLabel}`;
+    })
+    .filter(res => res !== null); // Kiszedjük a nullákat (ahol 0 volt a DB-ben)
 
-	const activeValue = arr[activeIndex];
-
-	const currentDuty = DUTY_TYPES.find(d => d.id === String(activeIndex + 1));
-	const levelName = currentDuty ? currentDuty.name : "Unknown";
-
-	const regionId = getRegionIdMath(activeValue);
-
-	if (regionId === 0) {
-		return `${levelName}: all regions`;
-	}
-
-	const region = regions.find(r => r.region_id === regionId);
-
-	return `${levelName}:  ${region?.region_name || `ID:${regionId}`}`;
+  return results.length > 0 ? results.join(", ") : "Nincs kijelölt szint";
 }
 
 export function parseDutyAndRegionAct(num: number, regions: any[]) {
 	if (!num) return "Nincs adat";
 
-	const firstDigit = parseInt(String(num)[0]);
-	const levelName = DUTY_TYPES[firstDigit]?.name || "Unknown";
+	const levelId = Number(num.toString()[0]);
+	const levelName = DUTY_MAP.find(d => d.id === levelId)?.name || "Unknown";
+	const regionId = getRegionIdFromCode(num);
 
-	const regionId = getRegionIdMath(num);
+	if (regionId === 0) {
+		return `${levelName}: all regions`;
+	}
+
 	const region = regions?.find(r => r.region_id === regionId);
+	const regionName = region?.region_name || `Régió:${regionId}`;
 
-	return `${levelName}:  ${region?.region_name || `ID:${regionId}`}`;
+	return `${levelName}: ${regionName}`;
 }
 
 // Meghatározzuk, hogy a User-nek tartalmaznia kell a user_duties tömböt is
