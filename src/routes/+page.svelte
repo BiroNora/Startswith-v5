@@ -5,14 +5,14 @@
 
 <style>
 	.container {
-		padding: 35px 15px 15px 15px;
+		padding: 1.0rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
 		align-content: space-around;
 		line-height: 85%;
 		grid-row: minmax(5px, auto);
-		margin: 10px auto 10px auto;
+		margin: 1rem auto 1rem auto;
 		border: 2px solid #32bea6;
 		border-radius: 5px;
 		border-spacing: 2px;

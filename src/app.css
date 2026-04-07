@@ -285,13 +285,13 @@ dialog[open] {
 	color: #09c6a7;
 	line-height: normal;
 	font-weight: 400;
-	font-size: 20px;
+	font-size: medium;
 }
 
 .ab {
 	line-height: normal;
 	font-weight: 400;
-	font-size: 20px;
+	font-size: medium;
 }
 
 .ac {
@@ -301,7 +301,7 @@ dialog[open] {
 	padding-top: 1%;
 	padding-left: 5%;
 	text-indent: -6%;
-	font-size: 20px;
+	font-size: medium;
 }
 
 .li {
