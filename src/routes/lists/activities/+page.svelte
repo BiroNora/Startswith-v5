@@ -25,10 +25,10 @@
 			let dutyText = '';
 
 			if (item.duty_level && Array.isArray(item.duty_level)) {
-				// Ha CentralMessage (tömb)
+				// CentralMessage (tömb)
 				dutyText = parseDutyLevelArray(item.duty_level, data.regions);
 			} else if (item.duty_level) {
-				// Ha Activity (szám)
+				// Activity (szám)
 				dutyText = parseDutyAndRegionAct(item.duty_level, data.regions);
 			}
 
@@ -38,6 +38,7 @@
 
 	let showDeleteModal = $state(false);
 	let activityToDelete = $state(null);
+	let typeToDelete = $state('');
 
 	function openDeleteModal() {
 		form = null;
@@ -83,56 +84,89 @@
 	</div>
 
 	<br />
-	<!-- Messages -->
-	{#each filteredItems as item}
-		{#if item.act_id}
-			<li class="li">
-				<a
-					href="#nothing"
-					class="aa"
-					onclick={() => {
-						activityToDelete = item.act_id;
-						openDeleteModal();
-					}}
-					title="Kattintson az esemény törléséhez"
-				>
-					{dateSlugify(String(item.end_date))}
-					&#9753
-					<strong>{item.act_name}</strong>
-					&#10087
-					{#if item.act_note !== null}
-						{item.act_note}
-					{/if}
-					{' 🏠 '}
-					{parseDutyAndRegionAct(item.duty_level, data.regions)}
-				</a>
-			</li>
-		{/if}
-		{#if item.cm_id}
-			igazgatói
-			<li class="li">
-				<a
-					href="#nothing"
-					class="aa"
-					onclick={() => {
-						activityToDelete = item.cm_id;
-						openDeleteModal();
-					}}
-					title="Kattintson az esemény törléséhez"
-				>
-					{dateSlugify(String(item.end_date))}
-					&#9753
-					<strong>{item.cm_name}</strong>
-					&#10087
-					{#if item.cm_note !== null}
-						{item.cm_note}
-					{/if}
-					{' 🏠 '}
-					{parseDutyLevelArray(item.duty_level, data.regions)}
-				</a>
-			</li>
-		{/if}
-	{/each}
+	<ul>
+		{#each filteredItems as item}
+			<!-- Own messages -->
+			{#if item.user_id === data.user.user_id}
+				{#if item.act_id}
+					<li class="li">
+						<a
+							href="#nothing"
+							class="ab"
+							onclick={() => {
+								activityToDelete = item.act_id;
+								typeToDelete = 'act';
+								openDeleteModal();
+							}}
+							title="Kattintson az esemény törléséhez"
+						>
+							{dateSlugify(String(item.end_date))}
+							&#9753
+							<strong>{item.act_name}</strong>
+							&#10087
+							{#if item.act_note !== null}
+								{item.act_note}
+							{/if}
+							{' 🏠 '}
+							{parseDutyAndRegionAct(item.duty_level, data.regions)}
+						</a>
+					</li>
+				{/if}
+				{#if item.cm_id}
+					<li class="li">
+						<a
+							href="#nothing"
+							class="ab d"
+							onclick={() => {
+								activityToDelete = item.cm_id;
+								typeToDelete = 'cm';
+								openDeleteModal();
+							}}
+							title="Kattintson az esemény törléséhez"
+						>
+							{dateSlugify(String(item.end_date))}
+							&#9753
+							<strong>{item.cm_name}</strong>
+							&#10087
+							{#if item.cm_note !== null}
+								{item.cm_note}
+							{/if}
+							{' 🏠 '}
+							{parseDutyLevelArray(item.duty_level, data.regions)}
+						</a>
+					</li>
+				{/if}
+			{:else}
+				<!-- Others messages -->
+				{#if item.act_id}
+					<li class="li">
+						{dateSlugify(String(item.end_date))}
+						&#9753
+						<strong>{item.act_name}</strong>
+						&#10087
+						{#if item.act_note !== null}
+							{item.act_note}
+						{/if}
+						{' 🏠 '}
+						{parseDutyAndRegionAct(item.duty_level, data.regions)}
+					</li>
+				{/if}
+				{#if item.cm_id}
+					<li class="li d d-color">
+						{dateSlugify(String(item.end_date))}
+						&#9753
+						<strong>{item.cm_name}</strong>
+						&#10087
+						{#if item.cm_note !== null}
+							{item.cm_note}
+						{/if}
+						{' 🏠 '}
+						{parseDutyLevelArray(item.duty_level, data.regions)}
+					</li>
+				{/if}
+			{/if}
+		{/each}
+	</ul>
 
 	<br />
 	<a href="#top" class="flower">&#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046 &nbsp &#10046</a>
@@ -144,8 +178,23 @@
 					<a href="#close" aria-label="Close" class="close" onclick={closeDeleteModal}></a>
 					<h5>Confirm Deletion</h5>
 				</header>
-				<form action="?/delAct" method="post" use:enhance id="inter">
-					<input type="hidden" name="act_id" value={activityToDelete} />
+				<form
+					action="?/delAct"
+					method="post"
+					use:enhance={() => {
+						return async ({ result, update }) => {
+							if (result.type === 'success' || result.type === 'redirect') {
+								showDeleteModal = false;
+								activityToDelete = null;
+								await update();
+							} else if (result.type === 'failure') {
+								await update();
+							}
+						};
+					}}
+				>
+					<input type="hidden" name="id" value={activityToDelete} />
+					<input type="hidden" name="item_type" value={typeToDelete} />
 					<h5>Az adat véglegesen törlődik.</h5>
 
 					{#if form?.interest}
@@ -172,5 +221,18 @@
 <style>
 	.ab {
 		color: #32bea6;
+	}
+
+	.li {
+		line-height: normal;
+		font-size: medium;
+	}
+
+	.d {
+		font-weight: bolder;
+	}
+
+	.d-color {
+		color: rgb(79, 70, 70);
 	}
 </style>

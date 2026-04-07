@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 
 	function handleCancel() {
@@ -8,9 +8,9 @@
 	}
 	let { data } = $props();
 
-	const canBas = $state(data.user?.allowedLevels.includes(1) ?? false);
-	const canMed = $state(data.user?.allowedLevels.includes(2) ?? false);
-	const canHigh = $state(data.user?.allowedLevels.includes(3) ?? false);
+	const canBas = $state(data.allowedLevels.includes(1) ?? false);
+	const canMed = $state(data.allowedLevels.includes(2) ?? false);
+	const canHigh = $state(data.allowedLevels.includes(3) ?? false);
 
 	let yesB = $state(canBas),
 		yesM = $state(canMed),
@@ -21,6 +21,7 @@
 		selRegH = $state(300);
 
 	let submitting = $state(false);
+	let nothingSelected = $derived(!yesB && !yesM && !yesH);
 
 	// A függvényed, amit megbeszéltünk (mindig számot ad vissza)
 	function formatRegionValue(num: number, id: number): number {
@@ -46,10 +47,11 @@
 			method="post"
 			use:enhance={() => {
 				submitting = true;
-				return async ({ result }) => {
+				return async ({ result, update }) => {
 					if (result.type === 'redirect') {
+						await invalidateAll();
 						alert('Üzenet sikeresen elküldve!');
-						goto(result.location);
+						update();
 					} else if (result.type === 'error' || result.type === 'failure') {
 						submitting = false;
 						alert('Hiba történt a küldés során!');
@@ -150,13 +152,15 @@
 			<label for="message">Message</label>
 			<textarea id="message" name="message" rows="4" cols="50"></textarea>
 
-			<button class="btn" id="btn" type="submit"
+			<button class="btn" id="btn" type="submit" disabled={submitting || nothingSelected}
 				>{#if submitting}
 					Sending...
+				{:else if nothingSelected}
+					Select at least one level
 				{:else}
 					Send Message
-				{/if}</button
-			>
+				{/if}
+			</button>
 			<button
 				class="btn btn-cancel"
 				id="cancel"
