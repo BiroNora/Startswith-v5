@@ -8,26 +8,28 @@
 	}
 	let { data } = $props();
 
-	const canBas = $state(data.allowedLevels.includes(1) ?? false);
-	const canMed = $state(data.allowedLevels.includes(2) ?? false);
-	const canHigh = $state(data.allowedLevels.includes(3) ?? false);
+	const allowed = $derived({
+		bas: data.finalKeys?.includes(100) ?? false,
+		med: data.finalKeys?.includes(200) ?? false,
+		high: data.finalKeys?.includes(300) ?? false
+	});
 
-	let yesB = $state(canBas),
-		yesM = $state(canMed),
-		yesH = $state(canHigh);
+	let yesB = $state(false);
+	let yesM = $state(false);
+	let yesH = $state(false);
 
-	let selRegB = $state(100),
-		selRegM = $state(200),
-		selRegH = $state(300);
+	$effect(() => {
+		yesB = allowed.bas;
+		yesM = allowed.med;
+		yesH = allowed.high;
+	});
+
+	let selRegB = $state(0),
+		selRegM = $state(0),
+		selRegH = $state(0);
 
 	let submitting = $state(false);
 	let nothingSelected = $derived(!yesB && !yesM && !yesH);
-
-	// A függvényed, amit megbeszéltünk (mindig számot ad vissza)
-	function formatRegionValue(num: number, id: number): number {
-		if (id < 10) return num * 10 + id;
-		return Number(`${num}${id}`);
-	}
 
 	let pageName = 'Central Message';
 </script>
@@ -49,9 +51,7 @@
 				submitting = true;
 				return async ({ result, update }) => {
 					if (result.type === 'redirect') {
-						await invalidateAll();
-						alert('Üzenet sikeresen elküldve!');
-						update();
+						await update();
 					} else if (result.type === 'error' || result.type === 'failure') {
 						submitting = false;
 						alert('Hiba történt a küldés során!');
@@ -77,7 +77,7 @@
 				/>
 			</div>
 
-			{#if canBas}
+			{#if allowed.bas}
 				<div class="input-group">
 					<label class="check-label">
 						<input type="checkbox" name="basic" bind:checked={yesB} />
@@ -91,9 +91,9 @@
 								bind:value={selRegB}
 								transition:fade={{ duration: 200 }}
 							>
-								<option value={100}>--- ALL REGIONS ---</option>
+								<option value={0}>--- ALL REGIONS ---</option>
 								{#each data.regions ?? [] as regio}
-									<option value={formatRegionValue(1, regio.region_id)}>{regio.region_name}</option>
+									<option value={regio.region_id}>{regio.region_name}</option>
 								{/each}
 							</select>
 						{/if}
@@ -101,7 +101,7 @@
 				</div>
 			{/if}
 
-			{#if canMed}
+			{#if allowed.med}
 				<div class="input-group">
 					<label class="check-label">
 						<input type="checkbox" name="medior" bind:checked={yesM} />
@@ -115,9 +115,9 @@
 								bind:value={selRegM}
 								transition:fade={{ duration: 200 }}
 							>
-								<option value={200}>--- ALL REGIONS ---</option>
+								<option value={0}>--- ALL REGIONS ---</option>
 								{#each data.regions ?? [] as regio}
-									<option value={formatRegionValue(2, regio.region_id)}>{regio.region_name}</option>
+									<option value={regio.region_id}>{regio.region_name}</option>
 								{/each}
 							</select>
 						{/if}
@@ -125,7 +125,7 @@
 				</div>
 			{/if}
 
-			{#if canHigh}
+			{#if allowed.high}
 				<div class="input-group">
 					<label class="check-label">
 						<input type="checkbox" name="high" bind:checked={yesH} />
@@ -139,9 +139,9 @@
 								bind:value={selRegH}
 								transition:fade={{ duration: 200 }}
 							>
-								<option value={300}>--- ALL REGIONS ---</option>
+								<option value={0}>--- ALL REGIONS ---</option>
 								{#each data.regions ?? [] as regio}
-									<option value={formatRegionValue(3, regio.region_id)}>{regio.region_name}</option>
+									<option value={regio.region_id}>{regio.region_name}</option>
 								{/each}
 							</select>
 						{/if}

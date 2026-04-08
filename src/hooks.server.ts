@@ -42,21 +42,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       // Így nem kell mindig a role-t stringként csekkolni
       isSuper: user.role === 'SUPER_USER',
       isDirector: user.role === 'DIRECTOR' || dutyTypes.includes('DIRECTOR'),
-      isSuperior: user.role === 'SUPERIOR' || dutyTypes.includes('SUPERIOR'),
-
-      // Egy gyors lista az összes régióról, amihez joga van
-      allowedRegions: [...new Set(
-        user.user_duties
-          .map(d => d.region_id)
-          .filter(id => id !== 0 && id !== null)
-      )],
-
-      allowedLevels: [...new Set(
-        user.user_duties
-          .map(d => d.level)
-          .filter(lvl => lvl !== 0 && lvl !== null)
-          .map(lvl => lvl * 100)
-      )]
+      isSuperior: user.role === 'SUPERIOR' || dutyTypes.includes('SUPERIOR')
     }
   } else {
     event.locals.user = null

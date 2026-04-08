@@ -68,30 +68,108 @@ export function isStrongPassword(password: string): boolean {
 	return regex.test(password);
 }
 
+/**
+ * Legenerálja a jogosultsági kódokat (duty_code) a user_duties alapján.
+ * Logika:
+ * - Director/Országos: szint * 100 (pl. 100, 200, 300) -> Master Key
+ * - Superior: az adott régió összes szintje (pl. 103, 203, 303)
+ * - User: szint * 100 + régió (pl. 103)
+ */
+export function generateDutyCodes(duties: any[]): number[] {
+	const dutyCodes = new Set<number>();
+
+	if (!duties || !Array.isArray(duties)) return [];
+
+	duties.forEach((d) => {
+		// 1. DIRECTOR vagy országos hatáskör (régió 0)
+		if (d.type === 'DIRECTOR' || d.region_id === 0) {
+			if (d.level > 0) {
+				dutyCodes.add(d.level * 100);
+			}
+		}
+		// 2. SUPERIOR (Egy régió összes szintjéhez hozzáfér)
+		else if (d.type === 'SUPERIOR') {
+			if (d.region_id > 0) {
+				dutyCodes.add(100 + d.region_id);
+				dutyCodes.add(200 + d.region_id);
+				dutyCodes.add(300 + d.region_id);
+			}
+		}
+		// 3. SIMA USER (Csak adott szint + adott régió)
+		else {
+			if (d.level > 0 && d.region_id > 0) {
+				dutyCodes.add(d.level * 100 + d.region_id);
+			}
+		}
+	});
+
+	return Array.from(dutyCodes).sort((a, b) => a - b);
+}
+
+/**
+ * Ellenőrzi, hogy a célkód (pl. 103) engedélyezett-e a felhasználó kulcsai alapján.
+ * Kezeli a 100, 200, 300-as "Master" kódokat is.
+ */
+export function isAllowed(userKeys: number[], targetCode: number): boolean {
+	if (!userKeys || userKeys.length === 0) return false;
+
+	return userKeys.some(key => {
+		// Pontos egyezés (pl. 103 == 103)
+		if (key === targetCode) return true;
+
+		// Director Master Key csekkolás (100, 200, 300)
+		if ([100, 200, 300].includes(key)) {
+			const levelPrefix = Math.floor(key / 100); // 1, 2 vagy 3
+			const targetPrefix = Math.floor(targetCode / 100);
+			return levelPrefix === targetPrefix;
+		}
+
+		return false;
+	});
+}
+
+export function isAllowed1(userKeys: number[], targetCode: number): boolean {
+	return userKeys.some(key => {
+		// 1. Pontos egyezés (pl. 24 == 24 vagy 200 == 200)
+		if (key === targetCode) return true;
+
+		// 2. Gyűjtőkód ellenőrzése (100, 200, 300)
+		if ([100, 200, 300].includes(key)) {
+			const levelPrefix = String(key)[0]; // "1", "2" vagy "3"
+			const targetPrefix = String(targetCode)[0]; // A célkód első számjegye (pl. "24" -> "2")
+
+			// Ha az első számjegy egyezik, akkor a Director látja
+			return levelPrefix === targetPrefix;
+		}
+
+		return false;
+	});
+}
+
 const getRegionIdFromCode = (num: number): number => {
-  if (num === 0) return 0;
-  return num >= 100 ? num % 100 : num % 10;
+	if (num === 0) return 0;
+	return num >= 100 ? num % 100 : num % 10;
 };
 
 export function parseDutyLevelArray(dutyArray: number[], regions: any[]) {
-  if (!dutyArray || !Array.isArray(dutyArray)) return "Nincs adat";
+	if (!dutyArray || !Array.isArray(dutyArray)) return "Nincs adat";
 
-  const results = dutyArray
-    .map((num, index) => {
-      if (num === 0) return null; // Ha 0, akkor ez a szint üres (Basic, Medior vagy High)
+	const results = dutyArray
+		.map((num, index) => {
+			if (num === 0) return null; // Ha 0, akkor ez a szint üres (Basic, Medior vagy High)
 
-      const levelId = index + 1;
-      const levelName = DUTY_MAP.find(d => d.id === levelId)?.name || "Unknown";
-      const regionId = getRegionIdFromCode(num);
-      const regionLabel = regionId === 0
-        ? "all regions"
-        : (regions?.find(r => r.region_id === regionId)?.region_name || `Régió:${regionId}`);
+			const levelId = index + 1;
+			const levelName = DUTY_MAP.find(d => d.id === levelId)?.name || "Unknown";
+			const regionId = getRegionIdFromCode(num);
+			const regionLabel = regionId === 0
+				? "all regions"
+				: (regions?.find(r => r.region_id === regionId)?.region_name || `Régió:${regionId}`);
 
-      return `${levelName}: ${regionLabel}`;
-    })
-    .filter(res => res !== null); // Kiszedjük a nullákat (ahol 0 volt a DB-ben)
+			return `${levelName}: ${regionLabel}`;
+		})
+		.filter(res => res !== null); // Kiszedjük a nullákat (ahol 0 volt a DB-ben)
 
-  return results.length > 0 ? results.join(", ") : "Nincs kijelölt szint";
+	return results.length > 0 ? results.join(", ") : "Nincs kijelölt szint";
 }
 
 export function parseDutyAndRegionAct(num: number, regions: any[]) {

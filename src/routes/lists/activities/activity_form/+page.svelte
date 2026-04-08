@@ -27,10 +27,9 @@
 		method="post"
 		use:enhance={() => {
 			submitting = true;
-			return async ({ result }) => {
+			return async ({ result, update }) => {
 				if (result.type === 'redirect') {
-					alert('Üzenet sikeresen elküldve!');
-					goto(result.location);
+					await update();
 				} else if (result.type === 'error' || result.type === 'failure') {
 					submitting = false;
 					alert('Hiba történt a küldés során!');

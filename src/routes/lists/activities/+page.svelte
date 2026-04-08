@@ -64,7 +64,10 @@
 </svelte:head>
 
 <div id="top" class="main">
-	<h3>Activities</h3>
+	<hgroup>
+		<h3>Activities</h3>
+		<i>Number of activities:&nbsp;{allItems.length}</i>
+	</hgroup>
 
 	<div class="admin-actions pad-bot-plus">
 		<a href="../lists/activities/activity_form" class="ab pad-bot-plus">

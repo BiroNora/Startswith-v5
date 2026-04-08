@@ -5,9 +5,6 @@ import type { Actions } from "./$types"
 export const actions: Actions = {
   dir_message: async ({ request, locals }) => {
     const formData = await request.formData();
-    console.log("locals.user: ", locals.user)
-    console.log("Minden beérkező adat:", Object.fromEntries(formData));
-
     const my_id = String(formData.get('user_id'));
 
     const userDuty = locals.user?.duty;
@@ -16,19 +13,21 @@ export const actions: Actions = {
     }
 
     // Segédfüggvény a szintek kódolásához
-    const getLevelCode = (levelName: string, regKey: string) => {
-      if (!formData.has(levelName)) return null;
-
+    const getLevelCode = (levelNum: number, regKey: string) => {
       const selection = formData.get(regKey);
+      if (selection === null || selection === "") return 0;
 
-      return selection ? Number(selection) : null;
+      const regionId = Number(selection);
+      // Matematikai kódolás: szint * 100 + régió
+      // Ha a régió 0 (All regions), akkor kerek 100, 200 vagy 300 lesz
+      return (levelNum * 100) + regionId;
     };
 
-    const on_duty = [
-      getLevelCode('basic', 'regB') ?? 0,
-      getLevelCode('medior', 'regM') ?? 0,
-      getLevelCode('high', 'regH') ?? 0
-    ];
+    // +page.server.ts - javasolt szerkezet az on_duty-hoz:
+    const on_duty = [];
+    if (formData.has('basic')) on_duty.push(getLevelCode(1, 'regB'));
+    if (formData.has('medior')) on_duty.push(getLevelCode(2, 'regM'));
+    if (formData.has('high')) on_duty.push(getLevelCode(3, 'regH'));
 
     await db.centralMessage.create({
       data: {

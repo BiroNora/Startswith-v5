@@ -14,8 +14,6 @@ declare global {
 				isSuper: boolean;
 				isDirector: boolean;
 				isSuperior: boolean;
-				allowedRegions: number[];
-				allowedLevels: number[];
 				active: boolean
 			} | null;
 		}

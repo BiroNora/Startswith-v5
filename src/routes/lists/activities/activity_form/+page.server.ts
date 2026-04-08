@@ -7,14 +7,16 @@ export const actions: Actions = {
     const data = await request.formData()
     const end_date = new Date(String(data.get('meeting-time')));
     const my_id = String(data.get('user_id'));
-    console.log("locals.user: ", locals.user)
+    const level = Number(data.get('duty'));
+    const region = Number(data.get('region'));
+    const duty_level = (level * 100) + region;
 
     await db.activity.create({
       data: {
         end_date,
         act_name: String(data.get('fantasy')),
         act_note: String(data.get('message')),
-        duty_level: Number(String(data.get('duty')) + data.get('region')),
+        duty_level: duty_level,
         user_id: my_id
       }
     });

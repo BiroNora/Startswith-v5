@@ -1,41 +1,14 @@
 import { error, redirect } from '@sveltejs/kit';
 import { db } from '$lib/database';
+import { isAllowed, generateDutyCodes } from '../../stores/dataStore';
 
 export async function load({ locals }) {
   if (!locals.user) throw redirect(302, '/auth/login');
+  console.log("USER USER. ", locals.user)
 
-  const dutySet = new Set<number>();
+  const finalKeys = generateDutyCodes(locals.user.duty || []);
 
-  const userDuties = locals.user.duty || [];
-
-  userDuties.forEach((d) => {
-    if (d.type === 'SUPERIOR') {
-      if (d.region_id > 0) {
-        dutySet.add(Number(`1${d.region_id}`));
-        dutySet.add(Number(`2${d.region_id}`));
-        dutySet.add(Number(`3${d.region_id}`));
-      }
-    } else if (d.type === 'DIRECTOR' || d.region_id === 0) {
-      if (d.level > 0) {
-        dutySet.add(d.level * 100);
-      }
-    } else {
-      if (d.level > 0 && d.region_id > 0) {
-        dutySet.add(Number(`${d.level}${d.region_id}`));
-      }
-    }
-  });
-
-  const allowedLevels = Array.from(
-    new Set(
-      Array.from(dutySet).map((k) => {
-        if (k >= 100) return Math.floor(k / 100);
-        return Math.floor(k / 10);
-      })
-    )
-  );
-
-  const finalKeys = Array.from(dutySet);
+  console.log("Generált finalKeys: ", finalKeys);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -51,16 +24,19 @@ export async function load({ locals }) {
     }),
   ]);
 
-  const activities = allActivities.filter((act) => finalKeys.includes(act.duty_level));
+  const activities = allActivities.filter((act) =>
+    isAllowed(finalKeys, act.duty_level)
+  );
+
   const c_messages = allCMessages.filter((msg) =>
-    msg.duty_level.some((code) => finalKeys.includes(code))
+    msg.duty_level.some((code) => isAllowed(finalKeys, code))
   );
 
   return {
     activities,
     c_messages,
     user_id: locals.user.user_id,
-    allowedLevels,
-    user: locals.user
+    user: locals.user,
+    finalKeys
   };
 }
