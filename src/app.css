@@ -96,14 +96,6 @@ article {
 	width: 100%;
 }
 
-.reg-container {
-	display: flex; /* Bekapcsolja a rugalmas elrendezést */
-	justify-content: center; /* Vízszintesen középre tesz */
-	align-items: center; /* Függőlegesen középre tesz */
-	min-height: 100vh; /* A képernyő teljes magasságát figyelembe veszi */
-	width: 100%;
-}
-
 .search-input {
 	flex-direction: column; /* Egymás alá rakja az elemeket */
 	align-items: flex-start; /* Balra igazítja őket */
@@ -272,13 +264,6 @@ dialog[open] {
 	z-index: 10000;
 }
 /* --- MODAL EDDIG --- */
-
-.chart-container-shared {
-	display: flex;
-	justify-content: space-evenly;
-	gap: 5%;
-	padding: 5% 0;
-}
 
 /* --- LISTS --- */
 .aa {

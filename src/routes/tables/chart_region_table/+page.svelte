@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import RegionDoughnut from '$lib/components/charts/RegionDoughnut.svelte';
-	import { DUTY_TYPES, semester } from '../../stores/dataStore'; // Store-ok a selectekhez
+	import { DUTY_TYPES, semester, smoothScroll } from '../../stores/dataStore'; // Store-ok a selectekhez
 	import type { PageServerData } from './$types';
 
 	// 1. Adatok fogadása
@@ -53,6 +53,11 @@
 				selSemest = selectedSemester;
 				selDuty = selectedDuty;
 				isElementVisible = true;
+
+				setTimeout(() => {
+					smoothScroll('chart-section-1');
+				}, 200);
+
 			} else {
 				err_mess = true;
 			}
@@ -126,18 +131,18 @@
 	{/if}
 
 	{#if err_mess}
-		<div class="container" style="margin-bottom: 8rem;">
+		<div class="container" style="margin-bottom: 15rem;">
 			<p><i>Something went wrong. Please try it later.</i></p>
 		</div>
 	{/if}
 
 	{#if err_mess1}
-		<div class="container" style="margin-bottom: 8rem;">
+		<div class="container" style="margin-bottom: 15rem;">
 			<p><i>No data available.</i></p>
 		</div>
 	{/if}
 
-	<div class="container">
+	<div class="container" id="chart-section-1">
 		{#if regionIntAdm.length > 0}
 			<div class="f">
 				<RegionDoughnut
@@ -171,7 +176,7 @@
 
 		align-items: center; /* Függőlegesen is középre igazítja őket, ha nem egyforma magasak */
 		gap: 5%; /* Csökkentettem a gap-et, hogy biztosan elférjenek egymás mellett */
-		padding-top: 4%;
+		padding-top: 5%;
 		padding-bottom: 3%;
 		box-sizing: border-box; /* Hogy a padding ne növelje meg a 100% szélességet */
 	}

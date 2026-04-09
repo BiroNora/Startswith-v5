@@ -1,6 +1,6 @@
 // src/lib/components/chartMappers.ts
 
-import { channelMap, gradeMap, statusMap, subjectMap } from "../../../routes/stores/dataStore";
+import { CHANNEL_MAP, GRADE_MAP, STATUS_MAP, SUBJECT_MAP } from "../../../routes/stores/dataStore";
 
 
 const SUBJECT_COLORS = [
@@ -64,17 +64,17 @@ export function mapCountryStatusData(statusCountry: any[]): ChartDataDatasets {
         data: statusCountry.map((item) => item.intert)
       },
       {
-        label: statusMap[0].name,
+        label: STATUS_MAP.find(s => s.id === 1)?.name || 'Admitted',
         backgroundColor: 'rgb(50, 190, 166)',
         data: statusCountry.map((item) => item.intrest_count_status_1)
       },
       {
-        label: statusMap[1].name,
+        label: STATUS_MAP.find(s => s.id === 2)?.name || 'Rejected',
         backgroundColor: 'rgb(135, 167, 196)',
         data: statusCountry.map((item) => item.intrest_count_status_2)
       },
       {
-        label: statusMap[2].name,
+        label: STATUS_MAP.find(s => s.id === 3)?.name || 'In Progress',
         backgroundColor: 'rgb(242, 196, 97)',
         data: statusCountry.map((item) => item.intrest_count_status_3)
       }
@@ -95,7 +95,7 @@ export function mapGradeData(data: any): ChartDataSimple {
   const values: number[] = [];
   const labels: string[] = [];
 
-  gradeMap.forEach((grade: { id: string | number; name: string }) => {
+  GRADE_MAP.forEach((grade: { id: string | number; name: string }) => {
     const key = `intrest_grade_status_${grade.id}`;
     values.push(item[key] || 0);
     labels.push(grade.name);
@@ -127,11 +127,10 @@ export function mapSubjectData(data: any): ChartDataSimple {
 
   // 2. Adatok kinyerése és nevek hozzárendelése a subjectMap alapján
   // Ez biztosítja, hogy pontosan azokat a kulcsokat keressük, amik a mapben vannak
-  subjectMap.forEach((subject: { id: string | number; name: string }) => {
+  SUBJECT_MAP.forEach((subject: { id: string | number; name: string }) => {
     const workTitleKey = `intrest_work_title_${subject.id}`;
 
     values.push(item[workTitleKey] || 0);
-
     labels.push(subject.name);
   });
 
@@ -175,7 +174,7 @@ export function mapChannelData(channelIntrest: any[], channelAdmitted: any[]): C
   if (!channelIntrest || channelIntrest.length === 0) return { labels: [], datasets: [] };
 
   const labels = channelIntrest.map((item) => {
-    const channel = channelMap.find((c: any) => c.id === item.channel);
+    const channel = CHANNEL_MAP.find((c: any) => c.id === item.channel);
     return channel ? channel.name : 'Unknown';
   });
 

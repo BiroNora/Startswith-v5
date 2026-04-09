@@ -68,6 +68,40 @@ export function isStrongPassword(password: string): boolean {
 	return regex.test(password);
 }
 
+export function smoothScroll(targetId: string) {
+  const element = document.getElementById(targetId);
+  if (!element) return;
+
+  const targetPosition = element.getBoundingClientRect().top + window.pageYOffset;
+  const startPosition = window.pageYOffset;
+
+  // Kiszámoljuk, hogy a grafikon közepe legyen a képernyő közepén
+  const offset = (window.innerHeight - element.offsetHeight) / 2;
+  const distance = targetPosition - startPosition - offset;
+
+  let start: number | null = null;
+  const duration = 1200; // 1.2 másodperc - ez már szépen, komótosan siklik
+
+  function step(timestamp: number) {
+    if (!start) start = timestamp;
+    const progress = timestamp - start;
+    const percentage = Math.min(progress / duration, 1);
+
+    // Easing: "easeInOutCubic" - lassan indul, felgyorsul, majd lassan áll meg
+    const easing = percentage < 0.5
+      ? 4 * percentage * percentage * percentage
+      : 1 - Math.pow(-2 * percentage + 2, 3) / 2;
+
+    window.scrollTo(0, startPosition + distance * easing);
+
+    if (progress < duration) {
+      window.requestAnimationFrame(step);
+    }
+  }
+
+  window.requestAnimationFrame(step);
+}
+
 /**
  * Legenerálja a jogosultsági kódokat (duty_code) a user_duties alapján.
  * Logika:

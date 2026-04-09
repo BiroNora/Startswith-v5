@@ -12,7 +12,7 @@
 	} from '$lib/components/charts';
 
 	import type { PageData } from './$types';
-	import { DUTY_TYPES } from '../../stores/dataStore';
+	import { DUTY_TYPES, smoothScroll } from '../../stores/dataStore';
 
 	let { data }: { data: PageData } = $props();
 	let pageName = 'CHART_TABLE';
@@ -88,7 +88,7 @@
 	// ASYNC FUNCTION
 	async function handleFilterUpdate(filters: FilterCriteria) {
 		// Frissítjük a Sticky sáv adatait
-		selYear = filters.selectedYear;
+		selYear = filters.selectedYear || 'ALL';
 		selSemest = filters.selectedSemester || 'ALL';
 		selDuty = filters.selectedDuty || 'ALL';
 		selCountry = filters.selectedCountry;
@@ -180,6 +180,11 @@
 			if (chart1Data.labels.length === 0) {
 				err_mess1 = true;
 			}
+
+			setTimeout(() => {
+				smoothScroll('chart-section-1');
+			}, 200);
+			
 		} catch (error) {
 			err_mess = true;
 			console.error('Hiba történt:', error);
@@ -215,7 +220,7 @@
 	/>
 
 	<StatusMessage error={err_mess} noData={err_mess1}>
-		<div class="container c">
+		<div class="container c" id="chart-section-1">
 			<GenericChart
 				labels={chart1Data.labels}
 				data={chart1Data.datasets}
@@ -223,7 +228,8 @@
 				type="bar"
 			/>
 		</div>
-		<div class="container">
+		<div></div>
+		<div class="container" id="chart-section-2">
 			<div class="c">
 				<GenericChart
 					labels={chart2Data.labels}
@@ -243,7 +249,7 @@
 				/>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container" id="chart-section-3">
 			<div class="c">
 				<GenericChart
 					labels={chart4Data.labels}
@@ -263,7 +269,7 @@
 				/>
 			</div>
 		</div>
-		<div class="container c">
+		<div class="container c" id="chart-section-4">
 			<GenericChart
 				labels={chart6Data.labels}
 				data={chart6Data.datasets}
@@ -271,7 +277,7 @@
 				type="bar"
 			/>
 		</div>
-		<div class="container c">
+		<div class="container c" id="chart-section-5">
 			<GenericChart
 				labels={chart7Data.labels}
 				data={chart7Data.datasets}
