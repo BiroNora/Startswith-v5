@@ -35,7 +35,7 @@
 				body: JSON.stringify({
 					selectedYear: selectedYear === 'ALL' ? null : Number(selectedYear),
 					selectedSemester:
-						selectedSemester === 'ALL' ? null : selectedSemester === 'Spring' ? 1 : 2,
+						selectedSemester === 'ALL' ? null : selectedSemester === 'SPRING' ? 1 : 2,
 					selectedDuty: selectedDuty === 'ALL' ? null : Number(selectedDuty)
 				})
 			});

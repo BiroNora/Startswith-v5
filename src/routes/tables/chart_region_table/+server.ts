@@ -2,7 +2,7 @@ import { db } from '$lib/database'
 import { json, redirect } from '@sveltejs/kit'
 
 export async function POST({ request, locals }) {
-	if (!locals.user || locals.user.active === false) {
+	if (!locals.user) {
 		throw redirect(302, '/auth/login')
 	}
 
@@ -31,9 +31,6 @@ export async function POST({ request, locals }) {
 
 	// Összefűzzük a feltételeket egyetlen stringgé, AND-del elválasztva
 	const finalWhereClause = whereConditions.join(" AND ");
-
-	console.log("SQL feltételek:", finalWhereClause);
-	console.log("Paraméterek:", queryParams);
 
 	try {
 		const regionIntAdm = await db.$queryRawUnsafe(`
