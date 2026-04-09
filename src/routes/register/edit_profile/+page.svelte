@@ -27,7 +27,7 @@
 	<div class="rei">
 		<p class="black">Account Settings</p>
 	</div>
-	<br />
+	
 	<form action="?/user" method="post" use:enhance>
 		<div>
 			<label for="name">Name</label>

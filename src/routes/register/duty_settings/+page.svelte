@@ -51,7 +51,7 @@
 	<div class="rei">
 		<p class="black">Duty Settings</p>
 	</div>
-	<br />
+	
 	<form action="?/user" method="post" use:enhance>
 		<div class="duties-container">
 			{#each sortedDuties as u}

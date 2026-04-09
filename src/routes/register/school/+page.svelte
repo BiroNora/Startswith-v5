@@ -31,7 +31,7 @@
 	<div class="rei">
 		<p class="black">School Register</p>
 	</div>
-	<br />
+
 	<form action="?/school" method="post" use:enhance>
 		<!-- LOCATION -->
 		<fieldset class="pad-bot-plus">

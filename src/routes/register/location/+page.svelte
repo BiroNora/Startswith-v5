@@ -16,7 +16,6 @@
   <div class="rei">
     <p class="black">Location Register</p>
   </div>
-  <br>
 
   <form action="?/location" method="post" use:enhance>
   <fieldset>

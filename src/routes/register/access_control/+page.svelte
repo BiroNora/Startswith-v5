@@ -25,7 +25,7 @@
 		<div class="rei">
 			<p class="black">Update Startswith's User Access</p>
 		</div>
-		<br />
+		
 		<form
 			action="?/user_active_change"
 			method="post"
