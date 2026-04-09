@@ -34,6 +34,9 @@
 					<a href="/register/location" target="_blank">Location Registration</a>
 					<a href="/register/edit_profile" target="_blank">Edit Profile</a>
 					<a href="/register/duty_settings" target="_blank">Edit Duty Settings</a>
+					{#if data.user.isDirector || data.user.isSuperior}
+						<a href="/register/access_control" target="_blank">User Access Control</a>
+					{/if}
 					{#if data.user.isSuper}
 						<a href="/admin" target="_blank">Admin</a>
 					{/if}

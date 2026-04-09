@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { db } from '$lib/database';
 import { isAllowed, generateDutyCodes } from '../../stores/dataStore';
 
