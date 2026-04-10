@@ -2,7 +2,7 @@ import { db } from '$lib/database';
 import { Prisma } from '@prisma/client';
 
 function buildWhereClause(filters: any): Prisma.Sql {
-  const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE` ];
+  const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE`];
 
   // Csak akkor adjuk hozzá, ha NEM null, NEM undefined és NEM NaN
   if (filters.selectedYear !== null && !isNaN(Number(filters.selectedYear)))
@@ -77,23 +77,25 @@ export async function POST({ request }) {
         WHERE ${whereClause} AND i.status = 1
       `,
 
-      // 4. Subject Interest - KIFEJTVE (Most már látod a 14 sort!)
+
+
+      // 4. Subject Interest
       db.$queryRaw<any[]>`
         SELECT
-          CAST(SUM(CASE WHEN i.work_title = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_1,
-          CAST(SUM(CASE WHEN i.work_title = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_2,
-          CAST(SUM(CASE WHEN i.work_title = 3 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_3,
-          CAST(SUM(CASE WHEN i.work_title = 4 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_4,
-          CAST(SUM(CASE WHEN i.work_title = 5 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_5,
-          CAST(SUM(CASE WHEN i.work_title = 6 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_6,
-          CAST(SUM(CASE WHEN i.work_title = 7 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_7,
-          CAST(SUM(CASE WHEN i.work_title = 8 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_8,
-          CAST(SUM(CASE WHEN i.work_title = 9 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_9,
-          CAST(SUM(CASE WHEN i.work_title = 10 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_10,
-          CAST(SUM(CASE WHEN i.work_title = 11 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_11,
-          CAST(SUM(CASE WHEN i.work_title = 12 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_12,
-          CAST(SUM(CASE WHEN i.work_title = 13 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_13,
-          CAST(SUM(CASE WHEN i.work_title = 14 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_14
+          CAST(SUM(CASE WHEN i.subject = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_1,
+          CAST(SUM(CASE WHEN i.subject = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_2,
+          CAST(SUM(CASE WHEN i.subject = 3 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_3,
+          CAST(SUM(CASE WHEN i.subject = 4 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_4,
+          CAST(SUM(CASE WHEN i.subject = 5 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_5,
+          CAST(SUM(CASE WHEN i.subject = 6 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_6,
+          CAST(SUM(CASE WHEN i.subject = 7 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_7,
+          CAST(SUM(CASE WHEN i.subject = 8 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_8,
+          CAST(SUM(CASE WHEN i.subject = 9 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_9,
+          CAST(SUM(CASE WHEN i.subject = 10 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_10,
+          CAST(SUM(CASE WHEN i.subject = 11 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_11,
+          CAST(SUM(CASE WHEN i.subject = 12 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_12,
+          CAST(SUM(CASE WHEN i.subject = 13 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_13,
+          CAST(SUM(CASE WHEN i.subject = 14 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_14
         FROM interested i JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id
         WHERE ${whereClause}
       `,
@@ -101,20 +103,20 @@ export async function POST({ request }) {
       // 5. Subject Admitted - KIFEJTVE
       db.$queryRaw<any[]>`
         SELECT
-          CAST(SUM(CASE WHEN i.work_title = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_1,
-          CAST(SUM(CASE WHEN i.work_title = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_2,
-          CAST(SUM(CASE WHEN i.work_title = 3 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_3,
-          CAST(SUM(CASE WHEN i.work_title = 4 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_4,
-          CAST(SUM(CASE WHEN i.work_title = 5 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_5,
-          CAST(SUM(CASE WHEN i.work_title = 6 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_6,
-          CAST(SUM(CASE WHEN i.work_title = 7 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_7,
-          CAST(SUM(CASE WHEN i.work_title = 8 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_8,
-          CAST(SUM(CASE WHEN i.work_title = 9 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_9,
-          CAST(SUM(CASE WHEN i.work_title = 10 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_10,
-          CAST(SUM(CASE WHEN i.work_title = 11 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_11,
-          CAST(SUM(CASE WHEN i.work_title = 12 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_12,
-          CAST(SUM(CASE WHEN i.work_title = 13 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_13,
-          CAST(SUM(CASE WHEN i.work_title = 14 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_14
+          CAST(SUM(CASE WHEN i.subject = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_1,
+          CAST(SUM(CASE WHEN i.subject = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_2,
+          CAST(SUM(CASE WHEN i.subject = 3 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_3,
+          CAST(SUM(CASE WHEN i.subject = 4 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_4,
+          CAST(SUM(CASE WHEN i.subject = 5 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_5,
+          CAST(SUM(CASE WHEN i.subject = 6 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_6,
+          CAST(SUM(CASE WHEN i.subject = 7 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_7,
+          CAST(SUM(CASE WHEN i.subject = 8 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_8,
+          CAST(SUM(CASE WHEN i.subject = 9 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_9,
+          CAST(SUM(CASE WHEN i.subject = 10 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_10,
+          CAST(SUM(CASE WHEN i.subject = 11 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_11,
+          CAST(SUM(CASE WHEN i.subject = 12 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_12,
+          CAST(SUM(CASE WHEN i.subject = 13 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_13,
+          CAST(SUM(CASE WHEN i.subject = 14 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_14
         FROM interested i JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id
         WHERE ${whereClause} AND i.status = 1
       `,
