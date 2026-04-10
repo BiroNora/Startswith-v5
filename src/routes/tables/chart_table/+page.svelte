@@ -18,6 +18,8 @@
 	let pageName = 'CHART_TABLE';
 
 	// Sticky line rúnák
+	let isActive = $state(false);
+  let isCoop = $state(false);
 	let selYear = $state('');
 	let selSemest = $state('');
 	let selDuty = $state('ALL');
@@ -78,6 +80,8 @@
 	});
 
 	interface FilterCriteria {
+		isActive: boolean;
+		isCoop: boolean;
 		selectedYear: string;
 		selectedSemester: string;
 		selectedDuty: any;
@@ -88,6 +92,8 @@
 	// ASYNC FUNCTION
 	async function handleFilterUpdate(filters: FilterCriteria) {
 		// Frissítjük a Sticky sáv adatait
+		isActive = filters.isActive;
+		isCoop = filters.isCoop;
 		selYear = filters.selectedYear || 'ALL';
 		selSemest = filters.selectedSemester || 'ALL';
 		selDuty = filters.selectedDuty || 'ALL';
@@ -99,6 +105,8 @@
 		err_mess1 = false;
 
 		const cleanFilters = {
+			isActive: filters.isActive,
+			isCoop: filters.isCoop,
 			selectedSemester:
 				filters.selectedSemester === 'ALL' || !filters.selectedSemester
 					? null
@@ -184,7 +192,7 @@
 			setTimeout(() => {
 				smoothScroll('chart-section-1');
 			}, 200);
-			
+
 		} catch (error) {
 			err_mess = true;
 			console.error('Hiba történt:', error);
@@ -199,7 +207,7 @@
 <div class="main-chart">
 	<hgroup>
 		<h3>Chart Tables* of Events** and Interested Students</h3>
-		<i>&emsp;*Events only with active and cooperative schools</i>
+		<i>&emsp;*Can be filtered by selected school status (Active/Cooperative)</i>
 		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i
 		>
 	</hgroup>
@@ -217,6 +225,8 @@
 		{DUTY_TYPES}
 		{selectedCountryObj}
 		{selectedRegionObj}
+		{isActive}
+		{isCoop}
 	/>
 
 	<StatusMessage error={err_mess} noData={err_mess1}>

@@ -9,7 +9,9 @@
 		DUTY_TYPES,
 		selectedCountryObj,
 		selectedRegionObj,
-		children
+		children,
+		isActive,
+		isCoop,
 	} = $props<{
 		isElementVisible: boolean;
 		selYear: string | number;
@@ -19,6 +21,8 @@
 		selectedCountryObj: any;
 		selectedRegionObj: any;
 		children?: Snippet;
+		isActive: boolean;
+  	isCoop: boolean;
 	}>();
 </script>
 
@@ -48,6 +52,61 @@
 		{/if}
 		&nbsp;&nbsp;
 
-		{@render children?.()}
+		<div class="children-content">
+			{@render children?.()}
+		</div>
+
+		<div class="dynamic-indicators">
+      <div class="status-boxes">
+        <span class="indicator {isActive ? 'active' : 'inactive'}">A</span>
+        <span class="indicator {isCoop ? 'active' : 'inactive'}">C</span>
+      </div>
+    </div>
 	</div>
 {/if}
+
+<style>
+	.sticky {
+		display: flex; /* Bekapcsolja a flexboxot */
+		align-items: center; /* Függőlegesen középre igazít */
+		justify-content: flex-start;
+		background-color: rgb(246, 242, 242);
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		height: 40px;
+		width: 100%;
+		padding: 5px;
+		color: #32bea6;
+		border-radius: 100px;
+		font-size: clamp(0.5rem, 0.7rem, 1.0rem);
+		white-space: nowrap; /* Ne törje több sorba */
+		overflow: hidden; /* Ami nem fér be, tűnjön el */
+		text-overflow: ellipsis;
+	}
+	.dynamic-indicators {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Távolság a Filtering ON/OFF és az [A][C] között */
+    flex-shrink: 0;
+		margin-left: auto;
+
+    flex-shrink: 0;
+    padding-left: 10px;
+  }
+
+	.indicator {
+    transition: color 0.3s ease;
+    font-family: sans-serif;
+  }
+
+	.indicator.active {
+    color: #2ecc71 !important; /* Szép zöld az aktívnak */
+    background: rgba(46, 204, 113, 0.1);
+  }
+
+  .indicator.inactive {
+    color: #95a5a6 !important; /* Szürke az inaktívnak */
+    opacity: 0.4;
+  }
+</style>

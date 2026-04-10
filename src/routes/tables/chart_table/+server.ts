@@ -2,8 +2,16 @@ import { db } from '$lib/database';
 import { Prisma } from '@prisma/client';
 
 function buildWhereClause(filters: any): Prisma.Sql {
-  const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE`];
+  //const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE`];
+  const conditions: Prisma.Sql[] = [];
 
+  if (filters.isActive === true) {
+    conditions.push(Prisma.sql`s.active = TRUE`);
+  }
+
+  if (filters.isCoop === true) {
+    conditions.push(Prisma.sql`s.coop = TRUE`);
+  }
   // Csak akkor adjuk hozzá, ha NEM null, NEM undefined és NEM NaN
   if (filters.selectedYear !== null && !isNaN(Number(filters.selectedYear)))
     conditions.push(Prisma.sql`e.event_year = ${Number(filters.selectedYear)}`);
@@ -19,6 +27,14 @@ function buildWhereClause(filters: any): Prisma.Sql {
 
   if (filters.selectedRegion !== null && !isNaN(Number(filters.selectedRegion)))
     conditions.push(Prisma.sql`i.region_id = ${Number(filters.selectedRegion)}`);
+
+  if (conditions.length === 0) {
+    return Prisma.sql`1=1`; // Ha nincs szűrő, adjon vissza mindent
+  }
+
+  if (conditions.length === 1) {
+    return conditions[0]; // Ha csak egy elem van, ne join-olja, csak adja vissza azt az egyet
+  }
 
   return Prisma.join(conditions, ' AND ');
 }
