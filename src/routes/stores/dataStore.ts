@@ -102,6 +102,17 @@ export function smoothScroll(targetId: string) {
   window.requestAnimationFrame(step);
 }
 
+export function highlight(text: string, term: number | string) {
+  const searchTerm = String(term).trim();
+  if (!searchTerm || !text) return text;
+
+  // Speciális karakterek (pl. a pont) levédése a Regex számára
+  const safeTerm = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${safeTerm})`, 'gi');
+
+  return text.replace(regex, '<mark class="highlight">$1</mark>');
+}
+
 /**
  * Legenerálja a jogosultsági kódokat (duty_code) a user_duties alapján.
  * Logika:

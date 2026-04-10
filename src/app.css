@@ -7,6 +7,10 @@
 	--secondary-gray-warm: #908484;
 }
 
+:global(html) {
+  scroll-behavior: smooth !important;
+}
+
 body,
 h1,
 h2,

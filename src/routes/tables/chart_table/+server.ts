@@ -77,8 +77,6 @@ export async function POST({ request }) {
         WHERE ${whereClause} AND i.status = 1
       `,
 
-
-
       // 4. Subject Interest
       db.$queryRaw<any[]>`
         SELECT
