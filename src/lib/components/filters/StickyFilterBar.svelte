@@ -84,29 +84,21 @@
 		overflow: hidden; /* Ami nem fér be, tűnjön el */
 		text-overflow: ellipsis;
 	}
+	
 	.dynamic-indicators {
     display: flex;
     align-items: center;
-    gap: 15px; /* Távolság a Filtering ON/OFF és az [A][C] között */
     flex-shrink: 0;
 		margin-left: auto;
-
-    flex-shrink: 0;
-    padding-left: 10px;
-  }
-
-	.indicator {
-    transition: color 0.3s ease;
-    font-family: sans-serif;
   }
 
 	.indicator.active {
-    color: #2ecc71 !important; /* Szép zöld az aktívnak */
+    color: #32bea6 !important;
     background: rgba(46, 204, 113, 0.1);
   }
 
   .indicator.inactive {
-    color: #95a5a6 !important; /* Szürke az inaktívnak */
+    color: #83918f !important;
     opacity: 0.4;
   }
 </style>

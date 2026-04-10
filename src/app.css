@@ -463,6 +463,35 @@ legend {
 	font-weight: 400;
 }
 
+/* Keressük meg a checkbox inputot a FilterForm-ban */
+input[type="checkbox"] {
+  /* Alapértelmezett stílus kikapcsolása */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Egyedi méret és keret */
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid #32bea6; /* Itt állíthatod a vastagságot (0.5px vagy 1px) */
+  border-radius: 3px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+}
+
+/* Amikor be van pipálva */
+input[type="checkbox"]:checked {
+  background-color: #32bea6;
+}
+
+/* Hover effekt a jobb UX-ért */
+input[type="checkbox"]:hover {
+  border-color: #2ecc71;
+  box-shadow: 0 0 3px rgba(50, 190, 166, 0.3);
+}
+
 /*body {
 	background-color: red !important;
 } */
