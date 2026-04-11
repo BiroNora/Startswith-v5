@@ -6,7 +6,7 @@ import type { Actions } from "./$types"
 export const actions: Actions = {
   event_form: async ({ request, params, locals }) => {
     if (!locals.user) return fail(401)
-      
+
     const schoolId = Number(params.school_id)
     const data = await request.formData()
 
@@ -36,7 +36,7 @@ export const actions: Actions = {
     const slugDate = dateSlugify(clos_date);
     const event_year = date.getFullYear()
     const month = date.getMonth() + 1
-    const semester = month >= 3 && month <= 9 ? 1 : 2;
+    const semester = month >= 2 && month < 9 ? 1 : 2;
 
     const cn = slugify(school.city.city_name.slice(0, 12))
     const sn = slugify(school.school_name.slice(0, 12))
