@@ -12,7 +12,7 @@
 	} from '$lib/components/charts';
 
 	import type { PageData } from './$types';
-	import { DUTY_TYPES, smoothScroll } from '../../stores/dataStore';
+	import { DUTY_TYPES, semester, smoothScroll } from '../../stores/dataStore';
 
 	let { data }: { data: PageData } = $props();
 	let pageName = 'CHART_TABLE';
@@ -95,7 +95,8 @@
 		isActive = filters.isActive;
 		isCoop = filters.isCoop;
 		selYear = filters.selectedYear || 'ALL';
-		selSemest = filters.selectedSemester || 'ALL';
+		selSemest =
+			filters.selectedSemester === 'ALL' ? 'ALL' : semester[Number(filters.selectedSemester)];
 		selDuty = filters.selectedDuty || 'ALL';
 		selCountry = filters.selectedCountry;
 		selRegion = filters.selectedRegion;

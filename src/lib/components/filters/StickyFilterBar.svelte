@@ -84,7 +84,7 @@
 		overflow: hidden; /* Ami nem fér be, tűnjön el */
 		text-overflow: ellipsis;
 	}
-	
+
 	.dynamic-indicators {
     display: flex;
     align-items: center;
@@ -94,7 +94,6 @@
 
 	.indicator.active {
     color: #32bea6 !important;
-    background: rgba(46, 204, 113, 0.1);
   }
 
   .indicator.inactive {
