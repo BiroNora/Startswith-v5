@@ -463,7 +463,7 @@ legend {
 	font-weight: 400;
 }
 
-/* Keressük meg a checkbox inputot a FilterForm-ban */
+/* Checkbox input */
 input[type="checkbox"] {
   /* Alapértelmezett stílus kikapcsolása */
   -webkit-appearance: none;

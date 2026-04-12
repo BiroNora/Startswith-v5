@@ -1,16 +1,34 @@
 <script lang="ts">
 	import { FilterForm, fuzzySearch, StickyFilterBar, SearchInput } from '$lib/components/filters';
-	import { DUTY_TYPES, schType } from '../../stores/dataStore';
+	import { tick } from 'svelte';
+	import { DUTY_TYPES, highlight, schType, semester, smoothScroll } from '../../stores/dataStore';
 	import type { PageData } from './$types';
 
 	// 1. ADATOK ÉS ÁLLAPOTOK (States)
-	let { data }: { data: PageData & { schoolsCount: number } } = $props();
+	let {
+		data
+	}: {
+		data: PageData & {
+			schoolsCount: number;
+			totalEvents: number;
+			totalEstStudents: number;
+			totalApplied: number;
+			totalIntrest0: number;
+			totalIntrest1: number;
+			totalIntrest2: number;
+			totalIntrest3: number;
+			countries: any[];
+			regions: any[];
+		};
+	} = $props();
 	let schoolsData = $state<any[]>([]); // A szerver válasza (Confirm után)
 	let searchTerm = $state('');
 	let debouncedTerm = $state(''); // Ez alapján szűrünk (késleltetett)
 	let timeoutId: any;
 
 	// Sticky line állapotok
+	let isActive = $state(false);
+	let isCoop = $state(false);
 	let selYear = $state('');
 	let selSemest = $state('');
 	let selDuty = $state('ALL');
@@ -18,6 +36,15 @@
 	let selCountry = $state('ALL');
 	let isElementVisible = $state(false);
 	let err_mess = $state(false);
+
+	let enhancedSchools = $derived(
+		schoolsData.map((school) => ({
+			...school,
+			isBasic: school.duty_levels?.includes(1),
+			isMedior: school.duty_levels?.includes(2),
+			isHigh: school.duty_levels?.includes(3)
+		}))
+	);
 
 	// 2. SEGÉDFÜGGVÉNYEK
 	const sum = (arr: any[], key: string) => arr.reduce((acc, curr) => acc + (curr[key] || 0), 0);
@@ -35,10 +62,19 @@
 
 	// Kliensoldali keresés logikája
 	let filteredSchools = $derived(
-		fuzzySearch(schoolsData, debouncedTerm, (s) => {
-			return [s.user_names, s.school_name, s.city_name, s.county_name, s.address, s.zip_code].join(
-				' '
-			);
+		fuzzySearch(enhancedSchools, debouncedTerm, (s) => {
+			return [
+				s.user_names, // Startswith Contact
+				s.school_name, // Iskola neve
+				s.city_name, // Város
+				s.county_name, // Megye
+				s.region_name, // Régió
+				s.country_code, // Ország kód (HU, stb.)
+				getType(s.school_type), // A típus SZÖVEGESEN (pl. "Gimnázium")
+				s.isBasic ? 'BAS' : '', // Ha van pipa, kereshető a 'BAS' szóra
+				s.isMedior ? 'MED' : '', // Ha van pipa, kereshető a 'MED' szóra
+				s.isHigh ? 'HIGH' : '' // Ha van pipa, kereshető a 'HIGH' szóra
+			].join(' ');
 		})
 	);
 
@@ -47,6 +83,7 @@
 		schools: schoolsData.length,
 		events: sum(schoolsData, 'event_count'),
 		students: sum(schoolsData, 'sum_estimated_student'),
+		applied: sum(schoolsData, 'total_applied'),
 		intr0: sum(schoolsData, 'total_intrest_count_status_0'),
 		intr1: sum(schoolsData, 'total_intrest_count_status_1'),
 		intr2: sum(schoolsData, 'total_intrest_count_status_2'),
@@ -59,6 +96,7 @@
 			schools: filteredSchools.length,
 			events: sum(filteredSchools, 'event_count'),
 			students: sum(filteredSchools, 'sum_estimated_student'),
+			applied: sum(filteredSchools, 'total_applied'),
 			intr0: sum(filteredSchools, 'total_intrest_count_status_0'),
 			intr1: sum(filteredSchools, 'total_intrest_count_status_1'),
 			intr2: sum(filteredSchools, 'total_intrest_count_status_2'),
@@ -71,6 +109,7 @@
 			percSchools: calcPerc(s.schools, serverTotals.schools),
 			percEvents: calcPerc(s.events, serverTotals.events),
 			percStudents: calcPerc(s.students, serverTotals.students),
+			percApplied: calcPerc(s.applied, serverTotals.applied),
 			percIntr0: calcPerc(s.intr0, serverTotals.intr0),
 			percIntr1: calcPerc(s.intr1, serverTotals.intr1),
 			percIntr2: calcPerc(s.intr2, serverTotals.intr2),
@@ -80,6 +119,7 @@
 			globalPercSchools: calcPerc(s.schools, data.schoolsCount),
 			globalPercEvents: calcPerc(s.events, data.totalEvents),
 			globalPercStudents: calcPerc(s.students, data.totalEstStudents),
+			globalPercApplied: calcPerc(s.applied, data.totalApplied),
 			globalPercIntr0: calcPerc(s.intr0, data.totalIntrest0),
 			globalPercIntr1: calcPerc(s.intr1, data.totalIntrest1),
 			globalPercIntr2: calcPerc(s.intr2, data.totalIntrest2),
@@ -93,7 +133,9 @@
 	const selectedCountryObj = $derived(
 		countriesArray.find((c: any) => c.country_id === Number(selCountry))
 	);
-	const selectedRegionObj = $derived(regionsArray.find((r: any) => r.region_id === Number(selRegion)));
+	const selectedRegionObj = $derived(
+		regionsArray.find((r: any) => r.region_id === Number(selRegion))
+	);
 
 	// 4. EFFEKTEK (Késleltetés/Debounce)
 	$effect(() => {
@@ -107,6 +149,8 @@
 
 	// 5. INTERFÉSZEK ÉS FÜGGVÉNYEK
 	interface FilterCriteria {
+		isActive: boolean;
+		isCoop: boolean;
 		selectedYear: string;
 		selectedSemester: string;
 		selectedDuty: any;
@@ -115,8 +159,11 @@
 	}
 
 	async function handleFilterUpdate(filters: FilterCriteria) {
-		selYear = filters.selectedYear;
-		selSemest = filters.selectedSemester || 'ALL';
+		isActive = filters.isActive;
+		isCoop = filters.isCoop;
+		selYear = filters.selectedYear || 'ALL';
+		selSemest =
+			filters.selectedSemester === 'ALL' ? 'ALL' : semester[Number(filters.selectedSemester)];
 		selDuty = filters.selectedDuty || 'ALL';
 		selCountry = filters.selectedCountry;
 		selRegion = filters.selectedRegion;
@@ -125,6 +172,8 @@
 		err_mess = false;
 
 		const cleanFilters = {
+			isActive: filters.isActive,
+			isCoop: filters.isCoop,
 			selectedSemester: filters.selectedSemester === 'ALL' ? null : filters.selectedSemester,
 			selectedDuty: filters.selectedDuty === 'ALL' ? null : filters.selectedDuty,
 			selectedYear: filters.selectedYear === 'ALL' ? null : Number(filters.selectedYear),
@@ -143,6 +192,25 @@
 
 			const result = await response.json();
 			schoolsData = result.schoolsData || [];
+
+			await tick();
+
+			setTimeout(() => {
+				const target = document.getElementById('above-search-input');
+
+				if (target) {
+					// Kiszámoljuk a távolságot az oldal tetejétől
+					const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+
+					// Levonjuk a dinamikus magasságot, plusz hagyunk egy pici (pl. 10px) lélegzetvételt
+					const offsetPosition = elementPosition - 10;
+
+					window.scrollTo({
+						top: offsetPosition,
+						behavior: 'smooth'
+					});
+				}
+			}, 200);
 		} catch (error) {
 			console.error('Error:', error);
 			err_mess = true;
@@ -159,8 +227,7 @@
 <div class="main-chart">
 	<hgroup>
 		<h3>Search on the Base of Schools* and their Events**</h3>
-		<i>&emsp;*Active and cooperative schools only with Startswith contact</i>
-
+		<i>&emsp;*Can be filtered by selected school status (Active/Cooperative)</i>
 		<i>&emsp;**Semesters: Spring — months between the 3th & 9th months inclusive; Autumn — others</i
 		>
 	</hgroup>
@@ -170,11 +237,10 @@
 		<FilterForm {data} onFilter={handleFilterUpdate} />
 	</div>
 
-	<div class="search-input">
+	<div class="search-input" id="above-search-input">
 		<SearchInput bind:searchTerm count={filteredSchools.length} placeholder="Search in events..." />
 	</div>
 
-	<br />
 	<StickyFilterBar
 		{isElementVisible}
 		{selYear}
@@ -183,6 +249,8 @@
 		{DUTY_TYPES}
 		{selectedCountryObj}
 		{selectedRegionObj}
+		{isActive}
+		{isCoop}
 	>
 		<i class="black">Filtering: </i>
 		<span class={searchTerm !== '' ? 'filter-on' : 'filter-off'}>
@@ -196,7 +264,6 @@
 				<th class="c v">Startswith Contact</th>
 				<th class="c v">Code</th>
 				<th class="c v">Region</th>
-				<th class="c v">County</th>
 				<th class="c v">City</th>
 
 				<th class="c v tight-header">
@@ -288,6 +355,26 @@
 				<th class="c v tight-header">
 					<div class="title-row">
 						<small>&#8470; of</small>
+						<span>Applied Students</span>
+					</div>
+
+					<div class="stats-grid">
+						<span class="main-stats">
+							{searchTotals.applied}/{serverTotals.applied}
+						</span>
+						<span class="percentage">{searchTotals.percApplied} %</span>
+
+						<div class="summary-row">
+							<strong class="i">&sum;: {data.totalApplied}</strong>
+						</div>
+
+						<div class="global-perc h">{searchTotals.globalPercApplied} %</div>
+					</div>
+				</th>
+
+				<th class="c v tight-header">
+					<div class="title-row">
+						<small>&#8470; of</small>
 						<span>ADMITTED</span>
 					</div>
 
@@ -350,41 +437,47 @@
 		<tbody>
 			{#each filteredSchools as school}
 				<tr>
-					<td id="nameCell" class="c z">{school.user_names}</td>
+					<td id="nameCell" class="c z">{@html highlight(school.user_names, searchTerm)}</td>
 
 					<td class="c w" title={school.country_name}>
-						{school.country_code}
+						{@html highlight(school.country_code, searchTerm)}
 					</td>
 
-					<td class="c w">{school.region_name}</td>
-					<td class="c w">{school.county_name}</td>
-					<td class="c z">{school.city_name}</td>
+					<td class="c w">{@html highlight(school.region_name, searchTerm)}</td>
+					<td class="c z">{@html highlight(school.city_name, searchTerm)}</td>
 					<td class="centered-link h w">
 						<a href="../lists/all_schools/{school.school_id}" target="_blank" class="h">
-							{school.school_name}
+							{@html highlight(school.school_name, searchTerm)}
 						</a>
 					</td>
 					<td class="c w">{getType(school.school_type)}</td>
 
-					{#if school.basic == true}
-						<td class="c g">&#10003;</td>
-					{:else}
-						<td></td>
-					{/if}
-					{#if school.medior == true}
-						<td class="c g">&#10003;</td>
-					{:else}
-						<td></td>
-					{/if}
-					{#if school.high == true}
-						<td class="c g">&#10003;</td>
-					{:else}
-						<td></td>
-					{/if}
+					<td class="c g">
+						{#if school.isBasic}
+							<span class={searchTerm.toLowerCase().includes('bas') ? 'highlight-pipa' : ''}>
+								&#10003;
+							</span>
+						{/if}
+					</td>
+					<td class="c g">
+						{#if school.isMedior}
+							<span class={searchTerm.toLowerCase().includes('med') ? 'highlight-pipa' : ''}>
+								&#10003;
+							</span>
+						{/if}
+					</td>
+					<td class="c g">
+						{#if school.isHigh}
+							<span class={searchTerm.toLowerCase().includes('high') ? 'highlight-pipa' : ''}>
+								&#10003;
+							</span>
+						{/if}
+					</td>
 
 					<td class="c nm">{school.event_count}</td>
 					<td class="c nm">{school.sum_estimated_student}</td>
 					<td class="c nm">{school.total_intrest_count_status_0}</td>
+					<td class="c nm">{school.total_applied}</td>
 					<td class="c nm">{school.total_intrest_count_status_1}</td>
 					<td class="c nm">{school.total_intrest_count_status_2}</td>
 					<td class="c nm">{school.total_intrest_count_status_3}</td>
@@ -530,5 +623,13 @@
 
 		outline: none; /* Remove focus outline (optional, for better accessibility) */
 		text-decoration-color: #32bea6;
+	}
+
+	.highlight-pipa {
+		background-color: #ffda44;
+		color: #000;
+		padding: 2px 5px;
+		border-radius: 4px;
+		font-weight: bold;
 	}
 </style>
