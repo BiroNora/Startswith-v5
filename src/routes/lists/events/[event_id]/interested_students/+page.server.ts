@@ -1,34 +1,34 @@
-import { db } from "$lib/database"
-import { fail, redirect } from "@sveltejs/kit"
-import type { Actions } from "./$types"
-import { checkEventAccess } from "$lib/validation";
+import { db } from '$lib/server/database';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions } from './$types';
+import { checkEventAccess } from '$lib/validation';
 
 export const actions: Actions = {
-  interested: async ({ request, params, locals }) => {
-    const event_id = Number(params.event_id);
-    await checkEventAccess(locals, event_id);
+	interested: async ({ request, params, locals }) => {
+		const event_id = Number(params.event_id);
+		await checkEventAccess(locals, event_id);
 
-    const data = await request.formData();
-    const applied = data.get('apply') !== 'true';
+		const data = await request.formData();
+		const applied = data.get('apply') !== 'true';
 
-    try {
-      await db.interestedStudents.create({
-        data: {
-          event_id,
-          intrest_count: Number(data.get('number')),
-          grade: Number(data.get('grade')),
-          applied,
-          subject: !applied || data.get('subject') === 'null' ? 0 : Number(data.get('subject')),
-          channel: Number(data.get('channel')),
-          status: !applied || data.get('status') === 'null' ? 0 : Number(data.get('status')),
-          country_id: Number(data.get('country')),
-          region_id: Number(data.get('connect'))
-        }
-      });
-    } catch (e) {
-      console.error(e);
-      return fail(400, { interest: true });
-    }
-    throw redirect(303, `/lists/events/${params.event_id}`);
-  }
-}
+		try {
+			await db.interestedStudents.create({
+				data: {
+					event_id,
+					intrest_count: Number(data.get('number')),
+					grade: Number(data.get('grade')),
+					applied,
+					subject: !applied || data.get('subject') === 'null' ? 0 : Number(data.get('subject')),
+					channel: Number(data.get('channel')),
+					status: !applied || data.get('status') === 'null' ? 0 : Number(data.get('status')),
+					country_id: Number(data.get('country')),
+					region_id: Number(data.get('connect'))
+				}
+			});
+		} catch (e) {
+			console.error(e);
+			return fail(400, { interest: true });
+		}
+		throw redirect(303, `/lists/events/${params.event_id}`);
+	}
+};

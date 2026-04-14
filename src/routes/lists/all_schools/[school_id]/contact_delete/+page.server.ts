@@ -1,19 +1,19 @@
-import { db } from "$lib/database"
-import { fail, redirect } from "@sveltejs/kit"
-import type { Actions } from "./$types"
+import { db } from '$lib/server/database';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
 export const actions: Actions = {
 	schoolUD: async ({ request, params }) => {
-		const sc_id = Number(params.school_id)
-		const data = await request.formData()
-		const email = String(data.get('email'))
+		const sc_id = Number(params.school_id);
+		const data = await request.formData();
+		const email = String(data.get('email'));
 
 		const user = await db.user.findUnique({
 			where: { user_email: email },
 			select: { user_id: true }
 		});
 
-		if (!user) return fail(400, { user: false, alreadycontact: false })
+		if (!user) return fail(400, { user: false, alreadycontact: false });
 
 		const school = await db.school.findFirst({
 			where: {
@@ -34,8 +34,8 @@ export const actions: Actions = {
 					disconnect: { user_id: user.user_id }
 				}
 			}
-		})
+		});
 
 		throw redirect(303, `/lists/all_schools/${params.school_id}`);
 	}
-}
+};

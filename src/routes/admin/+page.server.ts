@@ -1,62 +1,62 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { generateSecurePassword, getValidatedUser } from '$lib/adminUtils';
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (!locals.user || !locals.user.isSuper) throw redirect(302, '/auth/login')
-}
+	if (!locals.user || !locals.user.isSuper) throw redirect(302, '/auth/login');
+};
 
 export const actions: Actions = {
-  // 1. Átirányítás a jogosultság hozzáadáshoz
-  "search-add": async ({ request }) => {
-    const { email, user } = await getValidatedUser(await request.formData());
+	// 1. Átirányítás a jogosultság hozzáadáshoz
+	'search-add': async ({ request }) => {
+		const { email, user } = await getValidatedUser(await request.formData());
 
-    if (!user) return { error: "Nincs ilyen felhasználó!" };
-    if (!email) return { error: "Email megadása kötelező!" };
+		if (!user) return { error: 'Nincs ilyen felhasználó!' };
+		if (!email) return { error: 'Email megadása kötelező!' };
 
-    throw redirect(303, `/admin/add_duty?email=${email}`);
-  },
+		throw redirect(303, `/admin/add_duty?email=${email}`);
+	},
 
-  // 2. Átirányítás a törléshez (Figyelj a mappa nevére: delete_duty vagy del-duty?)
-  "search-del": async ({ request }) => {
-    const { email, user } = await getValidatedUser(await request.formData());
+	// 2. Átirányítás a törléshez (Figyelj a mappa nevére: delete_duty vagy del-duty?)
+	'search-del': async ({ request }) => {
+		const { email, user } = await getValidatedUser(await request.formData());
 
-    if (!user) return { error: "Nincs ilyen felhasználó!" };
-    if (!email) return { error: "Email megadása kötelező!" };
+		if (!user) return { error: 'Nincs ilyen felhasználó!' };
+		if (!email) return { error: 'Email megadása kötelező!' };
 
-    throw redirect(303, `/admin/delete_duty?email=${email}`);
-  },
+		throw redirect(303, `/admin/delete_duty?email=${email}`);
+	},
 
-  "add-new-user": async ({ request, locals }) => {
-    const { email, user } = await getValidatedUser(await request.formData());
+	'add-new-user': async ({ request, locals }) => {
+		const { email, user } = await getValidatedUser(await request.formData());
 
-    if (!locals.user) return fail(401, { message: "Nincs bejelentkezett felhasználó!" });
+		if (!locals.user) return fail(401, { message: 'Nincs bejelentkezett felhasználó!' });
 
-    if (user) return fail(500, { message: "Ezzel az email címmel felhasználó már létezik." });
-    if (!email) return fail(500, { message: "Váratlan hiba történt a mentéskor." });
+		if (user) return fail(500, { message: 'Ezzel az email címmel felhasználó már létezik.' });
+		if (!email) return fail(500, { message: 'Váratlan hiba történt a mentéskor.' });
 
-    const adminSerial = locals.user.serial;
-    const { newPass, passwordHash } = await generateSecurePassword();
+		const adminSerial = locals.user.serial;
+		const { newPass, passwordHash } = await generateSecurePassword();
 
-    try {
-      await db.user.create({
-        data: {
-          user_email: email,
-          user_name: email.split('@')[0],
-          passwordHash,
-          active: true,
-          user_phone: "",
-          active_by: adminSerial,
-          userAuthToken: crypto.randomUUID()
-        }
-      });
+		try {
+			await db.user.create({
+				data: {
+					user_email: email,
+					user_name: email.split('@')[0],
+					passwordHash,
+					active: true,
+					user_phone: '',
+					active_by: adminSerial,
+					userAuthToken: crypto.randomUUID()
+				}
+			});
 
-      // Siker esetén visszaküldjük a generált jelszót
-      return { success: true, generatedPassword: newPass, newUser: true };
-    } catch (e) {
-      console.error("Hiba a létrehozás során:", e);
-      return fail(500, { message: "Váratlan hiba történt a mentéskor." });
-    }
-  }
+			// Siker esetén visszaküldjük a generált jelszót
+			return { success: true, generatedPassword: newPass, newUser: true };
+		} catch (e) {
+			console.error('Hiba a létrehozás során:', e);
+			return fail(500, { message: 'Váratlan hiba történt a mentéskor.' });
+		}
+	}
 };

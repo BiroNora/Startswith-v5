@@ -1,4 +1,4 @@
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -48,7 +48,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		schoolsCount,
 		totalEvents: stats._count.event_id,
 		totalEstStudents: stats._sum.estimated_student || 0,
-    totalApplied: appliedSum._sum.intrest_count || 0,
+		totalApplied: appliedSum._sum.intrest_count || 0,
 		...statusMap
 	};
 };

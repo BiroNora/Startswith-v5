@@ -1,33 +1,33 @@
-import { db } from '$lib/database'
-import { fail, redirect } from '@sveltejs/kit'
+import { db } from '$lib/server/database';
+import { fail, redirect } from '@sveltejs/kit';
 import { hash, compare } from 'bcrypt-ts';
-import type { Action, Actions, PageServerLoad } from './$types'
+import type { Action, Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) {
-    throw redirect(302, '/lists/activities')
-  }
-}
+		throw redirect(302, '/lists/activities');
+	}
+};
 
 const login: Action = async ({ cookies, request }) => {
-	const data = await request.formData()
-	const user_email = data.get('email')
-	const password = data.get('password')
+	const data = await request.formData();
+	const user_email = data.get('email');
+	const password = data.get('password');
 
 	if (typeof user_email !== 'string' || typeof password !== 'string' || !user_email || !password) {
-		return fail(400, { invalid: true })
+		return fail(400, { invalid: true });
 	}
 
-	const user = await db.user.findUnique({ where: { user_email } })
+	const user = await db.user.findUnique({ where: { user_email } });
 
 	if (!user) {
-		return fail(400, { credentials: true })
+		return fail(400, { credentials: true });
 	}
 
 	const userPassword = await compare(password.trim(), user.passwordHash.trim());
 
 	if (!userPassword) {
-		return fail(400, { credentials: true })
+		return fail(400, { credentials: true });
 	}
 
 	// generate new auth token just in case
@@ -36,8 +36,8 @@ const login: Action = async ({ cookies, request }) => {
 		data: {
 			userAuthToken: crypto.randomUUID(),
 			resetToken: ''
-		 },
-	})
+		}
+	});
 
 	cookies.set('session', authenticatedUser.userAuthToken, {
 		// send cookie for every page
@@ -51,13 +51,12 @@ const login: Action = async ({ cookies, request }) => {
 		secure: process.env.NODE_ENV === 'production',
 		// set cookie to expire after a week
 		maxAge: 60 * 60 * 24 * 7
-	})
+	});
 
 	// redirect the user
-	throw redirect(302, '/lists/activities')
-}
+	throw redirect(302, '/lists/activities');
+};
 
-export const actions: Actions = { login }
-
+export const actions: Actions = { login };
 
 //$2b$10$95XvNAnD2O6M7uzhYf7mbe/t372Bcl0Wvpx7mO9N.S658pB.9z99W

@@ -1,4 +1,4 @@
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { Prisma } from '@prisma/client';
 import { json } from '@sveltejs/kit';
 
@@ -65,7 +65,7 @@ export async function POST({ request }) {
 		const isYearFiltered = selectedYear !== 'ALL' && !!selectedYear;
 
 		// 3. A KOMPLEX LEKÉRDEZÉS
-    const schoolsData = await db.$queryRaw<any[]>`
+		const schoolsData = await db.$queryRaw<any[]>`
       WITH FilteredEvents AS (
         SELECT e.event_id, e.school_id, e.estimated_student
         FROM events e

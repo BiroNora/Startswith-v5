@@ -1,70 +1,69 @@
-import { db } from '$lib/database'
-import { fail, redirect } from '@sveltejs/kit'
-import type { Actions, PageServerLoad } from "./$types"
-import nodemailer from 'nodemailer'
+import { db } from '$lib/server/database';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import nodemailer from 'nodemailer';
 
 export const load: PageServerLoad = async ({ locals }) => {
-  if (locals.user) {
-    throw redirect(302, '/auth/login')
-  }
-}
+	if (locals.user) {
+		throw redirect(302, '/auth/login');
+	}
+};
 
 export const actions: Actions = {
-  forgot: async ({ request }) => {
-    const data = await request.formData()
-    const userEmail = String(data.get('email'))
+	forgot: async ({ request }) => {
+		const data = await request.formData();
+		const userEmail = String(data.get('email'));
 
-    const user = await db.user.findUnique({
-      where: { user_email: userEmail }
-    })
+		const user = await db.user.findUnique({
+			where: { user_email: userEmail }
+		});
 
-    if (!user) {
-      return fail(400, { credentials: true })
-    }
+		if (!user) {
+			return fail(400, { credentials: true });
+		}
 
-    // Generate a unique token for password reset
-    const resetToken = crypto.randomUUID()
+		// Generate a unique token for password reset
+		const resetToken = crypto.randomUUID();
 
-    // Store the token and associate it with the user in your database
-    await db.user.update({
-      where: { user_email: userEmail },
-      data: {
-        resetToken: resetToken,
-        resetTokenExpiry: new Date(Date.now() + 300000), // Token expiry in 5 min
-      }
-    })
+		// Store the token and associate it with the user in your database
+		await db.user.update({
+			where: { user_email: userEmail },
+			data: {
+				resetToken: resetToken,
+				resetTokenExpiry: new Date(Date.now() + 300000) // Token expiry in 5 min
+			}
+		});
 
-    // Send a password reset email with the link containing the resetToken
-    const resetLink = `http://localhost:5173/auth/reset-password?token=${resetToken}`
+		// Send a password reset email with the link containing the resetToken
+		const resetLink = `http://localhost:5173/auth/reset-password?token=${resetToken}`;
 
+		// Use this transporter for sending emails
+		const transporter = nodemailer.createTransport({
+			host: '127.0.0.1',
+			port: 1025, // The default MailHog SMTP port
+			secure: false, // Use SSL, false for TLS
+			auth: {
+				user: 'user',
+				pass: 'pass'
+			}
+		});
 
-    // Use this transporter for sending emails
-    const transporter = nodemailer.createTransport({
-      host: '127.0.0.1',
-      port: 1025, // The default MailHog SMTP port
-      secure: false, // Use SSL, false for TLS
-      auth: {
-        user: 'user',
-        pass: 'pass'
-      }
-    })
-
-    try {
-      await transporter.sendMail({
-        from: '"Startswith" <startswith@stsw.com>',
-        to: userEmail,
-        subject: 'Password Reset',
-        text: `Kattints a linkre a jelszó visszaállításához: ${resetLink}`,
-        html: `
+		try {
+			await transporter.sendMail({
+				from: '"Startswith" <startswith@stsw.com>',
+				to: userEmail,
+				subject: 'Password Reset',
+				text: `Kattints a linkre a jelszó visszaállításához: ${resetLink}`,
+				html: `
           <h3>Jelszó visszaállítás</h3>
           <p>Kérted a jelszavad visszaállítását.</p>
           <a href="${resetLink}">Kattints ide az új jelszó megadásához</a>
           <p>A link 5 percig érvényes.</p>
         `
-      })
-      return { sent: true }
-    } catch (error) {
-      return fail(500, { emailError: true })
-    }
-  }
-}
+			});
+			return { sent: true };
+		} catch (error) {
+			return fail(500, { emailError: true });
+		}
+	}
+};

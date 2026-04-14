@@ -1,55 +1,62 @@
-import { db } from '$lib/database';
+import { db } from '$lib/server/database';
 import { Prisma } from '@prisma/client';
 
 function buildWhereClause(filters: any): Prisma.Sql {
-  //const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE`];
-  const conditions: Prisma.Sql[] = [];
+	//const conditions: Prisma.Sql[] = [Prisma.sql`s.coop = TRUE`, Prisma.sql`s.active = TRUE`];
+	const conditions: Prisma.Sql[] = [];
 
-  if (filters.isActive === true) {
-    conditions.push(Prisma.sql`s.active = TRUE`);
-  }
+	if (filters.isActive === true) {
+		conditions.push(Prisma.sql`s.active = TRUE`);
+	}
 
-  if (filters.isCoop === true) {
-    conditions.push(Prisma.sql`s.coop = TRUE`);
-  }
-  // Csak akkor adjuk hozzá, ha NEM null, NEM undefined és NEM NaN
-  if (filters.selectedYear !== null && !isNaN(Number(filters.selectedYear)))
-    conditions.push(Prisma.sql`e.event_year = ${Number(filters.selectedYear)}`);
+	if (filters.isCoop === true) {
+		conditions.push(Prisma.sql`s.coop = TRUE`);
+	}
+	// Csak akkor adjuk hozzá, ha NEM null, NEM undefined és NEM NaN
+	if (filters.selectedYear !== null && !isNaN(Number(filters.selectedYear)))
+		conditions.push(Prisma.sql`e.event_year = ${Number(filters.selectedYear)}`);
 
-  if (filters.selectedSemester !== null && !isNaN(Number(filters.selectedSemester)))
-    conditions.push(Prisma.sql`e.semester = ${Number(filters.selectedSemester)}`);
+	if (filters.selectedSemester !== null && !isNaN(Number(filters.selectedSemester)))
+		conditions.push(Prisma.sql`e.semester = ${Number(filters.selectedSemester)}`);
 
-  if (filters.selectedDuty !== null && !isNaN(Number(filters.selectedDuty)))
-    conditions.push(Prisma.sql`e.duty_level = ${Number(filters.selectedDuty)}`);
+	if (filters.selectedDuty !== null && !isNaN(Number(filters.selectedDuty)))
+		conditions.push(Prisma.sql`e.duty_level = ${Number(filters.selectedDuty)}`);
 
-  if (filters.selectedCountry !== null && !isNaN(Number(filters.selectedCountry)))
-    conditions.push(Prisma.sql`i.country_id = ${Number(filters.selectedCountry)}`);
+	if (filters.selectedCountry !== null && !isNaN(Number(filters.selectedCountry)))
+		conditions.push(Prisma.sql`i.country_id = ${Number(filters.selectedCountry)}`);
 
-  if (filters.selectedRegion !== null && !isNaN(Number(filters.selectedRegion)))
-    conditions.push(Prisma.sql`i.region_id = ${Number(filters.selectedRegion)}`);
+	if (filters.selectedRegion !== null && !isNaN(Number(filters.selectedRegion)))
+		conditions.push(Prisma.sql`i.region_id = ${Number(filters.selectedRegion)}`);
 
-  if (conditions.length === 0) {
-    return Prisma.sql`1=1`; // Ha nincs szűrő, adjon vissza mindent
-  }
+	if (conditions.length === 0) {
+		return Prisma.sql`1=1`; // Ha nincs szűrő, adjon vissza mindent
+	}
 
-  if (conditions.length === 1) {
-    return conditions[0]; // Ha csak egy elem van, ne join-olja, csak adja vissza azt az egyet
-  }
+	if (conditions.length === 1) {
+		return conditions[0]; // Ha csak egy elem van, ne join-olja, csak adja vissza azt az egyet
+	}
 
-  return Prisma.join(conditions, ' AND ');
+	return Prisma.join(conditions, ' AND ');
 }
 
 export async function POST({ request }) {
-  try {
-    const formData = await request.json();
-    const whereClause = buildWhereClause(formData);
+	try {
+		const formData = await request.json();
+		const whereClause = buildWhereClause(formData);
 
-    const [
-      statusCountry, statusGrade, admittedGrade, subjectIntrest, subjectAdmitted,
-      regionIntrest, regionAdmitted, channelIntrest, channelAdmitted
-    ] = await Promise.all([
-      // 1. Status Country (Minden grade és intert)
-      db.$queryRaw<any[]>`
+		const [
+			statusCountry,
+			statusGrade,
+			admittedGrade,
+			subjectIntrest,
+			subjectAdmitted,
+			regionIntrest,
+			regionAdmitted,
+			channelIntrest,
+			channelAdmitted
+		] = await Promise.all([
+			// 1. Status Country (Minden grade és intert)
+			db.$queryRaw<any[]>`
         SELECT c.country_name,
           CAST(SUM(CASE WHEN i.status = 0 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_count_status_0,
           CAST(SUM(CASE WHEN i.status = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_count_status_1,
@@ -69,8 +76,8 @@ export async function POST({ request }) {
         WHERE ${whereClause} GROUP BY c.country_name
       `,
 
-      // 2. Status Grade (Összesített)
-      db.$queryRaw<any[]>`
+			// 2. Status Grade (Összesített)
+			db.$queryRaw<any[]>`
         SELECT
           CAST(SUM(CASE WHEN i.grade = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_grade_status_1,
           CAST(SUM(CASE WHEN i.grade = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_grade_status_2,
@@ -81,8 +88,8 @@ export async function POST({ request }) {
         WHERE ${whereClause}
       `,
 
-      // 3. Admitted Grade (Összesített)
-      db.$queryRaw<any[]>`
+			// 3. Admitted Grade (Összesített)
+			db.$queryRaw<any[]>`
         SELECT
           CAST(SUM(CASE WHEN i.grade = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_grade_status_1,
           CAST(SUM(CASE WHEN i.grade = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_grade_status_2,
@@ -93,8 +100,8 @@ export async function POST({ request }) {
         WHERE ${whereClause} AND i.status = 1
       `,
 
-      // 4. Subject Interest
-      db.$queryRaw<any[]>`
+			// 4. Subject Interest
+			db.$queryRaw<any[]>`
         SELECT
           CAST(SUM(CASE WHEN i.subject = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_1,
           CAST(SUM(CASE WHEN i.subject = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_2,
@@ -114,8 +121,8 @@ export async function POST({ request }) {
         WHERE ${whereClause}
       `,
 
-      // 5. Subject Admitted - KIFEJTVE
-      db.$queryRaw<any[]>`
+			// 5. Subject Admitted - KIFEJTVE
+			db.$queryRaw<any[]>`
         SELECT
           CAST(SUM(CASE WHEN i.subject = 1 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_1,
           CAST(SUM(CASE WHEN i.subject = 2 THEN i.intrest_count ELSE 0 END) AS INTEGER) AS intrest_work_title_2,
@@ -135,21 +142,37 @@ export async function POST({ request }) {
         WHERE ${whereClause} AND i.status = 1
       `,
 
-      // 6-9. Régiók és Csatornák (Változatlanul)
-      db.$queryRaw<any[]>`SELECT r.region_name, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN region r ON i.region_id = r.region_id JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} GROUP BY r.region_name`,
-      db.$queryRaw<any[]>`SELECT r.region_name, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN region r ON i.region_id = r.region_id JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} AND i.status = 1 GROUP BY r.region_name`,
-      db.$queryRaw<any[]>`SELECT i.channel, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} GROUP BY i.channel ORDER BY CAST(i.channel AS INTEGER) ASC`,
-      db.$queryRaw<any[]>`SELECT i.channel, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} AND i.status = 1 GROUP BY i.channel ORDER BY CAST(i.channel AS INTEGER) ASC`
-    ]);
+			// 6-9. Régiók és Csatornák (Változatlanul)
+			db.$queryRaw<
+				any[]
+			>`SELECT r.region_name, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN region r ON i.region_id = r.region_id JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} GROUP BY r.region_name`,
+			db.$queryRaw<
+				any[]
+			>`SELECT r.region_name, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN region r ON i.region_id = r.region_id JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} AND i.status = 1 GROUP BY r.region_name`,
+			db.$queryRaw<
+				any[]
+			>`SELECT i.channel, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} GROUP BY i.channel ORDER BY CAST(i.channel AS INTEGER) ASC`,
+			db.$queryRaw<
+				any[]
+			>`SELECT i.channel, CAST(SUM(i.intrest_count) AS INTEGER) AS intrest_count FROM interested i JOIN events e ON e.event_id = i.event_id JOIN schools s ON e.school_id = s.school_id WHERE ${whereClause} AND i.status = 1 GROUP BY i.channel ORDER BY CAST(i.channel AS INTEGER) ASC`
+		]);
 
-    return new Response(JSON.stringify({
-      statusCountry, statusGrade: statusGrade[0], admittedGrade: admittedGrade[0],
-      subjectIntrest: subjectIntrest[0], subjectAdmitted: subjectAdmitted[0],
-      regionIntrest, regionAdmitted, channelIntrest, channelAdmitted
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-
-  } catch (error) {
-    console.error("Hiba:", error);
-    return new Response(JSON.stringify({ error: 'Database error' }), { status: 500 });
-  }
+		return new Response(
+			JSON.stringify({
+				statusCountry,
+				statusGrade: statusGrade[0],
+				admittedGrade: admittedGrade[0],
+				subjectIntrest: subjectIntrest[0],
+				subjectAdmitted: subjectAdmitted[0],
+				regionIntrest,
+				regionAdmitted,
+				channelIntrest,
+				channelAdmitted
+			}),
+			{ status: 200, headers: { 'Content-Type': 'application/json' } }
+		);
+	} catch (error) {
+		console.error('Hiba:', error);
+		return new Response(JSON.stringify({ error: 'Database error' }), { status: 500 });
+	}
 }

@@ -1,15 +1,15 @@
-import { db } from '$lib/database'
-import { json, redirect } from '@sveltejs/kit'
+import { db } from '$lib/server/database';
+import { json, redirect } from '@sveltejs/kit';
 
 export async function POST({ request, locals }) {
 	if (!locals.user) {
-		throw redirect(302, '/auth/login')
+		throw redirect(302, '/auth/login');
 	}
 
 	const { selectedYear, selectedSemester, selectedDuty } = await request.json();
 
 	// 1. Alapfeltételek (amik mindig kellenek)
-	let whereConditions = ["s.coop = TRUE", "s.active = TRUE"];
+	let whereConditions = ['s.coop = TRUE', 's.active = TRUE'];
 	let queryParams: any[] = [];
 
 	// 2. Dinamikus szűrők hozzáadása
@@ -30,10 +30,11 @@ export async function POST({ request, locals }) {
 	}
 
 	// Összefűzzük a feltételeket egyetlen stringgé, AND-del elválasztva
-	const finalWhereClause = whereConditions.join(" AND ");
+	const finalWhereClause = whereConditions.join(' AND ');
 
 	try {
-		const regionIntAdm = await db.$queryRawUnsafe(`
+		const regionIntAdm = await db.$queryRawUnsafe(
+			`
       WITH UserAggregates AS (
         SELECT stu."A" AS school_id, STRING_AGG(u.user_name, ', ') AS user_names
         FROM "_SchoolToUser" stu
@@ -51,10 +52,11 @@ export async function POST({ request, locals }) {
       JOIN UserAggregates ua ON s.school_id = ua.school_id
       WHERE ${finalWhereClause}
       GROUP BY r.region_name;
-    `, ...queryParams);
+    `,
+			...queryParams
+		);
 
 		return json({ regionIntAdm });
-
 	} catch (error) {
 		console.error('SQL Error:', error);
 		return json({ error: 'Database query failed' }, { status: 500 });
