@@ -29,7 +29,7 @@ body {
 	text-rendering: optimizeLegibility;
 
 	margin: 0; /* Alapértelmezett böngésző margók törlése */
-	width: 100%;    /* Használj 100%-ot vw helyett! */
+	width: 100%;
   min-height: 100vh;
   display: block;
   overflow-x: hidden;
@@ -37,31 +37,27 @@ body {
 
 input:not([type='checkbox']),
 select {
-	/* Itt jön a mágia: kényszerítsük őket egyforma magasságra */
 	height: 2.5rem !important;
-	padding: 0 1rem !important; /* A függőleges paddingot nullázzuk a fix magasság miatt */
-
+	padding: 0 1rem !important;
 	border-radius: 100px;
 	font-size: 0.8rem;
 	margin: 10px 0;
 	border: 1px solid #ccc;
-
-	/* Megszünteti a Pico alapértelmezett extra magasságát */
 	line-height: normal !important;
-	appearance: none; /* Néha segít a selectnél, de a Pico-nál óvatosan */
+	appearance: none;
 }
 
 input[type='search'] {
-	height: 2.5rem !important; /* Legyen ugyanakkora, mint a többi meződ */
-	padding: 0 1rem 0 2.5rem !important; /* Bal oldalon hagyunk helyet az ikonnak */
+	height: 2.5rem !important;
+	padding: 0 1rem 0 2.5rem !important;
 	border-radius: 100px !important;
 	line-height: normal !important;
-	background-position: left 0.75rem center !important; /* Az ikon helye balra zárva */
+	background-position: left 0.75rem center !important;
 	background-repeat: no-repeat !important;
 }
 
 select {
-	padding-right: 2rem !important; /* Hely a nyílnak a jobb szélen */
+	padding-right: 2rem !important;
 	background-position: center right 0.75rem;
 }
 
@@ -474,7 +470,7 @@ input[type='checkbox'] {
 	/* Egyedi méret és keret */
 	width: 1rem;
 	height: 1rem;
-	border: 1px solid #32bea6; /* Itt állíthatod a vastagságot (0.5px vagy 1px) */
+	border: 1px solid #32bea6;
 	border-radius: 3px;
 	background-color: transparent;
 	cursor: pointer;
