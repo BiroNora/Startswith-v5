@@ -66,25 +66,6 @@
 {/if}
 
 <style>
-	.sticky {
-		display: flex; /* Bekapcsolja a flexboxot */
-		align-items: center; /* Függőlegesen középre igazít */
-		justify-content: flex-start;
-		background-color: rgb(246, 242, 242);
-		position: sticky;
-		top: 0;
-		z-index: 1;
-		height: 40px;
-		width: 100%;
-		padding: 5px;
-		color: #32bea6;
-		border-radius: 100px;
-		font-size: clamp(0.5rem, 0.7rem, 1.0rem);
-		white-space: nowrap; /* Ne törje több sorba */
-		overflow: hidden; /* Ami nem fér be, tűnjön el */
-		text-overflow: ellipsis;
-	}
-
 	.dynamic-indicators {
     display: flex;
     align-items: center;

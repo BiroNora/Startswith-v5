@@ -165,27 +165,29 @@
 </div>
 
 <style>
+	.sticky {
+		padding-top: 0%;
+		padding-bottom: 0%;
+	}
 	.container {
+	  min-height: 500px; /* Vagy amekkora a grafikonod nagyjából lesz */
 		display: flex;
 		width: 100%;
 		flex-direction: row;
-		/* Ez teszi őket középre és osztja el az üres helyet egyenlően */
-		justify-content: center;
-		/* Vagy használd a space-evenly-t, ha azt akarod, hogy a széleken is ugyanannyi hely legyen */
-		/* justify-content: space-evenly; */
-
-		align-items: center; /* Függőlegesen is középre igazítja őket, ha nem egyforma magasak */
-		gap: 5%; /* Csökkentettem a gap-et, hogy biztosan elférjenek egymás mellett */
-		padding-top: 5%;
-		padding-bottom: 3%;
+		justify-content: space-evenly;
+		align-items: center;
+		padding-top: 0%;
+		padding-bottom: 4%;
 		box-sizing: border-box; /* Hogy a padding ne növelje meg a 100% szélességet */
+		overflow: hidden;
 	}
 
 	.f {
 		/* Fontos: adjunk nekik egy fix vagy rugalmas szélességet, hogy ne nyomják össze egymást */
-		flex: 0 1 40%;
-		min-width: 300px; /* Megakadályozza, hogy túl kicsik legyenek mobilon */
+		flex: 0 1 45%;
+		min-width: 250px; /* Megakadályozza, hogy túl kicsik legyenek mobilon */
 		display: flex;
 		justify-content: center;
+		max-width: 45%; 
 	}
 </style>

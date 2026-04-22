@@ -88,16 +88,20 @@
 
 <style>
 	.center-container {
-  display: flex;
-  flex-direction: column; /* Biztosítja, hogy a tartalom ne nyúljon el vízszintesen */
-  justify-content: center; /* Függőleges középre igazítás */
-  align-items: center;     /* Vízszintes középre igazítás */
-
-  /* Ez a kulcs: */
-  min-height: 100dvh;      /* Dynamic Viewport Height - a mobil böngésző sávjait is kezeli */
+  /* Kitölti a main-t */
   width: 100%;
+  display: flex;
 
-  /* Ha a main-nek van padding-je, akkor a box-sizing megvédi a layoutot */
-  box-sizing: border-box;
+  /* Ez rakja középre a belső kártyát vízszintesen */
+  justify-content: center;
+
+  /* Ez rakja középre függőlegesen */
+  align-items: center;
+
+  /* Magasság nélkül nincs függőleges közép, csak vízszintes */
+  min-height: 100dvh;
+
+  /* Ha mobilon mégis balra húzna, ez a végső megoldás: */
+  margin: 0 auto;
 }
 </style>

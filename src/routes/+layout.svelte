@@ -6,7 +6,7 @@
 	let { data, children } = $props();
 </script>
 
-<div class="m">
+<div>
 	{#if !data.user}
 		<div></div>
 	{:else if data.user.active === false}
@@ -15,7 +15,7 @@
 			<h6>Please contact your manager.</h6>
 		</div>
 	{:else}
-		<nav class="main-nav">
+		<nav class="nav">
 			<!-- Csoport: Charts -->
 			<div class="dropdown">
 				<button class="b">Charts &#x25BE</button>
@@ -89,16 +89,15 @@
 
 	.e {
 		padding-right: 1rem;
-		padding-left: 1rem;
 	}
 
-	nav {
+	.nav {
 		display: flex;
-		justify-content: space-between; /* Az elemeket balra rendezi */
+		justify-content: space-between;
 		align-items: center;
 		width: 100%;
 		background-color: white;
-		gap: 10px; /* Egyenletes távolság az oszlopok között */
+		gap: 10px;
 	}
 
 	.dropdown {

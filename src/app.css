@@ -8,7 +8,7 @@
 }
 
 :global(html) {
-  scroll-behavior: smooth !important;
+	scroll-behavior: smooth !important;
 }
 
 body,
@@ -27,6 +27,12 @@ body {
 	-webkit-font-smoothing: antialiased; /* Safari/Chrome finomítás */
 	-moz-osx-font-smoothing: grayscale; /* Firefox/Mac finomítás */
 	text-rendering: optimizeLegibility;
+
+	margin: 0; /* Alapértelmezett böngésző margók törlése */
+	width: 100%;    /* Használj 100%-ot vw helyett! */
+  min-height: 100vh;
+  display: block;
+  overflow-x: hidden;
 }
 
 input:not([type='checkbox']),
@@ -84,13 +90,9 @@ article {
 	border: none;
 }
 
-.art-div {
-	padding: 0.5rem;
-}
-
 .main {
 	padding: 2% 2% 0 2%;
-	width: 100%;
+	box-sizing: border-box;
 }
 
 .main-chart {
@@ -98,6 +100,7 @@ article {
 	padding-top: 2%;
 	padding-right: 0.5%;
 	width: 100%;
+	box-sizing: border-box;
 }
 
 .search-input {
@@ -154,7 +157,6 @@ article {
 	color: var(--secondary-gray-cool);
 }
 /* --- EDDIG --- */
-
 
 .width-400 {
 	width: 100%;
@@ -464,32 +466,52 @@ legend {
 }
 
 /* Checkbox input */
-input[type="checkbox"] {
-  /* Alapértelmezett stílus kikapcsolása */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  /* Egyedi méret és keret */
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid #32bea6; /* Itt állíthatod a vastagságot (0.5px vagy 1px) */
-  border-radius: 3px;
-  background-color: transparent;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
-  vertical-align: middle;
+input[type='checkbox'] {
+	/* Alapértelmezett stílus kikapcsolása */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	/* Egyedi méret és keret */
+	width: 1rem;
+	height: 1rem;
+	border: 1px solid #32bea6; /* Itt állíthatod a vastagságot (0.5px vagy 1px) */
+	border-radius: 3px;
+	background-color: transparent;
+	cursor: pointer;
+	position: relative;
+	transition: all 0.2s ease;
+	vertical-align: middle;
 }
 
 /* Amikor be van pipálva */
-input[type="checkbox"]:checked {
-  background-color: #32bea6;
+input[type='checkbox']:checked {
+	background-color: #32bea6;
 }
 
 /* Hover effekt a jobb UX-ért */
-input[type="checkbox"]:hover {
-  border-color: #2ecc71;
-  box-shadow: 0 0 3px rgba(50, 190, 166, 0.3);
+input[type='checkbox']:hover {
+	border-color: #2ecc71;
+	box-shadow: 0 0 3px rgba(50, 190, 166, 0.3);
+}
+
+/* --- STICKY LINE CSS --- */
+.sticky {
+	display: flex; /* Bekapcsolja a flexboxot */
+	align-items: center; /* Függőlegesen középre igazít */
+	justify-content: flex-start;
+	background-color: rgb(246, 242, 242);
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	height: 40px;
+	width: 100%;
+	padding: 5px;
+	color: #32bea6;
+	border-radius: 100px;
+	font-size: clamp(0.5rem, 0.7rem, 1rem);
+	white-space: nowrap; /* Ne törje több sorba */
+	overflow: hidden; /* Ami nem fér be, tűnjön el */
+	text-overflow: ellipsis;
 }
 
 /*body {
