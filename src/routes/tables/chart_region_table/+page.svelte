@@ -56,8 +56,7 @@
 
 				setTimeout(() => {
 					smoothScroll('chart-section-1');
-				}, 200);
-
+				}, 400);
 			} else {
 				err_mess = true;
 			}
@@ -170,16 +169,15 @@
 		padding-bottom: 0%;
 	}
 	.container {
-	  min-height: 500px; /* Vagy amekkora a grafikonod nagyjából lesz */
+		min-height: 500px;
 		display: flex;
 		width: 100%;
 		flex-direction: row;
 		justify-content: space-evenly;
 		align-items: center;
-		padding-top: 0%;
-		padding-bottom: 4%;
+		padding-top: 4.5%;
+		padding-bottom: 3.5%;
 		box-sizing: border-box; /* Hogy a padding ne növelje meg a 100% szélességet */
-		overflow: hidden;
 	}
 
 	.f {
@@ -188,6 +186,6 @@
 		min-width: 250px; /* Megakadályozza, hogy túl kicsik legyenek mobilon */
 		display: flex;
 		justify-content: center;
-		max-width: 45%; 
+		max-width: 45%;
 	}
 </style>
