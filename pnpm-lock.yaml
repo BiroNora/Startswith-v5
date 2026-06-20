@@ -24,8 +24,8 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1
       nodemailer:
-        specifier: ^8.0.4
-        version: 8.0.4
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@playwright/test':
         specifier: ^1.58.2
@@ -733,8 +733,8 @@ packages:
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
 
-  nodemailer@8.0.4:
-    resolution: {integrity: sha512-k+jf6N8PfQJ0Fe8ZhJlgqU5qJU44Lpvp2yvidH3vp1lPnVQMgi4yEEMPXg5eJS1gFIJTVq1NHBk7Ia9ARdSBdQ==}
+  nodemailer@9.0.1:
+    resolution: {integrity: sha512-Gwv8SQewT616ZM/URn0H54b8PWo/Wum7md3EW2aWy1lO27+WZCX+Xyak3J+NlmHUjDh5ME+uesJUDRbR3Ye8Bw==}
     engines: {node: '>=6.0.0'}
 
   nypm@0.6.5:
@@ -1519,7 +1519,7 @@ snapshots:
 
   node-fetch-native@1.6.7: {}
 
-  nodemailer@8.0.4: {}
+  nodemailer@9.0.1: {}
 
   nypm@0.6.5:
     dependencies:

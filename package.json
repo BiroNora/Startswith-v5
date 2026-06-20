@@ -45,6 +45,6 @@
 		"@prisma/client": "6.19.0",
 		"bcrypt-ts": "^8.0.1",
 		"chart.js": "^4.5.1",
-		"nodemailer": "^8.0.4"
+		"nodemailer": "^9.0.1"
 	}
 }
